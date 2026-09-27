@@ -7,6 +7,13 @@ import { contentEditorOptions } from '@/lib/content/editor-options'
 
 export const metadata = { title: 'Edit piece' }
 
+/**
+ * Allowed to block. The page title is the piece's own, read from the database
+ * before the shell's Suspense boundary, and the layout's `instant = false` does not
+ * extend to pages beneath it.
+ */
+export const instant = false
+
 export default async function EditContentPage({
   params,
   searchParams,

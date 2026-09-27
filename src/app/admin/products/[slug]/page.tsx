@@ -15,6 +15,13 @@ import { claudeWriterConfigured } from '@/lib/catalog/autowrite'
 
 export const maxDuration = 300
 
+/**
+ * Allowed to block. A posted product's title comes from its database row, read
+ * before the shell's Suspense boundary, and the layout's `instant = false` does not
+ * extend to pages beneath it.
+ */
+export const instant = false
+
 export const metadata = { title: 'Edit product' }
 
 /**

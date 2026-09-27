@@ -50,6 +50,9 @@ export function AdminNavLink({
   return (
     <Link
       href={href}
+      // No prefetch: every admin page is dynamic and session-checked, so twenty
+      // visible sidebar links were forty server renders on every page view.
+      prefetch={false}
       aria-current={active ? 'page' : undefined}
       onClick={onNavigate}
       className={`admin-nav-row relative flex min-h-11 items-center gap-3 rounded-md px-3 transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-moss-300 focus-visible:outline-none motion-reduce:transition-none ${

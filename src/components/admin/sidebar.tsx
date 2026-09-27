@@ -153,7 +153,7 @@ export function AdminSidebar({
           <p className="truncate text-sm leading-tight text-white">{name}</p>
           <p className="text-[10px] leading-tight tracking-[0.18em] text-stone-400 uppercase">{role.toLowerCase()}</p>
         </div>
-        <Link href="/" className={FOOTER_BUTTON} title="View site" aria-label="View site">
+        <Link href="/" prefetch={false} className={FOOTER_BUTTON} title="View site" aria-label="View site">
           <ExternalLinkIcon className="size-5" />
         </Link>
         <form action={adminLogout}>

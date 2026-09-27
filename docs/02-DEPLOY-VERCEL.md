@@ -52,7 +52,8 @@ Development** unless noted. The values are in `.env`; the names must match exact
 | `CRON_SECRET` | The nightly visit flush in `vercel.json` returns 401 and page views are lost |
 | `INDEXNOW_KEY` | `/indexnow-key.txt` 404s and Bing rejects every submission |
 | `BREVO_API_KEY`, `EMAIL_FROM` | No order or enquiry email is sent |
-| `NTFY_URL`, `NTFY_TOKEN` | No push alert on a new order |
+| `NTFY_URL`, `NTFY_TOPIC_ORDERS`, `NTFY_TOPIC_ALERTS` | No push alert on a new order, and no alert when a customer sends a chat message |
+| `NTFY_TOKEN` | Only needed for a reserved topic on a paid or self-hosted ntfy server. Public ntfy.sh topics publish without one |
 | `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION` | Verify by DNS instead; both are optional |
 | `ANTHROPIC_API_KEY` | The admin product writer is unavailable. Everything else works |
 
@@ -123,6 +124,29 @@ address in the footer under CAN-SPAM, and `BRAND.postalAddress` is empty — del
 because an invented address on commercial mail is a false statement rather than a
 placeholder. Set the real one in Admin → Settings. Order and enquiry email is
 transactional and sends without it.
+
+---
+
+## 4c. ntfy — the two phone topics
+
+The site pushes to two topics, and they are already created and tested:
+
+| Variable | Carries | Should it ring? |
+|---|---|---|
+| `NTFY_TOPIC_ALERTS` | Live chat, the contact form, bulk enquiries | Yes — a customer is waiting |
+| `NTFY_TOPIC_ORDERS` | New orders, payment claims, sign-ups, low stock, site errors, failed admin sign-ins, state-rule changes | Your call |
+
+The split exists so that a ringing chat topic always means a person needs answering,
+rather than being buried under operational noise.
+
+**To receive them:** install the ntfy app (iOS or Android), then Subscribe to topic →
+paste each topic name exactly as it appears in `.env`. No account is needed.
+
+**The topic name is the password.** An ntfy.sh topic is readable by anyone who knows
+its name, which is why each carries a long random suffix. Don't paste them into a
+screenshot, a support thread or a public repo. To rotate one, change the value in
+`.env` and in Vercel, then re-subscribe on the phone — a topic needs no deleting,
+it simply stops being used.
 
 ---
 

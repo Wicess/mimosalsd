@@ -34,49 +34,49 @@ export const BLOG_SECTIONS: readonly BlogSection[] = [
     slug: 'botanical',
     title: 'The botanical range',
     intro:
-      'What the material is, how the forms differ, and how to buy and store it. Start here if you have not used root bark before.',
+      'The trees, the three cuts, what tannin does, and how to buy and keep a pound so it is still worth using next year.',
   },
   {
     slug: 'dyeing',
     title: 'Dyeing technique',
     intro:
-      'Ratios, mordants, temperature and the modifiers that move a colour. Written to be repeatable rather than inspirational.',
+      'Fifteen articles of working numbers: what to weigh, how hot to hold it, and which single variable to change next. Repeatable, not inspirational.',
   },
   {
     slug: 'devices',
     title: 'Devices and hardware',
     intro:
-      'What a cartridge is, what a coil does, and why most faults are cold oil or a blocked airway rather than a broken device.',
+      'Threads, coils, blinking lights and blocked airways — how the hardware works, and how to tell a fault from a cold device.',
   },
   {
     slug: 'cannabinoids',
     title: 'Cannabinoids and concentrates',
     intro:
-      'The chemistry and the process words: what THCA is, how the four production methods differ, and what a label term does and does not mean.',
+      'The words on the box, explained: acid forms, terpenes, the four process names, and where the arithmetic on a total figure hides.',
   },
   {
     slug: 'testing',
     title: 'Testing and certificates',
     intro:
-      'How material is measured, what a full panel covers, and how to read a record against the batch code in your hand.',
+      'Batch code first, then the date, then the accreditation scope, then the panels. How to settle a certificate in two minutes.',
   },
   {
     slug: 'education',
     title: 'Background',
     intro:
-      'Longer explanations of the compounds and categories this site deals in, for readers who want the whole picture rather than a procedure.',
+      'Longer background pieces, for when you want the whole picture rather than the next step in a procedure.',
   },
   {
     slug: 'legality',
     title: 'Legal position',
     intro:
-      'Where the law is settled, where it is not, and what this site will and will not assert. Every position carries the date it was reviewed.',
+      'What we will and will not assert about the law, and the date each position was last read. Where it is unsettled, we say so.',
   },
   {
     slug: 'ordering',
     title: 'Ordering and delivery',
     intro:
-      'How an order is checked, packed and carried, and what to do when something arrives wrong.',
+      'What happens between your order and your doorstep, and what to do if a parcel arrives short or damaged.',
   },
 ]
 

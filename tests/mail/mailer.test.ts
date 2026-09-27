@@ -32,7 +32,7 @@ beforeEach(() => {
   resetMailProvider()
   create.mockClear()
   process.env.BREVO_API_KEY = 'xkeysib-test'
-  process.env.EMAIL_FROM = 'Snypegate <contact@mimosalsd.com>'
+  process.env.EMAIL_FROM = 'Mimosalsd <contact@mimosalsd.com>'
   vi.stubGlobal(
     'fetch',
     vi.fn().mockResolvedValue(new Response('{"messageId":"<1@brevo>"}', { status: 201 })),
@@ -47,8 +47,8 @@ afterEach(() => {
 
 describe('parseSender', () => {
   it('splits an RFC 5322 display name from the address', () => {
-    expect(parseSender('Snypegate <contact@mimosalsd.com>')).toEqual({
-      name: 'Snypegate',
+    expect(parseSender('Mimosalsd <contact@mimosalsd.com>')).toEqual({
+      name: 'Mimosalsd',
       email: 'contact@mimosalsd.com',
     })
   })
@@ -58,10 +58,10 @@ describe('parseSender', () => {
   })
 
   it('strips quotes around a display name', () => {
-    // `"Snypegate, Inc." <a@b.com>` is legal RFC 5322. Passing the quotes through
+    // `"Mimosalsd, Inc." <a@b.com>` is legal RFC 5322. Passing the quotes through
     // would put them inside Brevo's `name` field and into the rendered From line.
-    expect(parseSender('"Snypegate, Inc." <contact@mimosalsd.com>')).toEqual({
-      name: 'Snypegate, Inc.',
+    expect(parseSender('"Mimosalsd, Inc." <contact@mimosalsd.com>')).toEqual({
+      name: 'Mimosalsd, Inc.',
       email: 'contact@mimosalsd.com',
     })
   })
@@ -73,7 +73,7 @@ describe('parseSender', () => {
 
   it('rejects a value with no address rather than sending from nowhere', () => {
     expect(parseSender('')).toBeUndefined()
-    expect(parseSender('Snypegate')).toBeUndefined()
+    expect(parseSender('Mimosalsd')).toBeUndefined()
   })
 })
 
@@ -91,7 +91,7 @@ describe('Brevo transport', () => {
   it('sends the parsed sender object and both content fields', async () => {
     await sendEmail(message)
     expect(jsonBody()).toMatchObject({
-      sender: { name: 'Snypegate', email: 'contact@mimosalsd.com' },
+      sender: { name: 'Mimosalsd', email: 'contact@mimosalsd.com' },
       to: [{ email: 'buyer@example.com' }],
       subject: 'Order received',
       textContent: message.text,

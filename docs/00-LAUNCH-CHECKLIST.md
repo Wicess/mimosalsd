@@ -4,11 +4,33 @@ The framework, layout and components come from an existing build of the same sha
 Everything a search engine reads, and every claim a customer reads, must be this
 company's own before this site goes public.
 
-**Nothing in this repository may be deployed to mimosalsd.com until section 1 is
-done.** The copy that ships today is sample text carried over from the other build,
-kept only so that every section of the design renders while it is being reviewed.
-Publishing it would put near-identical pages on two domains, which is the one thing
-the client cannot afford, and would repeat claims that belong to another company.
+**The site can be deployed to Vercel and the domain attached at any time** — see
+`02-DEPLOY-VERCEL.md`. What must wait is *telling search engines about it*: no Search
+Console or Bing verification, no sitemap submission, no IndexNow run until section 1
+below is done. Publishing the pages that still carry the parent build's words is how two
+sites get read as one, and that is much harder to undo than to avoid.
+
+---
+
+## 0. Done — 27 September 2026
+
+- **50 new articles were written for this site**, across five sections: 8 botanical,
+  15 dyeing, 9 devices, 9 cannabinoids, 9 testing. Each is new text on a topic that is
+  general to the trade — not a reworded copy of the parent build's article on the same
+  subject. Different structure, different examples, different headings, different slugs.
+- **Three more pages were rewritten from scratch** at their existing slugs, so every
+  internal link and test kept working: the two pillar guides and the dyeing hub article.
+  That makes **53 pages of this site's own writing**. Five authored articles and two
+  guides are still the parent build's text — listed in 1.1 below.
+- **Every article carries its own hero image.** 162 images (60 article heroes,
+  102 product photographs) are in this site's own R2 bucket.
+- **The pillar loop works**: `what-is-mimosa-hostilis-root-bark` and
+  `how-to-read-a-certificate-of-analysis` were rewritten from scratch and now point down
+  at 18 of the new articles, which link back up.
+- **The blog index section intros** are this site's own words.
+- **`URL.md` is generated, not hand-kept** — `npm run urls` rewrites it from the
+  repository's own data and lists what is new since the last run. `npm run indexnow
+  -- --all` reads the same collector, so the file and the submissions cannot disagree.
 
 ---
 
@@ -16,23 +38,38 @@ the client cannot afford, and would repeat claims that belong to another company
 
 ### 1.1 Rewrite every page a visitor or a crawler reads
 
-Same sections, same design, different words. In order of how much traffic they earn:
+Same sections, same design, different words. What is still the parent build's text, in
+order of how much traffic it stands to earn or lose:
 
-| Where | File or source | What it is now |
+| Where | File or source | Size of the job |
 |---|---|---|
-| Home | `src/app/(site)/page.tsx` | Sample hero, promise, sections |
-| Categories | `src/lib/catalog/catalog.data.ts` | Sample category names, intros, FAQs |
-| Products | this site's database | Empty until seeded |
-| Guides and articles | this site's database, `src/lib/content/content.data.ts` | Sample authored pieces |
-| FAQ | `src/lib/content/faq.ts` | Sample answers |
-| Policies | `src/lib/content/policies.ts` | Sample shipping, purchase, returns, privacy, terms |
-| Legality pages | `src/lib/legality/state-profiles.ts` + `state_rules` | Sample per-state notes |
-| About | `src/app/(site)/about/page.tsx` | Sample summary |
-| llms.txt | `src/app/llms.txt/route.ts` | Sample business description |
+| **Product copy** | `postedProduct.document` in this database | **57 products, every one carrying its full description.** The largest block of duplicate text on the site by a wide margin |
+| **State legality pages** | `state_rules` (153 rows) + `src/lib/legality/state-profiles.ts` | 51 indexable pages. Duplicate detection bites hardest here, because the statute text is identical and the pages are templated |
+| Home | `src/app/(site)/page.tsx` | Hero, promise, every section |
+| Categories | `src/lib/catalog/catalog.data.ts` | 4 category names, intros and FAQs |
+| FAQ | `src/lib/content/faq.ts` | Every answer |
+| Policies | `src/lib/content/policies.ts` | 5 pages: shipping, purchase, returns, privacy, terms |
+| About | `src/app/(site)/about/page.tsx` | The whole page |
+| llms.txt | `src/app/llms.txt/route.ts` | Business description |
+| Footer, standards, canned replies | `site-footer.tsx`, `standards.tsx`, `lib/support/canned.ts` | Short but sitewide |
+| 5 remaining articles | `src/lib/content/content.data.ts` | `what-is-muscimol`, `is-amanita-muscaria-legal-in-the-united-states`, `what-the-pact-act-means-for-buyers`, `shipping-restrictions-explained`, `how-we-batch-test-every-product` |
+| 2 remaining guides | `src/lib/content/content.data.ts` | `amanita-muscaria-explained`, `how-ordering-and-payment-works` |
 
-Two pages must not be copied in shape either, because they are where duplicate
-detection bites hardest: the per-state pages and the category pages. Write them from
-this company's own position, with its own statutes and review dates.
+Three of those need a decision as well as a rewrite:
+
+- **`how-we-batch-test-every-product`** describes laboratory arrangements. Do not rewrite
+  it until this company's own arrangements are known — a rewritten claim is still a claim,
+  and this is the exact failure that cost the parent build: 206 live pages went on saying
+  a person had checked something after the rows behind it were deleted.
+- **The two Amanita pieces and `what-is-muscimol`** describe a category whose listings are
+  on hold. Leave them until the products they sit beside are settled.
+- **`shipping-restrictions-explained`** and **`what-the-pact-act-means-for-buyers`** must
+  not tell a customer about photo ID, adult signature, or which states are restricted.
+  Written fresh, they are "how delivery works" pages under slugs that already rank for the
+  question.
+
+Also carried over and harmless but worth clearing: `next.config.ts` redirects eleven
+retired product slugs from the parent build. Nothing on this domain ever used them.
 
 ### 1.2 Replace the placeholder brand assets
 
@@ -42,9 +79,14 @@ all of them.
 
 ### 1.3 Replace the sample photography
 
-`public/samples/*` and any product image are stand-ins. Identical photographs on two
-domains are a duplicate signal of their own, and the licence for another site's
-photography does not travel. `public/team/*` are flat placeholders, not people.
+**The 102 product photographs in this bucket are the same image files as the parent
+build's**, copied deliberately so every page renders while the site is being reviewed.
+Identical photographs on two domains are a duplicate signal in their own right, and the
+licence for another site's photography does not travel. They must be replaced before the
+site is submitted to a search engine.
+
+The 60 article hero images are in the same position. `public/samples/*` are stand-ins and
+`public/team/*` are flat placeholders, not people.
 
 ### 1.4 Supply the company's own facts
 

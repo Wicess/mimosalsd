@@ -35,7 +35,8 @@
     "predev": "node scripts/clean-build.mjs",
     "e2e:accounts": "tsx scripts/e2e-accounts.ts",
     "e2e:admin": "tsx scripts/e2e-accounts.ts create && node tests/e2e/admin.mjs && node tests/e2e/admin-fixes.mjs; tsx scripts/e2e-accounts.ts clean",
-    "images:upload": "tsx scripts/upload-images.ts"
+    "images:upload": "tsx scripts/upload-images.ts",
+    "urls": "tsx scripts/urls.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",

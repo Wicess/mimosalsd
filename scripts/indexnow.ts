@@ -20,6 +20,7 @@ import { catalog } from '../src/lib/catalog/repository'
 import { getAllStateLegality } from '../src/lib/legality/state-pages'
 import { publishedGuides, publishedPosts } from '../src/lib/content/content.data'
 import { POLICIES } from '../src/lib/content/policies'
+import { collectUrls } from './lib/site-urls'
 
 /*
  * `src/lib/seo/indexnow` guards itself with `server-only`, which is what stops it
@@ -37,7 +38,25 @@ async function loadIndexNow() {
   return import('../src/lib/seo/indexnow')
 }
 
-function canonicalUrls(): string[] {
+/**
+ * Every canonical URL, INCLUDING the articles and products posted from the admin panel.
+ *
+ * The authored-only list below was the whole of `--all` until 2026-09-27, which meant a
+ * site whose blog lives in the database could resubmit its entire sitemap and leave
+ * every article out of it. Falls back to the authored list if the database is
+ * unreachable — a partial submission beats a failed one.
+ */
+async function allUrls(): Promise<string[]> {
+  try {
+    return (await collectUrls()).map((u) => u.path)
+  } catch (error) {
+    console.warn(`database unreachable (${(error as Error).message.slice(0, 60)}) — submitting authored content only`)
+    return authoredUrls()
+  }
+}
+
+/** The authored files alone: no database, so it cannot fail. */
+function authoredUrls(): string[] {
   const paths = [
     ...Object.values(ROUTES)
       .filter((r) => r.inSitemap && !r.pattern.includes('['))
@@ -51,6 +70,16 @@ function canonicalUrls(): string[] {
     ...POLICIES.map((p) => url.policy(p.slug)),
   ]
   return [...new Set(paths)]
+}
+
+/** Database rows whose content was edited today, added to the authored list below. */
+async function postedChangedToday(): Promise<string[]> {
+  const today = new Date().toISOString().slice(0, 10)
+  try {
+    return (await collectUrls()).filter((u) => u.lastmod === today).map((u) => u.path)
+  } catch {
+    return []
+  }
 }
 
 /** URLs carrying a real date that changed today — the honest definition of "changed". */
@@ -97,7 +126,11 @@ async function main() {
   }
 
   const single = value('--url')
-  const paths = single ? [single] : flag('--all') ? canonicalUrls() : changedToday()
+  const paths = single
+    ? [single]
+    : flag('--all')
+      ? await allUrls()
+      : [...new Set([...changedToday(), ...(await postedChangedToday())])]
 
   if (paths.length === 0) {
     console.log('Nothing to submit — no content carries today as its change date.')

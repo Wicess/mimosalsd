@@ -77,14 +77,14 @@ describe('buildPaymentInstructions', () => {
 describe('what the owner types', () => {
   it('normalises $Cashtags and refuses bad ones', () => {
     expect(normalizeCashtag('MIMOSALSD')).toEqual({ ok: true, value: '$MIMOSALSD' })
-    expect(normalizeCashtag(' $Snype99 ')).toEqual({ ok: true, value: '$Snype99' })
+    expect(normalizeCashtag(' $Mimosa99 ')).toEqual({ ok: true, value: '$Mimosa99' })
     expect(normalizeCashtag('$12345').ok).toBe(false) // needs a letter
-    expect(normalizeCashtag('$snype gate').ok).toBe(false)
+    expect(normalizeCashtag('$mimosa lsd').ok).toBe(false)
     expect(normalizeCashtag('$' + 'a'.repeat(21)).ok).toBe(false)
   })
 
   it('normalises $ChimeSigns', () => {
-    expect(normalizeChimeSign('snype-gate')).toEqual({ ok: true, value: '$snype-gate' })
+    expect(normalizeChimeSign('mimosa-lsd')).toEqual({ ok: true, value: '$mimosa-lsd' })
     expect(normalizeChimeSign('$').ok).toBe(false)
   })
 

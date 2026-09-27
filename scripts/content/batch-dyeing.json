@@ -1,0 +1,102 @@
+[
+{
+  "slug": "mordanting-wool-before-a-bark-bath",
+  "title": "Mordanting Wool Before a Bark Bath",
+  "category": "dyeing",
+  "hero": "media/003b5816ae2cbb5f13d9757d6f90ed06.jpg",
+  "summary": "Alum at ten to fifteen per cent of the dry fibre weight, dissolved completely in hot water before any fibre goes near it, held just under a simmer for an hour, then left to cool in the pot. Undissolved crystals are the single commonest cause of pale patches people blame on the bark.",
+  "products": ["mimosa-treee-bark", "powdered-mimosa-hostils-root"],
+  "body": [
+    "A mordant is what makes colour stay. Skip it and a bark bath will still stain wool, and the first wash will take most of it away again.",
+    "## What to weigh",
+    "| Item | Quantity | Note |\n| --- | --- | --- |\n| Alum, potassium aluminium sulfate | 10 to 15% of dry fibre weight | Twelve is a sensible default |\n| Cream of tartar | 5 to 7% of dry fibre weight | Optional; keeps the handle soft |\n| Water | Enough that the fibre moves freely | Volume changes nothing about depth |",
+    "Percentages are always of the **dry** weight of the fibre, taken before anything is wetted. For a hundred grams of wool, twelve grams of alum.",
+    "More is not better. Past about eighteen per cent wool starts to feel harsh and faintly tacky, and that does not wash out. If mordanted fibre feels unpleasant before it has met any colour, the answer is less alum next time, not more rinsing.",
+    "## The order that matters",
+    "1. **Scour first.** Wash in hot water with a pH-neutral detergent to remove grease and spinning oil, rinse, and keep the fibre wet. Fibre that dries between scouring and mordanting wets out unevenly afterwards.\n2. **Dissolve the alum in a jug of very hot water**, completely, until the water is clear. This is the step people rush.\n3. **Stir it into the pot** before any fibre goes in.\n4. **Add the wet fibre**, then raise the heat slowly over about half an hour to just under a simmer, around 80°C or 175°F.\n5. **Hold for an hour**, turning gently once or twice. Wool at temperature does not want to be stirred; that is how felting starts.\n6. **Turn the heat off and let it cool in the pot**, overnight if you can.\n7. **Rinse** in water of roughly the same temperature as the fibre.",
+    "## Why undissolved crystals ruin a skein",
+    "A crystal that has not dissolved does not sit in the water; it settles against the fibre and mordants that spot far more heavily than everything around it. The bath afterwards then takes unevenly, and the result is hard-edged pale patches on an otherwise good skein.",
+    "It is the most common fault in a first attempt, and it is entirely avoided by the jug of hot water in step two.",
+    "## Handling",
+    "Alum is not something to be careless with. Weigh it without raising dust, keep it away from food surfaces, and use a pot kept for dyeing. Sudden temperature changes are what felt wool, so move fibre between baths of similar temperature rather than plunging it from hot to cold.",
+    "## What this material is not",
+    "Everything described here is raw botanical material sold for dyeing, soap making and craft work. It is not food, it is not a supplement, and it is not for human consumption. Nothing on this page is a recommendation to put any of it in or on a body."
+  ]
+},
+{
+  "slug": "keeping-a-bark-bath-purple",
+  "title": "Keeping a Bark Bath Purple Instead of Brown",
+  "category": "dyeing",
+  "hero": "media/ed25f527bba4ad4283343cdae0af1ef7.jpg",
+  "summary": "Brown is what heat does to this colour, and heat is the one mistake that cannot be undone. Hold the bath at about eighty degrees, soak the material cold overnight first, strain it out before the fibre goes in, and give the pot time instead of temperature.",
+  "products": ["mimosa-treee-bark", "mimosa-roots-stripped"],
+  "body": [
+    "Every disappointed first bath we hear about has the same shape: it looked promising in the pot, then it went the colour of weak coffee and stayed there. The cause is almost always temperature, and unlike most dyeing faults it cannot be corrected afterwards.",
+    "## The number",
+    "Work at about **80°C, or 175°F**. That looks like the first small bubbles forming on the base of the pot and nothing breaking the surface. If you own no thermometer, buy one before you buy more bark: it is much the cheaper of the two mistakes.",
+    "A rolling boil will take a bath to brown in minutes, and no amount of cooling brings the purple back.",
+    "## What else moves it, in order",
+    "**Scour properly.** Uneven wetting reads afterwards as patchy brownish shading, which then gets blamed on the material. Wash in hot water with a pH-neutral detergent, rinse, and keep the fibre wet until it goes in.",
+    "**Use clean alum, fully dissolved.** See [mordanting wool before a bark bath](/blog/mordanting-wool-before-a-bark-bath). Crystals give hard-edged pale patches.",
+    "**Soak the material cold, overnight.** Colour begins moving into cold water long before heat is applied, and a bath that starts loaded gives you room to work gently rather than pushing the temperature to make something happen.",
+    "**Strain before the fibre goes in.** Loose material against wool is how you get specks, and powder in particular will not rinse out of the plies. See [filtering a bark bath](/blog/filtering-a-bark-bath-without-losing-the-colour).",
+    "**Go long rather than hot.** Seventy per cent of the fibre weight held at the right temperature beats a hundred and twenty per cent boiled, every single time. Quantity matters less than people assume; temperature matters more.",
+    "## If it has already browned",
+    "Do not try to rescue it with acid or alkali. A pH shift on a browned skein gives you a warmer brown, not a purple.",
+    "What does work is iron. A short dip in a weak iron after-bath takes a dull brown to a genuine slate or charcoal, which is a colour worth having rather than a failed one. Keep it to one or two per cent of the fibre weight, use a separate pot, and lift the fibre out while it still looks lighter than you want, because it reads darker dry.",
+    "## The order to learn things in",
+    "Get the temperature right first and change nothing else. Once purple is reliable, then bring in pH as a tool for warming or cooling the shade, and iron for depth. Trying all three at once on a first bath teaches you nothing about which one did what.",
+    "## What this material is not",
+    "Everything described here is raw botanical material sold for dyeing, soap making and craft work. It is not food, it is not a supplement, and it is not for human consumption. Nothing on this page is a recommendation to put any of it in or on a body."
+  ]
+},
+{
+  "slug": "filtering-a-bark-bath-without-losing-the-colour",
+  "title": "Filtering a Bark Bath Without Losing the Colour",
+  "category": "dyeing",
+  "hero": "media/a0d7ed846dd3bbd3fda67b0324bf3420.jpg",
+  "summary": "Fine particles do not settle and decanting will not separate them. Hold the material in a mesh bag from the start, or pour the bath through doubled muslin into a second pot. Filter warm, never boiling, and keep the last inch of the pot for the compost rather than the fibre.",
+  "products": ["powdered-mimosa-hostils-root", "mimosa-treee-bark"],
+  "body": [
+    "Straining is the part of powder dyeing nobody photographs, and it is the part that decides whether a finished skein reads as dyed or as dirty.",
+    "## Why you cannot simply pour carefully",
+    "Coarse fragments sink, so with shredded bark a slotted spoon and a steady hand are enough. Fine particles behave differently: they stay in suspension, a good proportion of them float, and tipping the pot moves them along with the liquid. Careful pouring separates almost nothing.",
+    "## Two methods that work",
+    "**The bag, from the start.** Put the material into a fine mesh bag before it ever meets the water, tie it loosely enough that water moves through freely, and lift the whole thing out when the bath is loaded. Nothing to strain afterwards, and the material can be kept for a second bath.",
+    "**Doubled muslin, afterwards.** Stretch two layers over a second pot, secure them, and pour slowly. Doubled matters: a single layer passes enough fine material to speck a skein.",
+    "## Practical points",
+    "- **Filter warm, not boiling.** Hot liquid through cloth is a burn risk, and the pot does not need to be at temperature to strain.\n- **Stop before the bottom.** The last inch holds most of the sediment. Give it to the compost heap rather than to your fibre.\n- **Wet the cloth first.** Dry muslin absorbs a surprising amount of a small bath.\n- **Rinse the cloth immediately.** Dried-on material is far harder to clear, and stained muslin is fine but blocked muslin is not.",
+    "## Specks after the fact",
+    "If fine material has already dried into a skein, the honest answer is that most of it stays. A gentle wash with pH-neutral detergent and a lot of moving water lifts some. Iron over the top, deliberately, will darken the whole piece enough that the specks stop reading as a fault.",
+    "Better is to avoid it: use the bag, or use shredded bark for anything you cannot rinse hard afterwards, such as a finished garment or [leather](/blog/dyeing-leather-with-bark).",
+    "## What this material is not",
+    "Everything described here is raw botanical material sold for dyeing, soap making and craft work. It is not food, it is not a supplement, and it is not for human consumption. Nothing on this page is a recommendation to put any of it in or on a body."
+  ]
+},
+{
+  "slug": "dyeing-leather-with-bark",
+  "title": "Dyeing Leather With Bark",
+  "category": "dyeing",
+  "hero": "media/320a0e07fce13ab38aa9376fb28f3baf.jpg",
+  "summary": "Vegetable-tanned leather takes a bark solution readily because it is already full of tannin. Work with a strong, well-strained liquid, build the colour in thin coats with a dauber, and let each coat dry before judging it. Powder is the wrong cut here: particles mark a surface you cannot rinse.",
+  "products": ["mimosa-treee-bark", "sassafras-root-bark"],
+  "body": [
+    "Leather is the one surface in this craft you cannot wash out, which changes how you work: everything is built in layers, and every decision is judged dry.",
+    "## Only vegetable-tanned",
+    "Chrome-tanned leather has been through a process that leaves little for a plant colour to hold onto. Vegetable-tanned leather is tannin-rich already, which is exactly why a tannin-rich bark takes on it so readily and so evenly.",
+    "If you do not know which you have, a scrap and ten minutes will tell you more than any label.",
+    "## Make the liquid strong, and strain it hard",
+    "A bath mixed for wool is usually too weak for leather. Use more material for the same water, soak it cold overnight, bring it to temperature gently, and then strain it more thoroughly than you would for fibre: through doubled muslin, twice if necessary.",
+    "Use shredded or stripped material rather than powder. Fine particles settle into the grain and there is no rinse step to remove them.",
+    "## Thin coats, dried between",
+    "- Wipe the surface with a damp cloth first so it accepts the liquid evenly.\n- Apply with a wool dauber or a sponge, in overlapping circles rather than straight lines, which show as streaks.\n- Let each coat dry fully before deciding whether to add another. Wet leather always looks two shades darker than it will end up.\n- Three thin coats beat one heavy one, every time.",
+    "## Finishing",
+    "Once the colour is where you want it and the piece is fully dry, buff it with a soft cloth to lift any surface deposit, then condition it. Leather that has been wetted and dried has lost oils, and a conditioner returns the flex as well as deepening the colour slightly.",
+    "Expect the finished shade to sit browner and warmer than the same liquid gives on wool. That is the leather's own colour underneath showing through, not a fault in the bath.",
+    "## Testing",
+    "Keep offcuts from the same hide and test on them. Two hides from different batches take colour differently, and the test piece costs nothing compared to a belt or a wallet you will finish and then dislike.",
+    "## What this material is not",
+    "Everything described here is raw botanical material sold for dyeing, soap making and craft work. It is not food, it is not a supplement, and it is not for human consumption. Nothing on this page is a recommendation to put any of it in or on a body."
+  ]
+}
+]

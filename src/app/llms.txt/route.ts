@@ -155,6 +155,7 @@ async function buildLlmsTxt(): Promise<string> {
     '## Contact',
     '',
     `- Email: ${await getCompanyEmail()}`,
+    `- Telephone: ${BRAND.phone}`,
     '',
     '---',
     '',

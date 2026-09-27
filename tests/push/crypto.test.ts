@@ -79,7 +79,7 @@ describe('VAPID (RFC 8292)', () => {
     const header = vapidAuthorization({
       endpoint: 'https://fcm.googleapis.com/fcm/send/abc',
       keys,
-      subject: 'mailto:contact@mimosalsd.com',
+      subject: 'mailto:sales@mimosalsd.com',
       now,
     })
     const match = /^vapid t=([^.]+)\.([^.]+)\.([^,]+), k=(.+)$/.exec(header)
@@ -90,7 +90,7 @@ describe('VAPID (RFC 8292)', () => {
     expect(JSON.parse(fromBase64url(c).toString())).toEqual({
       aud: 'https://fcm.googleapis.com',
       exp: now / 1000 + 12 * 3600,
-      sub: 'mailto:contact@mimosalsd.com',
+      sub: 'mailto:sales@mimosalsd.com',
     })
     const raw = fromBase64url(keys.publicKey)
     const publicKey = createPublicKey({

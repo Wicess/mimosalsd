@@ -137,19 +137,32 @@ export default async function ContactPage({
 
         <aside>
           <h2 className="font-display text-2xl text-balance text-foreground">
-            Or email us directly
+            Or reach us directly
           </h2>
           <p className="mt-2 max-w-[62ch] leading-relaxed text-pretty text-foreground-muted">
-            One address for everything: orders, product questions and bulk
-            enquiries. Say which it is in the subject line and it reaches the right
-            person on the first read.
+            One address and one number for everything: orders, product questions and
+            bulk enquiries. Say which it is in the subject line and it reaches the
+            right person on the first read.
           </p>
+          {/*
+            Both on their own line and both a real link — `mailto:` and `tel:` — so a
+            phone opens the dialler with one tap instead of making someone select and
+            copy a number. `min-h-11` keeps each inside the 44px touch target.
+          */}
           <p className="mt-4">
             <a
               href={`mailto:${email}`}
               className="inline-flex min-h-11 items-center font-display text-xl break-all text-primary underline underline-offset-4"
             >
               {email}
+            </a>
+          </p>
+          <p className="mt-1">
+            <a
+              href={`tel:${BRAND.phoneE164}`}
+              className="inline-flex min-h-11 items-center font-display text-xl text-primary underline underline-offset-4"
+            >
+              {BRAND.phone}
             </a>
           </p>
 

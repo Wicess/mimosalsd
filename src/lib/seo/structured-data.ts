@@ -144,13 +144,14 @@ export function organization(email: string) {
       addressRegion: BRAND.location.regionCode,
       addressCountry: BRAND.location.country,
     },
-    ...(BRAND.phone ? { telephone: BRAND.phone } : {}),
+    ...(BRAND.phoneE164 ? { telephone: BRAND.phoneE164 } : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),
     contactPoint: [
       {
         '@type': 'ContactPoint',
         contactType: 'customer support',
         email,
+        ...(BRAND.phoneE164 ? { telephone: BRAND.phoneE164 } : {}),
         areaServed: 'US',
         availableLanguage: 'English',
       },

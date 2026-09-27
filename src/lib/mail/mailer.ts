@@ -69,7 +69,7 @@ interface Sender {
 
 /**
  * `EMAIL_FROM` is written in the RFC 5322 form every other provider accepts —
- * `MIMOSALSD <contact@mimosalsd.com>` — but Brevo wants the two halves as separate JSON
+ * `MIMOSALSD <sales@mimosalsd.com>` — but Brevo wants the two halves as separate JSON
  * fields. Parsing here keeps the env var in the format a human recognises instead of
  * forcing two variables that can drift apart.
  *

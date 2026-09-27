@@ -11,6 +11,7 @@ import {
   website,
 } from '@/lib/seo/structured-data'
 import { FAQ_ITEMS } from '@/lib/content/faq'
+import { BRAND } from '@/lib/brand'
 
 /**
  * Bing §16 asks for clear, consistent entity definition, and §14 says markup must
@@ -49,8 +50,21 @@ describe('placeholder-safe entity fields', () => {
     expect(organization(DEFAULT_COMPANY_EMAIL)).not.toHaveProperty('sameAs')
   })
 
-  it('omits telephone while the phone number is blank', () => {
-    expect(organization(DEFAULT_COMPANY_EMAIL)).not.toHaveProperty('telephone')
+  /*
+    The number landed on 2026-09-27, so the blank case is no longer observable here.
+    What still has to hold is the FORM: schema.org wants E.164, and the site keeps a
+    separate readable spelling for people. If those two ever swap places, a search
+    engine gets "+1 (608) 556-4932" as a machine-readable number.
+  */
+  it('emits telephone in E.164, not the readable spelling', () => {
+    const node = organization(DEFAULT_COMPANY_EMAIL)
+    expect(node.telephone).toBe(BRAND.phoneE164)
+    expect(node.telephone).toMatch(/^\+[1-9]\d{7,14}$/)
+    expect(node.telephone).not.toContain(' ')
+  })
+
+  it('gives the contact point the same number', () => {
+    expect(organization(DEFAULT_COMPANY_EMAIL).contactPoint[0]?.telephone).toBe(BRAND.phoneE164)
   })
 
   it('still declares a contact point, which needs no placeholder', () => {

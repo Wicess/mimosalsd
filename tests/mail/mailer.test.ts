@@ -32,7 +32,7 @@ beforeEach(() => {
   resetMailProvider()
   create.mockClear()
   process.env.BREVO_API_KEY = 'xkeysib-test'
-  process.env.EMAIL_FROM = 'Mimosalsd <contact@mimosalsd.com>'
+  process.env.EMAIL_FROM = 'Mimosalsd <sales@mimosalsd.com>'
   vi.stubGlobal(
     'fetch',
     vi.fn().mockResolvedValue(new Response('{"messageId":"<1@brevo>"}', { status: 201 })),
@@ -47,27 +47,27 @@ afterEach(() => {
 
 describe('parseSender', () => {
   it('splits an RFC 5322 display name from the address', () => {
-    expect(parseSender('Mimosalsd <contact@mimosalsd.com>')).toEqual({
+    expect(parseSender('Mimosalsd <sales@mimosalsd.com>')).toEqual({
       name: 'Mimosalsd',
-      email: 'contact@mimosalsd.com',
+      email: 'sales@mimosalsd.com',
     })
   })
 
   it('accepts a bare address and sends without a display name', () => {
-    expect(parseSender('contact@mimosalsd.com')).toEqual({ email: 'contact@mimosalsd.com' })
+    expect(parseSender('sales@mimosalsd.com')).toEqual({ email: 'sales@mimosalsd.com' })
   })
 
   it('strips quotes around a display name', () => {
     // `"Mimosalsd, Inc." <a@b.com>` is legal RFC 5322. Passing the quotes through
     // would put them inside Brevo's `name` field and into the rendered From line.
-    expect(parseSender('"Mimosalsd, Inc." <contact@mimosalsd.com>')).toEqual({
+    expect(parseSender('"Mimosalsd, Inc." <sales@mimosalsd.com>')).toEqual({
       name: 'Mimosalsd, Inc.',
-      email: 'contact@mimosalsd.com',
+      email: 'sales@mimosalsd.com',
     })
   })
 
   it('clamps a display name to the 70 characters Brevo accepts', () => {
-    const name = parseSender(`${'a'.repeat(200)} <contact@mimosalsd.com>`)?.name
+    const name = parseSender(`${'a'.repeat(200)} <sales@mimosalsd.com>`)?.name
     expect(name).toHaveLength(70)
   })
 
@@ -91,7 +91,7 @@ describe('Brevo transport', () => {
   it('sends the parsed sender object and both content fields', async () => {
     await sendEmail(message)
     expect(jsonBody()).toMatchObject({
-      sender: { name: 'Mimosalsd', email: 'contact@mimosalsd.com' },
+      sender: { name: 'Mimosalsd', email: 'sales@mimosalsd.com' },
       to: [{ email: 'buyer@example.com' }],
       subject: 'Order received',
       textContent: message.text,

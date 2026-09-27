@@ -35,8 +35,17 @@ export const BRAND = {
    * This is the DEFAULT; the address in use is set in Admin → Settings and read with
    * `getCompanyEmail()`. This value applies until one is saved there.
    */
-  email: 'contact@mimosalsd.com',
-  phone: '' as string,
+  email: 'sales@mimosalsd.com',
+  /**
+   * The contact number (owner, 2026-09-27).
+   *
+   * Two forms on purpose: `phone` is what a person reads, `phoneE164` is what a
+   * `tel:` link and schema.org's `telephone` want. Deriving one from the other at
+   * every call site is how a site ends up with three different spellings of the
+   * same number.
+   */
+  phone: '+1 (608) 556-4932' as string,
+  phoneE164: '+16085564932' as string,
   /**
    * PENDING — the client's own postal address, set in Admin → Settings.
    *

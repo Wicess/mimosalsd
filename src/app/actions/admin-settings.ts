@@ -23,7 +23,7 @@ export async function saveCompanyEmail(_prev: CrudState, formData: FormData): Pr
 
   const parsed = z.object({ email: z.string().max(254) }).safeParse({ email: formData.get('email') ?? '' })
   const email = parsed.success ? normaliseCompanyEmail(parsed.data.email) : null
-  if (!email) return { error: 'Enter a valid email address, for example contact@mimosalsd.com.' }
+  if (!email) return { error: 'Enter a valid email address, for example sales@mimosalsd.com.' }
 
   const before = await db.setting.findUnique({ where: { key: COMPANY_EMAIL_KEY } })
   if (before?.value === email) return { ok: `The company email is already ${email}.` }

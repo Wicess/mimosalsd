@@ -17,7 +17,7 @@ import {
 } from '@/lib/mail/templates'
 
 /**
- * The owner's rule: the company has ONE email address, contact@mimosalsd.com, set in
+ * The owner's rule: the company has ONE email address, sales@mimosalsd.com, set in
  * the admin and used everywhere. These tests hold the rule in place — including the
  * one that fails the build if anybody writes another address into the code.
  */
@@ -28,12 +28,12 @@ vi.mock('@/lib/site/company-email.server', () => ({
 vi.mock('@/lib/db/client', () => ({ db: { notificationLog: { create: vi.fn() } } }))
 
 describe('the company email', () => {
-  it('defaults to contact@mimosalsd.com', () => {
-    expect(DEFAULT_COMPANY_EMAIL).toBe('contact@mimosalsd.com')
+  it('defaults to sales@mimosalsd.com', () => {
+    expect(DEFAULT_COMPANY_EMAIL).toBe('sales@mimosalsd.com')
   })
 
   it('accepts a real address, trimmed and lower-cased', () => {
-    expect(normaliseCompanyEmail('  Contact@MIMOSALSD.com ')).toBe('contact@mimosalsd.com')
+    expect(normaliseCompanyEmail('  Sales@MIMOSALSD.com ')).toBe('sales@mimosalsd.com')
     expect(normaliseCompanyEmail('first.last+shop@mail.example.co.uk')).toBe('first.last+shop@mail.example.co.uk')
   })
 
@@ -84,11 +84,11 @@ describe('nothing on the site uses another address', () => {
     const others: string[] = []
     for (const file of files) {
       for (const match of readFileSync(file, 'utf8').matchAll(/[a-z0-9._%+-]+@mimosalsd\.com/gi)) {
-        if (match[0].toLowerCase() !== 'contact@mimosalsd.com') others.push(`${path.relative(src, file)}: ${match[0]}`)
+        if (match[0].toLowerCase() !== 'sales@mimosalsd.com') others.push(`${path.relative(src, file)}: ${match[0]}`)
       }
     }
     expect(others).toEqual([])
-    expect(readFileSync(path.join(src, 'lib/brand.ts'), 'utf8')).toContain("email: 'contact@mimosalsd.com'")
+    expect(readFileSync(path.join(src, 'lib/brand.ts'), 'utf8')).toContain("email: 'sales@mimosalsd.com'")
   })
 
   it('reads the address from the one source, never a per-role field', () => {

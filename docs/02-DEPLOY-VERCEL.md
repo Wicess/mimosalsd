@@ -92,38 +92,44 @@ common single mistake, because the server-side variable alone lets the build pas
 
 ---
 
-## 4b. Brevo — verifying the sending domain
+## 4b. Brevo — already done, and how to check it
 
-Email will not send until Brevo trusts `mimosalsd.com`. Three DNS records and a key.
+Verified against the Brevo API on 2026-09-27, so there is nothing to set up here:
 
-1. **Add the domain.** Brevo → Senders, Domains & Dedicated IPs → **Domains** → Add a
-   domain → `mimosalsd.com`.
-2. **Add the records Brevo shows you**, at the same registrar as the Vercel records:
+| Item | State |
+|---|---|
+| `mimosalsd.com` | **Authenticated and verified** — DKIM and SPF both resolve |
+| Sender `sales@mimosalsd.com` | **Active** (this is the company address the site uses) |
+| `BREVO_API_KEY` | Set in `.env`; add the same value to Vercel |
+| `EMAIL_FROM` | `MIMOSALSD <sales@mimosalsd.com>` |
 
-| Type | Host | Value |
-|---|---|---|
-| TXT | `mimosalsd.com` (or `@`) | `brevo-code:...` — the exact string Brevo gives you |
-| TXT | `mail._domainkey` | The DKIM value Brevo gives you |
-| TXT | `mimosalsd.com` (or `@`) | `v=spf1 include:spf.brevo.com mx ~all` |
-| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:contact@mimosalsd.com` — optional, worth having |
+Proven end to end, not assumed: an order email, a contact acknowledgement and a contact
+notification were each rendered from the app's own templates, sent through
+`sendEmail()`, and confirmed `delivered` in Brevo's event log.
 
-   If a record already exists at `@` for SPF, **merge** rather than adding a second one:
-   a domain with two SPF records fails both.
-3. **Wait for propagation** — usually minutes, up to a few hours — then press Verify in
-   Brevo. It will not authenticate until all of the records resolve.
-4. **Add the sender.** Senders → Add a sender → `contact@mimosalsd.com`, and confirm the
-   message it sends to that mailbox.
-5. **Create the key.** SMTP & API → API Keys → Create a new API key. Paste it into Vercel
-   as `BREVO_API_KEY` (it is blank in `.env` today, so nothing sends yet).
-6. **`EMAIL_FROM`** is `MIMOSALSD <contact@mimosalsd.com>`. The display name is optional
-   but it is what a recipient sees in their inbox list; a bare address shows as the
-   address. The address must be the sender you verified in step 4.
+**The account is shared with other sites** (several other domains and senders sit in it)
+and it is on the **free plan — roughly 300 sends a day across all of them**. Order mail,
+contact replies and any marketing blast draw on the same allowance, so a busy day on
+another site can silence this one. Watch it, and upgrade before a campaign.
 
-**What still will not send after all of that:** marketing blasts. They require a postal
-address in the footer under CAN-SPAM, and `BRAND.postalAddress` is empty — deliberately,
-because an invented address on commercial mail is a false statement rather than a
-placeholder. Set the real one in Admin → Settings. Order and enquiry email is
-transactional and sends without it.
+To re-check at any time:
+
+```
+curl -s -H "api-key: $BREVO_API_KEY" https://api.brevo.com/v3/senders
+curl -s -H "api-key: $BREVO_API_KEY" https://api.brevo.com/v3/senders/domains
+curl -s -H "api-key: $BREVO_API_KEY" "https://api.brevo.com/v3/smtp/statistics/events?limit=10&sort=desc"
+```
+
+**What still will not send:** marketing blasts. They require a postal address in the
+footer under CAN-SPAM, and `BRAND.postalAddress` is empty — deliberately, because an
+invented address on commercial mail is a false statement rather than a placeholder. Set
+the real one in Admin → Settings. Order and enquiry email is transactional and sends
+without it.
+
+**If you ever move to a different domain or mailbox**, the DNS records Brevo asks for are
+a `brevo-code` TXT, a DKIM TXT on `mail._domainkey`, and an SPF TXT
+(`v=spf1 include:spf.brevo.com mx ~all`) — merge SPF with any existing record rather than
+adding a second, because two SPF records fail both.
 
 ---
 

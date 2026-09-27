@@ -24,7 +24,7 @@ export const MIN_DESCRIPTION_LENGTH = 70
  * ─────────────────────────────────────────────────────────────────────────────
  *  NO SYMBOLS IN A TITLE OR A DESCRIPTION (owner, 2026-09-17).
  *
- *  The generated meta used to read `Muha Meds Juice Man | $24 | SnypeGate`. Three
+ *  The generated meta used to read `Muha Meds Juice Man | $24 | MIMOSALSD`. Three
  *  problems in one string: the pipes are decoration a search engine gives no weight
  *  to, the brand suffix spends characters this site already decided not to spend
  *  (see the title comment in app/layout.tsx), and the price is a fact that changes

@@ -83,7 +83,7 @@ export function buildPaymentInstructions(d: IssuedPaymentDetails): PaymentInstru
   const amount = formatCents(d.amountCents)
   const label = PAYMENT_LABELS[d.method]
   const safety =
-    'We only send payment details for an order you placed, and they always match your order page on snypegate.com. If a message asks you to pay anywhere else, do not pay. Contact us through the chat on our site instead.'
+    'We only send payment details for an order you placed, and they always match your order page on mimosalsd.com. If a message asks you to pay anywhere else, do not pay. Contact us through the chat on our site instead.'
   const payToLine = d.payToName ? `${d.payTo} (${d.payToName})` : d.payTo
 
   switch (d.method) {
@@ -232,7 +232,7 @@ export type DetailCheck = { ok: true; value: string } | { ok: false; error: stri
 export function normalizeCashtag(input: string): DetailCheck {
   const bare = input.trim().replace(/^\$/, '')
   if (!/^[A-Za-z0-9]{1,20}$/.test(bare) || !/[A-Za-z]/.test(bare)) {
-    return { ok: false, error: 'A $Cashtag is a $ followed by up to 20 letters and numbers, e.g. $SnypeGate.' }
+    return { ok: false, error: 'A $Cashtag is a $ followed by up to 20 letters and numbers, e.g. $MIMOSALSD.' }
   }
   return { ok: true, value: `$${bare}` }
 }
@@ -241,7 +241,7 @@ export function normalizeCashtag(input: string): DetailCheck {
 export function normalizeChimeSign(input: string): DetailCheck {
   const bare = input.trim().replace(/^\$/, '')
   if (!/^[A-Za-z0-9][A-Za-z0-9_-]{1,29}$/.test(bare)) {
-    return { ok: false, error: 'A $ChimeSign is a $ followed by letters and numbers, e.g. $SnypeGate.' }
+    return { ok: false, error: 'A $ChimeSign is a $ followed by letters and numbers, e.g. $MIMOSALSD.' }
   }
   return { ok: true, value: `$${bare}` }
 }

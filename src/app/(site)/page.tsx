@@ -128,20 +128,13 @@ const { props: STAGE } = getImageProps({
   Idle loading, reduced motion, data saver, pausing and the carousel itself are all
   in components/marketing/hero-video.tsx.
 */
-const HERO_VIDEO: readonly HeroVideoClip[] = [
-  {
-    sources: [
-      { src: '/videos/hero-amanita-moss.mp4', type: 'video/mp4' },
-      { src: '/videos/hero-amanita-moss.webm', type: 'video/webm' },
-    ],
-  },
-  {
-    sources: [
-      { src: '/videos/hero-products-slate.mp4', type: 'video/mp4' },
-      { src: '/videos/hero-products-slate.webm', type: 'video/webm' },
-    ],
-  },
-]
+/*
+  Empty until this site has footage of its own. The hero renders its still image
+  instead (the block below is already conditional), and nothing is borrowed from
+  another site: reusing the same clip on two sites is the same duplicate signal as
+  reusing its words.
+*/
+const HERO_VIDEO: readonly HeroVideoClip[] = []
 
 /* A 1×1 transparent GIF. Inline, so selecting it costs no request at all. */
 const BLANK_PIXEL =

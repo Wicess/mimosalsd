@@ -36,51 +36,41 @@ export interface TeamMember {
   readonly photoPosition?: string
 }
 
+/*
+  SAMPLE DATA (2026-09-27). Roles and wording are stand-ins so this section of the
+  design renders; the photographs are flat placeholders, not people. All of it is
+  replaced with the client's own before launch — see docs/00-LAUNCH-CHECKLIST.md.
+*/
 export const TEAM: readonly TeamMember[] = [
   {
     id: 'compliance',
-    // Supplied by the owner on 2026-09-13.
-    photo: '/team/compliance.jpg',
-    photoPosition: '50% 5%',
     role: 'Compliance',
-    accountableFor:
-      'Owns the state rules. Every position we publish carries the statute behind it and the date it was last reviewed, and the cart reads the same record the legality pages do.',
+    accountableFor: 'Sample copy: who keeps the state positions current, and what is checked before a page is published.',
+    photo: '/team/compliance.jpg',
   },
   {
     id: 'quality',
-    // Supplied by the owner on 2026-09-13.
+    role: 'Quality',
+    accountableFor: 'Sample copy: who handles batch records, and what is checked before a batch is offered for sale.',
     photo: '/team/quality.jpg',
-    photoPosition: '56% 40%',
-    role: 'Quality & Lab',
-    accountableFor:
-      'Commissions the laboratory panel for every batch and files it against the batch code, then releases certified copies to verified buyers who ask — potency, heavy metals, pesticides, mycotoxins, solvents and microbials, not potency alone.',
   },
   {
     id: 'fulfilment',
-    // Supplied by the owner on 2026-09-13.
-    photo: '/team/fulfilment.jpg',
-    photoPosition: '51% 30%',
     role: 'Fulfilment',
-    accountableFor:
-      'Packs and routes every order, and splits a cart by fulfilment channel so PACT-regulated products travel on the carrier that may lawfully carry them.',
+    accountableFor: 'Sample copy: who packs an order, what the packaging shows, and when tracking is sent.',
+    photo: '/team/fulfilment.jpg',
   },
   {
     id: 'support',
-    // Supplied by the owner on 2026-09-13.
+    role: 'Support',
+    accountableFor: 'Sample copy: who answers the chat and the contact form, and how quickly.',
     photo: '/team/support.jpg',
-    photoPosition: '45% 40%',
-    role: 'Customer Support',
-    accountableFor:
-      'Reads every message a person sends us and answers within one business day. Verifies every payment by hand before an order moves.',
   },
   {
     id: 'editorial',
-    // Supplied by the owner on 2026-09-13.
+    role: 'Editorial',
+    accountableFor: 'Sample copy: who writes the guides, and what every claim on them has to be backed by.',
     photo: '/team/editorial.jpg',
-    photoPosition: '50% 44%',
-    role: 'Research & Editorial',
-    accountableFor:
-      'Writes the guides and the per-state pages, and cites what they rely on. No health claims, ever — the automated check runs before anything can publish.',
   },
 ]
 

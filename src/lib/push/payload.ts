@@ -47,7 +47,7 @@ export function safePushPath(value: string | null | undefined, siteOrigin: strin
 
 export function buildPayload(message: PushMessage, siteOrigin: string): string {
   const payload: Record<string, unknown> = {
-    title: clip(message.title, TITLE_MAX) || 'SnypeGate',
+    title: clip(message.title, TITLE_MAX) || 'MIMOSALSD',
     body: clip(message.body, BODY_MAX),
     url: safePushPath(message.url, siteOrigin),
   }

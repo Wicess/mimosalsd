@@ -33,6 +33,9 @@ import { TEAM, TEAM_PHOTOS_PUBLISHED, type TeamMember } from '@/lib/content/team
 export function TeamSlats() {
   const [openId, setOpenId] = useState<string>(TEAM[0]?.id ?? '')
 
+  // No people named yet: the section omits itself rather than showing a bare heading.
+  if (TEAM.length === 0) return null
+
   return (
     <section aria-labelledby="team-heading" className="mt-16">
       <h2 id="team-heading" className="font-display text-3xl text-foreground">

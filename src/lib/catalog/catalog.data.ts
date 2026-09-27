@@ -129,11 +129,11 @@ export const CATEGORIES: readonly Category[] = [
     intro:
       'Disposable vapes, distributed direct: nicotine and hemp-derived cannabinoid disposables, lab-tested by batch and sold by the unit. For adults 21 and over.',
     detail:
-      'Disposables are what SnypeGate is built around. We distribute ready-to-use disposable vapor products — nicotine disposables, and hemp-derived cannabinoid disposables including THCA and THC — to adult customers and to retailers across the United States. Every product is priced per unit, so you order exactly how many you want, and every batch is lab-tested before it is offered. Retailers and bulk buyers get volume pricing through our bulk team.',
+      'Disposables are what MIMOSALSD is built around. We distribute ready-to-use disposable vapor products — nicotine disposables, and hemp-derived cannabinoid disposables including THCA and THC — to adult customers and to retailers across the United States. Every product is priced per unit, so you order exactly how many you want, and every batch is lab-tested before it is offered. Retailers and bulk buyers get volume pricing through our bulk team.',
     about: {
       heading: 'About our disposables',
       lede:
-        'A disposable vape is a sealed, pre-filled vapor device that is ready to use as it arrives: no refilling and no coils to change. SnypeGate is a US distributor of disposables, supplying adult customers and retailers with nicotine and hemp-derived cannabinoid disposables, lab-tested by batch and sold by the unit.',
+        'A disposable vape is a sealed, pre-filled vapor device that is ready to use as it arrives: no refilling and no coils to change. MIMOSALSD is a US distributor of disposables, supplying adult customers and retailers with nicotine and hemp-derived cannabinoid disposables, lab-tested by batch and sold by the unit.',
       blocks: [
         {
           question: 'What kinds of disposables do you distribute?',
@@ -203,7 +203,7 @@ export const CATEGORIES: readonly Category[] = [
       'Everything in this category ships the way our disposables do, via a carrier that complies with the federal PACT Act. Each item is priced per unit, and the total is that price times how many you order.',
     metaTitle: 'Other Products, Sold by the Unit, 21 and Over',
     metaDesc:
-      'More from the SnypeGate range, priced per unit and shipped via a PACT Act compliant carrier. For adults 21 and over.',
+      'More from the MIMOSALSD range, priced per unit and shipped via a PACT Act compliant carrier. For adults 21 and over.',
     sortOrder: 4,
   },
 ]

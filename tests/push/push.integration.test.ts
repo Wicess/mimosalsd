@@ -72,9 +72,9 @@ let sent: Sent[] = []
 let reply: (endpoint: string) => number = () => 201
 
 function request(method: string, body?: unknown, headers: Record<string, string> = {}) {
-  return new Request('https://www.snypegate.com/api/push/subscribe', {
+  return new Request('https://www.mimosalsd.com/api/push/subscribe', {
     method,
-    headers: { 'content-type': 'application/json', origin: 'https://www.snypegate.com', ...headers },
+    headers: { 'content-type': 'application/json', origin: 'https://www.mimosalsd.com', ...headers },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
 }
@@ -99,7 +99,7 @@ describe.skipIf(!local)('push notifications (local Postgres)', () => {
     // Leave nothing behind: a local site started on this database afterwards would
     // otherwise try to notify 1,200 pretend phones.
     await local?.pushSubscription.deleteMany({ where: { endpoint: { startsWith: 'https://fcm.googleapis.com/fcm/send/' } } })
-    await local?.pushBroadcast.deleteMany({ where: { sentBy: 'owner@snypegate.com' } })
+    await local?.pushBroadcast.deleteMany({ where: { sentBy: 'owner@mimosalsd.com' } })
     await local?.$disconnect()
   })
 
@@ -154,7 +154,7 @@ describe.skipIf(!local)('push notifications (local Postgres)', () => {
     await POST(request('POST', other.subscription))
 
     const tally = await sendPushToVisitor(visitor, {
-      title: 'New reply from SnypeGate',
+      title: 'New reply from MIMOSALSD',
       body: 'Your parcel left this morning.',
       url: '/account/chat',
       tag: 'chat-reply',
@@ -166,7 +166,7 @@ describe.skipIf(!local)('push notifications (local Postgres)', () => {
     expect(message!.headers).toMatchObject({ TTL: '86400', Urgency: 'high', 'Content-Encoding': 'aes128gcm' })
     expect(message!.headers.Authorization).toMatch(/^vapid t=.+, k=/)
     expect(phone.decrypt(message!.body)).toEqual({
-      title: 'New reply from SnypeGate',
+      title: 'New reply from MIMOSALSD',
       body: 'Your parcel left this morning.',
       url: '/account/chat',
       tag: 'chat-reply',
@@ -222,7 +222,7 @@ describe.skipIf(!local)('push notifications (local Postgres)', () => {
     // Every fifth one is gone, including rows at the edge of a page.
     reply = (endpoint) => (/bulk-\d{3}[05]$/.test(endpoint) ? 410 : 201)
 
-    const result = await broadcastPush({ title: 'Restocked', body: 'Amanita is back.', url: '/shop' }, 'owner@snypegate.com')
+    const result = await broadcastPush({ title: 'Restocked', body: 'Amanita is back.', url: '/shop' }, 'owner@mimosalsd.com')
     // Other integration files share this database and may add a row of their own
     // mid-test, so the counts are checked for this test's own endpoints.
     const ours = (endpoint: string) => endpoint.startsWith('https://fcm.googleapis.com/fcm/send/')
@@ -238,6 +238,6 @@ describe.skipIf(!local)('push notifications (local Postgres)', () => {
     })
     expect(await local!.pushSubscription.count({ where: { endpoint: { startsWith: 'https://fcm.googleapis.com/fcm/send/' } } })).toBe(961)
     const log = await local!.pushBroadcast.findUniqueOrThrow({ where: { id: result.id } })
-    expect(log).toMatchObject({ title: 'Restocked', recipients: result.recipients, delivered: result.delivered, removed: 240, sentBy: 'owner@snypegate.com' })
+    expect(log).toMatchObject({ title: 'Restocked', recipients: result.recipients, delivered: result.delivered, removed: 240, sentBy: 'owner@mimosalsd.com' })
   }, 60_000)
 })

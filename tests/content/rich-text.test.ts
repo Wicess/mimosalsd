@@ -41,7 +41,7 @@ describe('link targets an article body may render', () => {
 
   it('refuses a protocol-relative URL even though it starts with a slash', () => {
     // The ordering of the checks is what makes this pass; keep "//" tested first.
-    expect(isInternalPath('//snypegate.com.evil.example/product/x')).toBe(false)
+    expect(isInternalPath('//mimosalsd.com.evil.example/product/x')).toBe(false)
   })
 
   it('accepts a prefix exactly as well as beneath it', () => {

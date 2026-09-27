@@ -33,7 +33,7 @@
  */
 
 const VERSION = 'v2'
-const CACHE = `snypegate-${VERSION}`
+const CACHE = `mimosalsd-${VERSION}`
 const OFFLINE_URL = '/offline'
 
 /** Which of the three behaviours a request gets. Kept pure, and tested. */
@@ -121,7 +121,7 @@ function notificationTarget(data) {
 /** What to show for one push. Kept pure, and tested. */
 function notificationFor(payload) {
   const data = payload && typeof payload === 'object' ? payload : {}
-  const title = typeof data.title === 'string' && data.title ? data.title : 'SnypeGate'
+  const title = typeof data.title === 'string' && data.title ? data.title : 'MIMOSALSD'
   const options = {
     body: typeof data.body === 'string' ? data.body : '',
     icon: APP_ICON,

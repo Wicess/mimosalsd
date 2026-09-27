@@ -26,7 +26,7 @@ function generatePassword(): string {
 }
 
 async function main() {
-  const email = (process.argv[2] ?? 'admin@snypegate.com').toLowerCase()
+  const email = (process.argv[2] ?? 'admin@mimosalsd.com').toLowerCase()
   const existing = await db.adminUser.findUnique({ where: { email } })
   const password = generatePassword()
 

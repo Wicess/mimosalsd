@@ -72,7 +72,7 @@ const order: Order = {
 
 const cashApp = buildPaymentInstructions({
   method: 'CASHAPP',
-  payTo: '$SnypeGate',
+  payTo: '$MIMOSALSD',
   amountCents: order.totalCents,
   orderId: order.orderNumber,
   payBy: order.expiresAt,
@@ -122,16 +122,16 @@ describe('email essentials', () => {
 
   it('carries the payment details, the steps and the order page link (owner request, 2026-09-13)', () => {
     const email = paymentInstructionsEmail(order, cashApp)
-    expect(email.text).toContain('Send to: $SnypeGate')
+    expect(email.text).toContain('Send to: $MIMOSALSD')
     expect(email.text).toContain('How to pay:')
     expect(email.text).toContain(order.orderToken) // the order page, where the same details live
-    expect(email.html).toContain('$SnypeGate')
+    expect(email.html).toContain('$MIMOSALSD')
     expect(email.html).not.toContain('&lt;strong&gt;') // no double-escaped markup
   })
 
   it('tells the customer how to recognise a fake: details always match the order page', () => {
     const email = paymentInstructionsEmail(order, cashApp)
-    expect(email.text).toMatch(/always match your order page on snypegate\.com/)
+    expect(email.text).toMatch(/always match your order page on mimosalsd\.com/)
     expect(email.text).not.toContain('never send payment details in an email')
   })
 

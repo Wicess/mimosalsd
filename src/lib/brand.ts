@@ -6,61 +6,50 @@
  * Values marked PENDING must be supplied before launch; Step 20 gates on it.
  */
 export const BRAND = {
-  name: 'SnypeGate',
-  legalName: 'SnypeGate LLC',
+  name: 'MIMOSALSD',
+  /** PENDING — the registered entity, once the client supplies it. */
+  legalName: 'MIMOSALSD',
   /*
     Three sentences, and it must stay three: the homepage hero splits this on
     sentence boundaries and sets each one on its own line.
 
-    Every clause is a fact a visitor can go and check — a batch report, a cited
-    statute, the packaging they receive. That is deliberate. "Premium" and
-    "number one" are the two things a buyer in this category has read on every
-    site that later sold them something untested, so the positioning is built
-    from what is verifiable instead of from adjectives.
+    Every clause has to be something a buyer can check on the page they land on —
+    what the material is, how it is sold, where it goes. Adjectives are what every
+    other site in this category leads with, and they are the first thing a cautious
+    buyer discounts.
   */
-  tagline: 'Lab-Tested. State-Verified. Discreetly Delivered.',
+  tagline: 'Botanical raw material. Sold by the pound. Shipped inside the United States.',
   description:
-    'Disposable vapes, distributed direct, with Mimosa hostilis root bark and sassafras sold as raw botanical material for dyeing and craft. United States only: what can ship where is decided per product line at checkout, from state positions that carry the date a person last reviewed them. Every batch is lab-tested, and a certified copy of the report is issued to verified buyers on request.',
+    'Mimosa hostilis and sassafras root bark sold as raw material for natural dyeing, soap and craft, in powder, shredded and stripped cuts. Orders are placed as a request rather than paid on the site: the order is checked against the address it is going to, then payment instructions follow. United States only.',
 
   /**
-   * PENDING — confirm before launch.
-   *
-   * Assumed from the trading name so the contact addresses below are not left
-   * reading `@example.com` on a live site. If the registered domain differs,
-   * this line and the three addresses are the only places to change it.
-   *
-   * Note this is NOT what builds canonical URLs — those come from
-   * NEXT_PUBLIC_SITE_URL. This value is for display and mailto links.
+   * The registered domain. Display and mailto links only — canonical URLs come from
+   * NEXT_PUBLIC_SITE_URL.
    */
-  domain: 'snypegate.com',
+  domain: 'mimosalsd.com',
 
   /**
-   * The company's ONE email address — the owner's rule. There is no orders@, support@
-   * or wholesale@: every contact link, email footer, reply-to and form delivery uses
-   * this single mailbox.
+   * The company's ONE email address. Every contact link, email footer, reply-to and
+   * form delivery uses this single mailbox.
    *
-   * This is the DEFAULT. The address in use is set in Admin → Settings and read with
-   * `getCompanyEmail()` (lib/site/company-email.server.ts); this value applies until
-   * one is saved there, and wherever the database cannot be read (the proxy).
+   * This is the DEFAULT; the address in use is set in Admin → Settings and read with
+   * `getCompanyEmail()`. This value applies until one is saved there.
    */
-  email: 'sales@snypegate.com',
-  phone: '',
+  email: 'contact@mimosalsd.com',
+  phone: '' as string,
   /**
-   * The DEFAULT postal address, one line. The owner sets the real one in
-   * Admin → Settings (lib/site/postal-address.ts); this applies only until then.
+   * PENDING — the client's own postal address, set in Admin → Settings.
    *
-   * CAN-SPAM requires a valid postal address (a street address, a USPS box, or a
-   * registered private mailbox) in every commercial email, so email blasts refuse to
-   * send while this is empty. It is not invented here for the same reason the
-   * proprietor's name is not: a made-up address on marketing mail is a false
-   * statement, not a placeholder.
+   * CAN-SPAM requires a valid postal address in every commercial email, so email
+   * blasts refuse to send while this is empty. It is not invented here: a made-up
+   * address on marketing mail is a false statement, not a placeholder.
    */
-  postalAddress: '',
+  postalAddress: '' as string,
 
   social: {
-    linkedin: '', // matters for the bulk/B2B funnel — Copilot weights LinkedIn heavily
-    instagram: '',
-    x: '',
+    linkedin: '' as string,
+    instagram: '' as string,
+    x: '' as string,
   },
 
   /** Company policy. Individual state rules may raise this, never lower it. */
@@ -70,48 +59,34 @@ export const BRAND = {
   freeShippingThresholdCents: 10_000,
 
   /**
-   * The person behind the business, for the "About the proprietor" section and the
-   * founder story on /about.
+   * PENDING — the client's own founder, if they want one published.
    *
-   * Supplied by the owner on 2026-09-11: the name, the credentials, the one-line
-   * title and the photograph, which the owner confirmed is John himself and not a
-   * stock image. Nothing here is invented, and nothing may be: a fabricated owner
-   * attached to a real trading company is a misrepresentation, not a design detail,
-   * on a business that sells age-restricted goods.
-   *
-   * `portrait` and `signature` are paths under /public. Leave one empty and the
-   * section omits it rather than showing a stranger.
+   * Every field is empty on purpose, and the sections that use it omit themselves
+   * rather than show a stranger. A person, a photograph or a credential carried over
+   * from another company would be a misrepresentation on a business selling
+   * age-restricted goods, not a design detail.
    */
   proprietor: {
-    name: 'John McKenedy',
-    /** Set after the name wherever it appears in full: "John McKenedy, PhD". */
-    postNominal: 'PhD',
-    role: 'Founder',
-    /**
-     * Who he is, in one phrase from the owner's own description. Written to follow
-     * "a" mid-sentence; capitalised where it stands on its own line.
-     */
-    title: 'professional chemist and laboratory scientist from Kansas',
-    /*
-      One sentence, around thirty words, and it must survive the compliance lexicon
-      like any other copy. It is set at display size, and display size is a volume
-      control: five sentences of it is not a statement, it is shouting. Anything
-      longer than this belongs on /about.
-    */
+    // SAMPLE DATA: stand-ins so the founder section renders. Replaced with the
+    // client's own before launch, or emptied so the section omits itself.
+    name: 'Sample Name' as string,
+    postNominal: '' as string,
+    role: 'Founder' as string,
+    title: 'sample one-line description of the founder' as string,
     statement:
-      'We keep what most distributors cannot produce — a lab report for every batch, filed against the code on your package and released to verified buyers who ask, and the legal position for every state, with the statute behind it.',
-    portrait: '/brand/founder-john-mckenedy.jpg',
-    signature: '',
+      'Sample copy: one sentence from the founder about what this business does differently, replaced before launch.' as string,
+    portrait: '/team/founder.jpg' as string,
+    signature: '' as string,
   },
 
   /**
-   * Track record, as floors the owner supplied on 2026-09-11 ("over 10 years",
-   * "over 10,000 customers"). Always published as "more than", so the sentence stays
-   * true as both grow. Raise them when the owner does; never round them up.
+   * PENDING — the client's own trading history. Zero means the site says nothing
+   * about how long it has traded or how many customers it has served, which is the
+   * only honest default for a business opening its doors.
    */
   track: {
-    yearsInBusiness: 10,
-    customers: 10_000,
+    yearsInBusiness: 0,
+    customers: 0,
   },
 
   /** Developer credit rendered in the footer. */
@@ -138,5 +113,8 @@ export function proprietorFullName(): string {
  */
 export function trackRecord(): string {
   const { yearsInBusiness, customers } = BRAND.track
+  // Nothing to say until the client supplies real figures: a new business claiming
+  // years and customers it has not had is the plainest kind of false statement.
+  if (yearsInBusiness <= 0 || customers <= 0) return ''
   return `in business for more than ${yearsInBusiness} years, with more than ${customers.toLocaleString('en-US')} customers across the United States`
 }

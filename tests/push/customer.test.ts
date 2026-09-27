@@ -4,7 +4,7 @@ import { paymentDetailsNotification, staffReplyNotification } from '@/lib/push/c
 describe('customer notifications', () => {
   it('a staff reply opens the chat and shares the chat alert tag, so it never shows twice', () => {
     expect(staffReplyNotification({ body: 'Your parcel\nleft this morning.' })).toEqual({
-      title: 'New reply from SnypeGate',
+      title: 'New reply from MIMOSALSD',
       body: 'Your parcel left this morning.',
       url: '/account/chat',
       tag: 'chat-reply',

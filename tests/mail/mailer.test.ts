@@ -32,7 +32,7 @@ beforeEach(() => {
   resetMailProvider()
   create.mockClear()
   process.env.BREVO_API_KEY = 'xkeysib-test'
-  process.env.EMAIL_FROM = 'Snypegate <sales@snypegate.com>'
+  process.env.EMAIL_FROM = 'Snypegate <contact@mimosalsd.com>'
   vi.stubGlobal(
     'fetch',
     vi.fn().mockResolvedValue(new Response('{"messageId":"<1@brevo>"}', { status: 201 })),
@@ -47,27 +47,27 @@ afterEach(() => {
 
 describe('parseSender', () => {
   it('splits an RFC 5322 display name from the address', () => {
-    expect(parseSender('Snypegate <sales@snypegate.com>')).toEqual({
+    expect(parseSender('Snypegate <contact@mimosalsd.com>')).toEqual({
       name: 'Snypegate',
-      email: 'sales@snypegate.com',
+      email: 'contact@mimosalsd.com',
     })
   })
 
   it('accepts a bare address and sends without a display name', () => {
-    expect(parseSender('sales@snypegate.com')).toEqual({ email: 'sales@snypegate.com' })
+    expect(parseSender('contact@mimosalsd.com')).toEqual({ email: 'contact@mimosalsd.com' })
   })
 
   it('strips quotes around a display name', () => {
     // `"Snypegate, Inc." <a@b.com>` is legal RFC 5322. Passing the quotes through
     // would put them inside Brevo's `name` field and into the rendered From line.
-    expect(parseSender('"Snypegate, Inc." <sales@snypegate.com>')).toEqual({
+    expect(parseSender('"Snypegate, Inc." <contact@mimosalsd.com>')).toEqual({
       name: 'Snypegate, Inc.',
-      email: 'sales@snypegate.com',
+      email: 'contact@mimosalsd.com',
     })
   })
 
   it('clamps a display name to the 70 characters Brevo accepts', () => {
-    const name = parseSender(`${'a'.repeat(200)} <sales@snypegate.com>`)?.name
+    const name = parseSender(`${'a'.repeat(200)} <contact@mimosalsd.com>`)?.name
     expect(name).toHaveLength(70)
   })
 
@@ -91,7 +91,7 @@ describe('Brevo transport', () => {
   it('sends the parsed sender object and both content fields', async () => {
     await sendEmail(message)
     expect(jsonBody()).toMatchObject({
-      sender: { name: 'Snypegate', email: 'sales@snypegate.com' },
+      sender: { name: 'Snypegate', email: 'contact@mimosalsd.com' },
       to: [{ email: 'buyer@example.com' }],
       subject: 'Order received',
       textContent: message.text,
@@ -116,8 +116,8 @@ describe('Brevo transport', () => {
   })
 
   it('maps replyTo into Brevo’s object form and omits it otherwise', async () => {
-    await sendEmail({ ...message, replyTo: 'ops@snypegate.com' })
-    expect(jsonBody().replyTo).toEqual({ email: 'ops@snypegate.com' })
+    await sendEmail({ ...message, replyTo: 'ops@mimosalsd.com' })
+    expect(jsonBody().replyTo).toEqual({ email: 'ops@mimosalsd.com' })
 
     resetMailProvider()
     vi.mocked(globalThis.fetch).mockClear()

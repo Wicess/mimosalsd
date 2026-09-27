@@ -52,7 +52,7 @@ export default async function AboutPage() {
       <PageSection first>
         <PolicyProse
           title={`About ${BRAND.name}`}
-          summary={`${BRAND.legalName} is a United States distributor of disposable vapes. It was founded by ${proprietorFullName()}, and we have been ${trackRecord()}. This page covers what we distribute and the people who run it: our founder, and the team behind every order, lab report and answer you get from us.`}
+          summary={`${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap making and craft, to customers in the United States. This page covers what we sell, how an order is handled from request to delivery, and how to reach a person about one.`}
           lastReviewedAt={REVIEWED}
           sections={[
             /*

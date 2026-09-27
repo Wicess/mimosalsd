@@ -4,7 +4,7 @@ import { BRAND } from '@/lib/brand'
  * The company's email address. There is exactly ONE.
  *
  * The owner's rule (2026-09-11): the whole business has a single address,
- * sales@snypegate.com, and every place the site shows, links, routes or replies from
+ * contact@mimosalsd.com, and every place the site shows, links, routes or replies from
  * an email uses it. The site used to carry orders@, support@ and wholesale@ — role
  * addresses that were never real mailboxes, so anything sent to them was lost.
  *

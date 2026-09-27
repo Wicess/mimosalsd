@@ -131,13 +131,13 @@ describe('FAQ entries stay answer-first', () => {
 /*
   Owner, 2026-09-17: "do not add symbols to the metatags".
 
-  The generated title read `Muha Meds Juice Man | $24 | SnypeGate`. Pipes a search
+  The generated title read `Muha Meds Juice Man | $24 | MIMOSALSD`. Pipes a search
   engine gives no weight to, a brand suffix this site decided not to spend characters
   on, and a price that goes stale in a frozen string without anything re-reading it.
 */
 describe('symbols in a title or description', () => {
   it('takes the symbols out of the title the writer used to produce', () => {
-    expect(sanitizeMeta('Muha Meds Juice Man | $24 | SnypeGate')).toBe('Muha Meds Juice Man, SnypeGate')
+    expect(sanitizeMeta('Muha Meds Juice Man | $24 | MIMOSALSD')).toBe('Muha Meds Juice Man, MIMOSALSD')
     expect(sanitizeMeta('Mimosa Hostilis Root Bark Powder & Shredded — Lab-Tested, US-Packed')).toBe(
       'Mimosa Hostilis Root Bark Powder and Shredded, Lab-Tested, US-Packed',
     )

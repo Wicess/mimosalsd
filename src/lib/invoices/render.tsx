@@ -141,7 +141,7 @@ export async function renderInvoicePng(d: InvoiceData): Promise<Buffer> {
             {/* Satori draws this into a PNG; next/image does not apply outside a page. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={logo} width={264} height={116} alt="" />
-            <span style={{ fontSize: 22, color: MUTED, marginTop: 10 }}>{`${BRAND.legalName} · snypegate.com`}</span>
+            <span style={{ fontSize: 22, color: MUTED, marginTop: 10 }}>{`${BRAND.legalName} · mimosalsd.com`}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
             <span style={{ fontFamily: 'Grotesk', fontSize: 50, letterSpacing: 2, color: INK }}>INVOICE</span>

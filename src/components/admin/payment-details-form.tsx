@@ -66,7 +66,7 @@ export function PaymentDetailsForm({
   }
 
   /*
-    What the customer will actually be sent: "SnypeGate" becomes "$SnypeGate" and
+    What the customer will actually be sent: "MIMOSALSD" becomes "$MIMOSALSD" and
     "512 555 0134" becomes "(512) 555-0134" on the server, so the preview applies
     the same rules instead of echoing the raw typing.
   */

@@ -71,11 +71,11 @@ const inter = Inter({
 /*
   The homepage title leads with the products, not the company.
 
-  Nobody searches "SnypeGate" yet, and a title tag is about 60 characters before
+  Nobody searches "MIMOSALSD" yet, and a title tag is about 60 characters before
   Google truncates it. Spending the first twelve of those on a term with no search
   volume pushes the things people DO search toward the cut.
 
-  2026-09-19: it read "Mimosa Hostilis, Amanita Muscaria & Vapes — SnypeGate": two
+  2026-09-19: it read "Mimosa Hostilis, Amanita Muscaria & Vapes — MIMOSALSD": two
   symbols the owner banned from titles, and a product name that is not what that
   category holds. Google's autocomplete puts "mimosa hostilis root bark for sale" at
   the top of every search about the material, so the title is that phrase, then the
@@ -91,7 +91,7 @@ export const metadata: Metadata = {
   /*
     NO `template`, deliberately.
 
-    It used to be `%s | SnypeGate`, which appended the brand to all ~150 page
+    It used to be `%s | MIMOSALSD`, which appended the brand to all ~150 page
     titles. For an established brand that is worth the characters; for one nobody
     is searching it is twelve characters of a sixty-character budget spent on a
     term that wins no query, repeated on every page — and it is the tail of the

@@ -36,7 +36,7 @@ export function emitNotify(): void {
 export const serverFalse = () => false
 
 /** Show a system notification for a reply. Tapping it opens the chat. */
-export async function showReplyNotification(body: string, title = 'New reply from SnypeGate'): Promise<void> {
+export async function showReplyNotification(body: string, title = 'New reply from MIMOSALSD'): Promise<void> {
   const options: NotificationOptions = {
     body: body.slice(0, 140) || 'You have a new message.',
     tag: 'chat-reply',

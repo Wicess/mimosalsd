@@ -163,7 +163,7 @@ export function orderReceivedEmail(order: Order): EmailMessage {
  * "we never send payment details in an email". The owner asked for details to reach
  * the customer by email and chat at once. The protection that promise gave, against
  * a fake email with someone else's handle, is kept in a form that stays true: the
- * same details are always on the customer's order page on snypegate.com, and they
+ * same details are always on the customer's order page on mimosalsd.com, and they
  * are told not to pay if a message ever differs from it.
  *
  * Text and HTML carry everything the invoice image does. The image is attached by

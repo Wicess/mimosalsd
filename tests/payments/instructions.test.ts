@@ -13,8 +13,8 @@ import {
 const base = { amountCents: 12345, orderId: '202609-K7Q4M9', payBy: '2026-09-15T16:30:00Z' }
 
 const detailsFor: Record<string, IssuedPaymentDetails> = {
-  CASHAPP: { ...base, method: 'CASHAPP', payTo: '$SnypeGate', payToName: 'SnypeGate LLC' },
-  CHIME: { ...base, method: 'CHIME', payTo: '$SnypeGate' },
+  CASHAPP: { ...base, method: 'CASHAPP', payTo: '$MIMOSALSD', payToName: 'MIMOSALSD LLC' },
+  CHIME: { ...base, method: 'CHIME', payTo: '$MIMOSALSD' },
   APPLE_CASH: { ...base, method: 'APPLE_CASH', payTo: '(512) 555-0134' },
   BITCOIN: {
     ...base,
@@ -35,7 +35,7 @@ describe('buildPaymentInstructions', () => {
     expect(text).toContain('202609-K7Q4M9')
     expect(ins.steps.length).toBeGreaterThanOrEqual(5)
     expect(ins.warnings.length).toBeGreaterThanOrEqual(2)
-    expect(ins.safety).toMatch(/snypegate\.com/)
+    expect(ins.safety).toMatch(/mimosalsd\.com/)
     // US dollars always shown, BTC amount as well for Bitcoin.
     expect(text).toContain('$123.45')
     if (method === 'BITCOIN') expect(text).toContain('0.00205750 BTC')
@@ -45,7 +45,7 @@ describe('buildPaymentInstructions', () => {
     const ins = buildPaymentInstructions(detailsFor.CASHAPP!)
     expect(ins.steps.join(' ')).toMatch(/"For" note.*202609-K7Q4M9/)
     expect(ins.warnings.join(' ')).toMatch(/cannot be cancelled/)
-    expect(ins.summary.find((r) => r.label === 'Send to')?.value).toBe('$SnypeGate (SnypeGate LLC)')
+    expect(ins.summary.find((r) => r.label === 'Send to')?.value).toBe('$MIMOSALSD (MIMOSALSD LLC)')
   })
 
   it('Chime: says the sender needs a Chime Checking Account, and that member transfers cannot be reversed', () => {
@@ -76,7 +76,7 @@ describe('buildPaymentInstructions', () => {
 
 describe('what the owner types', () => {
   it('normalises $Cashtags and refuses bad ones', () => {
-    expect(normalizeCashtag('SnypeGate')).toEqual({ ok: true, value: '$SnypeGate' })
+    expect(normalizeCashtag('MIMOSALSD')).toEqual({ ok: true, value: '$MIMOSALSD' })
     expect(normalizeCashtag(' $Snype99 ')).toEqual({ ok: true, value: '$Snype99' })
     expect(normalizeCashtag('$12345').ok).toBe(false) // needs a letter
     expect(normalizeCashtag('$snype gate').ok).toBe(false)
@@ -91,9 +91,9 @@ describe('what the owner types', () => {
   it('formats Apple Cash phone numbers and accepts emails', () => {
     expect(normalizeAppleCashRecipient('+1 512 555 0134')).toEqual({ ok: true, value: '(512) 555-0134' })
     expect(normalizeAppleCashRecipient('5125550134')).toEqual({ ok: true, value: '(512) 555-0134' })
-    expect(normalizeAppleCashRecipient('Pay@SnypeGate.com')).toEqual({ ok: true, value: 'pay@snypegate.com' })
+    expect(normalizeAppleCashRecipient('Pay@MIMOSALSD.com')).toEqual({ ok: true, value: 'pay@mimosalsd.com' })
     expect(normalizeAppleCashRecipient('555-0134').ok).toBe(false)
-    expect(normalizeAppleCashRecipient('pay@snypegate').ok).toBe(false)
+    expect(normalizeAppleCashRecipient('pay@mimosalsd').ok).toBe(false)
   })
 
   it('works out BTC from dollars, rounding up so the shop is never short', () => {

@@ -283,7 +283,7 @@ export function ChatPanel({
                 result === 'granted'
                   ? 'We will notify you when the team replies.'
                   : result === 'needs-install'
-                    ? 'On iPhone, add SnypeGate to your Home Screen first — the steps are open.'
+                    ? 'On iPhone, add MIMOSALSD to your Home Screen first — the steps are open.'
                     : result === 'unsupported'
                       ? 'This browser cannot show notifications.'
                       : 'Notifications are blocked in your browser settings.',

@@ -151,7 +151,7 @@ describe('the rules every writer passes through', () => {
   })
 
   it('cuts a title on a word, at most 60 characters', () => {
-    const title = clampTitle('Mimosa Hostilis Root Bark Powder, Extra Fine Mill | $140.61 per lb | SnypeGate')
+    const title = clampTitle('Mimosa Hostilis Root Bark Powder, Extra Fine Mill | $140.61 per lb | MIMOSALSD')
     expect(title.length).toBeLessThanOrEqual(60)
     expect(title.endsWith('|')).toBe(false)
   })

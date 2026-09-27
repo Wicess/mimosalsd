@@ -17,7 +17,7 @@ import {
 } from '@/lib/mail/templates'
 
 /**
- * The owner's rule: the company has ONE email address, sales@snypegate.com, set in
+ * The owner's rule: the company has ONE email address, contact@mimosalsd.com, set in
  * the admin and used everywhere. These tests hold the rule in place — including the
  * one that fails the build if anybody writes another address into the code.
  */
@@ -28,12 +28,12 @@ vi.mock('@/lib/site/company-email.server', () => ({
 vi.mock('@/lib/db/client', () => ({ db: { notificationLog: { create: vi.fn() } } }))
 
 describe('the company email', () => {
-  it('defaults to sales@snypegate.com', () => {
-    expect(DEFAULT_COMPANY_EMAIL).toBe('sales@snypegate.com')
+  it('defaults to contact@mimosalsd.com', () => {
+    expect(DEFAULT_COMPANY_EMAIL).toBe('contact@mimosalsd.com')
   })
 
   it('accepts a real address, trimmed and lower-cased', () => {
-    expect(normaliseCompanyEmail('  Sales@SnypeGate.com ')).toBe('sales@snypegate.com')
+    expect(normaliseCompanyEmail('  Contact@MIMOSALSD.com ')).toBe('contact@mimosalsd.com')
     expect(normaliseCompanyEmail('first.last+shop@mail.example.co.uk')).toBe('first.last+shop@mail.example.co.uk')
   })
 
@@ -80,15 +80,15 @@ describe('nothing on the site uses another address', () => {
   const src = path.resolve(__dirname, '../../src')
   const files = sourceFiles(src)
 
-  it('never names any @snypegate.com address other than sales@', () => {
+  it('never names any @mimosalsd.com address other than sales@', () => {
     const others: string[] = []
     for (const file of files) {
-      for (const match of readFileSync(file, 'utf8').matchAll(/[a-z0-9._%+-]+@snypegate\.com/gi)) {
-        if (match[0].toLowerCase() !== 'sales@snypegate.com') others.push(`${path.relative(src, file)}: ${match[0]}`)
+      for (const match of readFileSync(file, 'utf8').matchAll(/[a-z0-9._%+-]+@mimosalsd\.com/gi)) {
+        if (match[0].toLowerCase() !== 'contact@mimosalsd.com') others.push(`${path.relative(src, file)}: ${match[0]}`)
       }
     }
     expect(others).toEqual([])
-    expect(readFileSync(path.join(src, 'lib/brand.ts'), 'utf8')).toContain("email: 'sales@snypegate.com'")
+    expect(readFileSync(path.join(src, 'lib/brand.ts'), 'utf8')).toContain("email: 'contact@mimosalsd.com'")
   })
 
   it('reads the address from the one source, never a per-role field', () => {
@@ -101,13 +101,13 @@ describe('copy written ahead of time carries the token', () => {
   it('in the FAQ, and no literal address', () => {
     const text = JSON.stringify(FAQ_ITEMS)
     expect(text).toContain(COMPANY_EMAIL_TOKEN)
-    expect(text).not.toMatch(/@snypegate\.com/)
+    expect(text).not.toMatch(/@mimosalsd\.com/)
   })
 
   it('in the policies, and no literal address', () => {
     const text = JSON.stringify(POLICIES)
     expect(text.split(COMPANY_EMAIL_TOKEN).length - 1).toBeGreaterThanOrEqual(2)
-    expect(text).not.toMatch(/@snypegate\.com/)
+    expect(text).not.toMatch(/@mimosalsd\.com/)
   })
 })
 

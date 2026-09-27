@@ -6,7 +6,7 @@ import robots from '@/app/robots'
   site — which is a bad combination, because a mistake in it is both invisible in
   review and expensive in effect.
 
-  It emitted `Host: https://www.snypegate.com/` until 2026-09-17: the wrong format
+  It emitted `Host: https://www.mimosalsd.com/` until 2026-09-17: the wrong format
   for a directive Google and Bing have never read, saying what the apex-to-www
   redirect already says. Removed rather than corrected.
 

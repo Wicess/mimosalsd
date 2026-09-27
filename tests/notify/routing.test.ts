@@ -40,13 +40,13 @@ describe('notify', () => {
       topic: 'orders-new',
       title: 'New order — Order ID 202609-K7Q4M9 — $63.95',
       body: 'Dana Whitfield · Oregon · Cash App · 1 line(s)',
-      clickUrl: 'https://www.snypegate.com/admin/orders/202609-K7Q4M9/payment',
+      clickUrl: 'https://www.mimosalsd.com/admin/orders/202609-K7Q4M9/payment',
     })
     const [url, init] = vi.mocked(globalThis.fetch).mock.calls[0] as [string, RequestInit]
     expect(url).toBe('https://ntfy.example.test/orders-topic')
     const headers = init.headers as Record<string, string>
     expect(headers.Priority).toBe('urgent')
-    expect(headers.Click).toBe('https://www.snypegate.com/admin/orders/202609-K7Q4M9/payment')
+    expect(headers.Click).toBe('https://www.mimosalsd.com/admin/orders/202609-K7Q4M9/payment')
     expect(headers.Authorization).toBe('Bearer tk_test')
   })
 

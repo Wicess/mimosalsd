@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-//  SnypeGate — data model
+//  MIMOSALSD — data model
 //
 //  Conventions enforced throughout:
 //   · All money is Int, in CENTS. Never Float, never Decimal-as-float.

@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest'
  * fetch handler is called with the few fields it actually reads. A copy of the
  * rules in a test would only prove the copy agrees with itself.
  */
-const ORIGIN = 'https://snypegate.test'
+const ORIGIN = 'https://mimosalsd.test'
 
 function loadWorker() {
   const source = readFileSync(path.join(process.cwd(), 'public/sw.js'), 'utf8')
@@ -208,10 +208,10 @@ describe('the service worker', () => {
 
     it('shows the message with the app icon, the status-bar badge and where to go', async () => {
       const worker = loadWorker()
-      await worker.dispatch('push', pushOf({ title: 'New reply from SnypeGate', body: 'Your order is packed', url: '/account/chat', tag: 'chat-reply' }))
+      await worker.dispatch('push', pushOf({ title: 'New reply from MIMOSALSD', body: 'Your order is packed', url: '/account/chat', tag: 'chat-reply' }))
       expect(worker.shown).toHaveLength(1)
       const { title, options } = worker.shown[0]!
-      expect(title).toBe('New reply from SnypeGate')
+      expect(title).toBe('New reply from MIMOSALSD')
       expect(options.body).toBe('Your order is packed')
       expect(options.icon).toBe('/brand/app-icon-192.png')
       expect(options.badge).toBe('/brand/notification-badge-96.png')
@@ -225,7 +225,7 @@ describe('the service worker', () => {
       const worker = loadWorker()
       await worker.dispatch('push', {})
       await worker.dispatch('push', { data: { json: () => { throw new Error('not json') }, text: () => 'plain words' } })
-      expect(worker.shown.map((n) => n.title)).toEqual(['SnypeGate', 'SnypeGate'])
+      expect(worker.shown.map((n) => n.title)).toEqual(['MIMOSALSD', 'MIMOSALSD'])
       expect(worker.shown[1]!.options.body).toBe('plain words')
       expect(worker.shown[0]!.options.renotify).toBeUndefined()
     })

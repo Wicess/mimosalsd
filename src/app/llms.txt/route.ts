@@ -80,7 +80,7 @@ async function buildLlmsTxt(): Promise<string> {
     '',
     '## What this business is',
     '',
-    `${BRAND.legalName} is a United States distributor of disposable vapes and 510 cartridges, and a retailer of Mimosa hostilis and sassafras root bark sold as raw botanical material, ${trackRecord()}. It was founded by ${proprietorFullName()}, a ${BRAND.proprietor.title}. We sell to the United States only. All products are age-restricted to ${BRAND.minimumAge} or over. We take no payment on our website: a customer submits an order request and selects a preferred method, we verify the order, and we contact them with instructions. No card data is processed or stored.`,
+    `${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap and cosmetic manufacture, craft and botanical research. We sell to the United States only. All products are age-restricted to ${BRAND.minimumAge} or over. We take no payment on our website: a customer submits an order request and selects a preferred method, we verify the order, and we contact them with instructions. No card data is processed or stored.`,
     '',
     '## Product lines and their legal basis',
     '',
@@ -89,7 +89,7 @@ async function buildLlmsTxt(): Promise<string> {
       Said nothing about hemp status or potency until the laboratory figures behind
       that claim are settled, and nothing about nicotine: no nicotine product is listed.
     */
-    'Disposables are the core of the business. SnypeGate distributes all-in-one disposable devices and 510-thread cartridges to adults 21 and over and to retailers in the United States. Each product is sold by the unit, and retailers can request wholesale pricing. Disposables are governed by the federal PACT Act: the United States Postal Service is prohibited from carrying vaping products, and UPS, FedEx and DHL decline them, so they ship via a specialist compliant carrier, separately from any other items in an order.',
+    'Disposables are the core of the business. MIMOSALSD distributes all-in-one disposable devices and 510-thread cartridges to adults 21 and over and to retailers in the United States. Each product is sold by the unit, and retailers can request wholesale pricing. Disposables are governed by the federal PACT Act: the United States Postal Service is prohibited from carrying vaping products, and UPS, FedEx and DHL decline them, so they ship via a specialist compliant carrier, separately from any other items in an order.',
     '',
     '### Mimosa hostilis and sassafras root bark',
     'Sold strictly as raw botanical material for natural dyeing, soap and cosmetic manufacture, craft and botanical research. Neither is food, and neither is sold for human consumption.',

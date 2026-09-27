@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { BODY_MAX, buildPayload, isAllowedPushEndpoint, platformFromUserAgent, safePushPath, TITLE_MAX } from '@/lib/push/payload'
 
-const SITE = 'https://www.snypegate.com'
+const SITE = 'https://www.mimosalsd.com'
 
 describe('safePushPath', () => {
   it('keeps a path on this site, with its query and hash', () => {
     expect(safePushPath('/order/abc?x=1#pay', SITE)).toBe('/order/abc?x=1#pay')
     expect(safePushPath('shop', SITE)).toBe('/shop')
-    expect(safePushPath('https://www.snypegate.com/faq', SITE)).toBe('/faq')
+    expect(safePushPath('https://www.mimosalsd.com/faq', SITE)).toBe('/faq')
   })
 
   it('never lets a notification open another site', () => {
@@ -35,7 +35,7 @@ describe('buildPayload', () => {
 
   it('falls back to the brand name for an empty title and leaves out empty extras', () => {
     const json = JSON.parse(buildPayload({ title: '   ', body: '', url: 'https://evil.test', badgeCount: 0 }, SITE))
-    expect(json).toEqual({ title: 'SnypeGate', body: '', url: '/' })
+    expect(json).toEqual({ title: 'MIMOSALSD', body: '', url: '/' })
   })
 })
 

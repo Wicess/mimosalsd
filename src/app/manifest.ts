@@ -38,7 +38,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // The body background, for the splash before first paint.
     background_color: '#12160f',
     /*
-      The round SnypeGate badge. The 192 and 512 are the two Android requires, and
+      The round MIMOSALSD badge. The 192 and 512 are the two Android requires, and
       the round art sits on transparency, which desktop installs show as it is.
 
       The maskable plate is the badge's own dark ground run to the edges with the

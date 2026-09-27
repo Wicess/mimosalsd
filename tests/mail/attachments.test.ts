@@ -14,7 +14,7 @@ function jsonBody(): Record<string, unknown> {
 beforeEach(() => {
   resetMailProvider()
   process.env.BREVO_API_KEY = 'xkeysib-test'
-  process.env.EMAIL_FROM = 'Snypegate <sales@snypegate.com>'
+  process.env.EMAIL_FROM = 'Snypegate <contact@mimosalsd.com>'
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{"messageId":"<1@brevo>"}', { status: 201 })))
 })
 afterEach(() => {

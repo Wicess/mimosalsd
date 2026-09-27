@@ -23,7 +23,7 @@ describe('isValidBitcoinAddress', () => {
     ['a testnet legacy address', 'mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn'],
     ['an Ethereum address', '0x742d35Cc6634C0532925a3b844Bc454e4438f44e'],
     ['empty', ''],
-    ['a Cash App tag', '$SnypeGate'],
+    ['a Cash App tag', '$MIMOSALSD'],
   ])('refuses %s', (_label, address) => {
     expect(isValidBitcoinAddress(address)).toBe(false)
   })

@@ -2,12 +2,12 @@ import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { destination, onSiteTarget, readTarget } from '@/lib/links/redirect'
 
-const SITE = 'https://snypegate.test'
+const SITE = 'https://mimosalsd.test'
 
 describe('readTarget', () => {
   it('takes a path or a full URL on this site, and stores a path either way', () => {
     expect(readTarget('/shop/amanita', SITE)).toEqual({ ok: true, value: '/shop/amanita' })
-    expect(readTarget('  https://www.snypegate.test/guides/x?a=1#top  ', SITE)).toEqual({
+    expect(readTarget('  https://www.mimosalsd.test/guides/x?a=1#top  ', SITE)).toEqual({
       ok: true,
       value: '/guides/x?a=1#top',
     })
@@ -30,8 +30,8 @@ describe('readTarget', () => {
 describe('onSiteTarget', () => {
   it('follows paths and full URLs on this site, with or without www', () => {
     expect(onSiteTarget('/shop/amanita', SITE)?.pathname).toBe('/shop/amanita')
-    expect(onSiteTarget('https://snypegate.test/guides/x', SITE)?.pathname).toBe('/guides/x')
-    expect(onSiteTarget('https://www.snypegate.test/guides/x', SITE)).not.toBeNull()
+    expect(onSiteTarget('https://mimosalsd.test/guides/x', SITE)?.pathname).toBe('/guides/x')
+    expect(onSiteTarget('https://www.mimosalsd.test/guides/x', SITE)).not.toBeNull()
   })
 
   /*
@@ -42,7 +42,7 @@ describe('onSiteTarget', () => {
     for (const bad of [
       'https://evil.test/login',
       '//evil.test/login',
-      'https://snypegate.test.evil.test/',
+      'https://mimosalsd.test.evil.test/',
       'javascript:alert(1)',
       'data:text/html,hi',
     ]) {

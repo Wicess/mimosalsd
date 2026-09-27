@@ -51,9 +51,9 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   */
   {
     category: 'Disposables',
-    question: 'Is SnypeGate a disposable vape distributor?',
+    question: 'Is MIMOSALSD a disposable vape distributor?',
     answer:
-      'Yes. SnypeGate is a US distributor of disposable vapor products, supplying adult customers by the unit and retailers in volume. Our range covers nicotine disposables and hemp-derived cannabinoid disposables, including THCA and THC, and every batch is lab-tested before it is offered for sale.',
+      'Yes. MIMOSALSD is a US distributor of disposable vapor products, supplying adult customers by the unit and retailers in volume. Our range covers nicotine disposables and hemp-derived cannabinoid disposables, including THCA and THC, and every batch is lab-tested before it is offered for sale.',
   },
   {
     category: 'Disposables',

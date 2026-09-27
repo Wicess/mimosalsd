@@ -126,8 +126,8 @@ describe.skipIf(!local)('sending payment details, against Postgres', () => {
     const result = await issuePaymentDetails({
       orderNumber: order.orderNumber,
       method: 'CASHAPP',
-      payTo: 'SnypeGateTest',
-      payToName: 'SnypeGate LLC',
+      payTo: 'MIMOSALSDTest',
+      payToName: 'MIMOSALSD LLC',
       actorEmail: 'owner@example.test',
     })
     expect(result).toMatchObject({ ok: true, reissued: false, chat: 'sent', email: 'sent', invoiceAttached: true })
@@ -138,10 +138,10 @@ describe.skipIf(!local)('sending payment details, against Postgres', () => {
     })
     expect(row!.status).toBe('AWAITING_PAYMENT')
     expect(row!.paymentRequest).toMatchObject({ method: 'CASHAPP', amountCents: 6395 })
-    expect(row!.paymentRequest!.handle).toMatchObject({ handle: '$SnypeGateTest', label: 'SnypeGate LLC' })
+    expect(row!.paymentRequest!.handle).toMatchObject({ handle: '$MIMOSALSDTest', label: 'MIMOSALSD LLC' })
     const verified = row!.events.find((e) => e.type === 'AWAITING_PAYMENT')
     expect(verified).toMatchObject({ fromStatus: 'PENDING_VERIFICATION', toStatus: 'AWAITING_PAYMENT', actorEmail: 'owner@example.test' })
-    expect(verified!.message).toContain('$SnypeGateTest')
+    expect(verified!.message).toContain('$MIMOSALSDTest')
     expect(row!.events.some((e) => e.type === 'INVOICE_SENT')).toBe(true)
 
     // The invoice image was drawn and stored privately.
@@ -152,7 +152,7 @@ describe.skipIf(!local)('sending payment details, against Postgres', () => {
     const messages = await local!.supportMessage.findMany({ where: { threadId } })
     expect(messages).toHaveLength(1)
     expect(messages[0]).toMatchObject({ fromCustomer: false, attachmentKey: stored[0]!.key, attachmentType: 'image/png' })
-    expect(messages[0]!.body).toContain('Send to: $SnypeGateTest (SnypeGate LLC)')
+    expect(messages[0]!.body).toContain('Send to: $MIMOSALSDTest (MIMOSALSD LLC)')
     expect(messages[0]!.body).toContain(`Order ID: ${order.orderNumber}`)
     const thread = await local!.supportThread.findUnique({ where: { id: threadId } })
     expect(thread!.unreadForCustomer).toBe(1)
@@ -160,7 +160,7 @@ describe.skipIf(!local)('sending payment details, against Postgres', () => {
     // And emailed, with the same image attached.
     expect(sent).toHaveLength(1)
     expect(sent[0]!.to).toBe(order.email)
-    expect(sent[0]!.text).toContain('$SnypeGateTest')
+    expect(sent[0]!.text).toContain('$MIMOSALSDTest')
     expect(sent[0]!.attachments).toHaveLength(1)
     expect(sent[0]!.attachments![0]!.name).toBe(`Invoice ${order.orderNumber}.png`)
     expect([...sent[0]!.attachments![0]!.content.slice(0, 4)]).toEqual(PNG_SIGNATURE)
@@ -181,7 +181,7 @@ describe.skipIf(!local)('sending payment details, against Postgres', () => {
       return new Response(null, { status: 201 })
     })
     try {
-      await issuePaymentDetails({ orderNumber: order.orderNumber, method: 'CHIME', payTo: 'snypegate-pay', actorEmail: 'owner@example.test' })
+      await issuePaymentDetails({ orderNumber: order.orderNumber, method: 'CHIME', payTo: 'mimosalsd-pay', actorEmail: 'owner@example.test' })
     } finally {
       setPushTransport(null)
     }
@@ -333,7 +333,7 @@ describe.skipIf(!local)('the order and its chat, against Postgres', () => {
   it("a system message does not replace the customer's message as the inbox preview", async () => {
     const thread = await local!.supportThread.create({ data: { visitorId: randomUUID(), publicId: `SG-${randomUUID().slice(0, 6)}` } })
     await postMessage({ threadId: thread.id, fromCustomer: true, body: 'Do you ship to Texas?' })
-    await postMessage({ threadId: thread.id, fromCustomer: false, isSystem: true, body: 'Welcome to SnypeGate.' })
+    await postMessage({ threadId: thread.id, fromCustomer: false, isSystem: true, body: 'Welcome to MIMOSALSD.' })
     const after = await local!.supportThread.findUnique({ where: { id: thread.id } })
     expect(after!.lastMessageText).toBe('Do you ship to Texas?')
     expect(after!.lastSender).toBe('CUSTOMER')

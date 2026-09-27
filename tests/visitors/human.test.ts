@@ -81,7 +81,7 @@ describe('POST /api/visits/human', () => {
     const { POST } = await import('@/app/api/visits/human/route')
     recordActivity.mockClear()
     const response = await POST(
-      new Request('https://www.snypegate.com/api/visits/human', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) }),
+      new Request('https://www.mimosalsd.com/api/visits/human', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) }),
     )
     expect(response.status).toBe(204)
     return recordActivity.mock.calls.length
@@ -94,7 +94,7 @@ describe('POST /api/visits/human', () => {
   })
 
   it('accepts an older browser without Fetch Metadata when Origin is this site', async () => {
-    expect(await send({ 'user-agent': SAFARI, origin: 'https://www.snypegate.com' })).toBe(1)
+    expect(await send({ 'user-agent': SAFARI, origin: 'https://www.mimosalsd.com' })).toBe(1)
   })
 
   it('ignores another site, a self-named crawler, no user-agent, and a bad path — with the same answer', async () => {

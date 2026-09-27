@@ -4,7 +4,7 @@ import { PageSection } from '@/components/layout/page-section'
 import { PolicyProse } from '@/components/content/policy-prose'
 import { Proprietor } from '@/components/marketing/proprietor'
 import { TeamSlats } from '@/components/marketing/team-slats'
-import { BRAND, proprietorFullName, trackRecord } from '@/lib/brand'
+import { BRAND } from '@/lib/brand'
 import { absoluteUrl, url } from '@/lib/seo/routes'
 import {
   breadcrumbList,

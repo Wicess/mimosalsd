@@ -117,7 +117,7 @@ export function AdminSidebar({
           artwork's black outline melts into it and the green reads — no separate
           admin variant to keep in sync with the public one.
         */}
-        <Image src="/brand/logo.png" alt={BRAND.name} width={996} height={440} sizes="112px" className="h-7 w-auto" />
+        <Image src="/brand/logo.png" alt={BRAND.name} width={1180} height={329} sizes="112px" className="h-7 w-auto" />
         <span className="text-[10px] font-medium tracking-[0.2em] text-moss-300 uppercase">Admin</span>
       </div>
 

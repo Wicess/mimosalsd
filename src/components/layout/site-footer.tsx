@@ -94,8 +94,8 @@ export function SiteFooter() {
             <Image
               src="/brand/logo.png"
               alt={BRAND.name}
-              width={996}
-              height={440}
+              width={1180}
+              height={329}
               sizes="200px"
               className="h-11 w-auto sm:h-12"
             />

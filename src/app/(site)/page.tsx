@@ -128,13 +128,20 @@ const { props: STAGE } = getImageProps({
   Idle loading, reduced motion, data saver, pausing and the carousel itself are all
   in components/marketing/hero-video.tsx.
 */
-/*
-  Empty until this site has footage of its own. The hero renders its still image
-  instead (the block below is already conditional), and nothing is borrowed from
-  another site: reusing the same clip on two sites is the same duplicate signal as
-  reusing its words.
-*/
-const HERO_VIDEO: readonly HeroVideoClip[] = []
+const HERO_VIDEO: readonly HeroVideoClip[] = [
+  {
+    sources: [
+      { src: '/videos/hero-amanita-moss.mp4', type: 'video/mp4' },
+      { src: '/videos/hero-amanita-moss.webm', type: 'video/webm' },
+    ],
+  },
+  {
+    sources: [
+      { src: '/videos/hero-products-slate.mp4', type: 'video/mp4' },
+      { src: '/videos/hero-products-slate.webm', type: 'video/webm' },
+    ],
+  },
+]
 
 /* A 1×1 transparent GIF. Inline, so selecting it costs no request at all. */
 const BLANK_PIXEL =
@@ -257,10 +264,10 @@ export default async function Home() {
             <Image
               src="/brand/logo.png"
               alt={BRAND.name}
-              width={996}
-              height={440}
+              width={1180}
+              height={329}
               priority
-              sizes="(max-width: 640px) 200px, 260px"
+              sizes="(max-width: 640px) 240px, 260px"
               /*
                 Centred on phones, left-aligned from `lg`.
 

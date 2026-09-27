@@ -64,7 +64,7 @@ function Letterhead({ document, reference, email }: { document: string; referenc
           tile, and it prints straight onto the white sheet.
         */}
         <span className="inline-flex shrink-0 rounded-md bg-white px-2.5 py-2 print:p-0">
-          <Image src="/brand/logo.png" alt={BRAND.name} width={996} height={440} className="h-10 w-auto" priority />
+          <Image src="/brand/logo.png" alt={BRAND.name} width={1180} height={329} className="h-10 w-auto" priority />
         </span>
         <div>
           <p className="font-display text-xl text-foreground">{BRAND.legalName}</p>

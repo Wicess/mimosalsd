@@ -71,11 +71,26 @@ Three of those need a decision as well as a rewrite:
 Also carried over and harmless but worth clearing: `next.config.ts` redirects eleven
 retired product slugs from the parent build. Nothing on this domain ever used them.
 
-### 1.2 Replace the placeholder brand assets
+### 1.2 Brand assets — done
 
-`public/brand/*`, `assets/logo-badge.png`, `src/app/icon.png`, `apple-icon.png`,
-`favicon.ico` are plain text marks generated as stand-ins. The client's logo replaces
-all of them.
+The client's wordmark is in. It was cut out of the supplied artwork: the black ground and
+its glow keyed to transparency, cropped to the mark, so it sits on both the light and the
+dark theme without a halo. Every slot is generated from that one file and from the ornate
+`M` inside it:
+
+| File | What it is |
+|---|---|
+| `public/brand/logo.png` | The wordmark, 900×251, transparent |
+| `public/brand/mark.png`, `app-icon-512`, `app-icon-192`, `icon-192`, `src/app/icon.png` | The round badge: dark disc, citron hairline, the `M` |
+| `public/brand/app-icon-maskable-512.png`, `src/app/apple-icon.png` | Dark plate to the edges, art inside the 80% safe zone |
+| `public/brand/notification-badge-96.png` | Solid white `M` on transparency — Android draws it as a silhouette |
+| `public/brand/logo-email.png` | Wordmark on a dark plate; most email clients drop transparency |
+| `assets/logo-badge.png` | The share card's circle, pre-masked |
+| `src/app/favicon.ico` | 16/32/48 from the badge |
+
+`assets/logo-source.jpg` is the original supplied artwork, kept so the set can be
+regenerated. The wordmark's real aspect is 3.59:1, so the seven places that hard-coded the
+placeholder's 996×440 now carry 1180×329.
 
 ### 1.3 Replace the sample photography
 
@@ -85,8 +100,12 @@ Identical photographs on two domains are a duplicate signal in their own right, 
 licence for another site's photography does not travel. They must be replaced before the
 site is submitted to a search engine.
 
-The 60 article hero images are in the same position. `public/samples/*` are stand-ins and
-`public/team/*` are flat placeholders, not people.
+The 60 article hero images are in the same position, and so are the **two hero videos** in
+`public/videos/` — transferred from the parent build at the owner's request so the landing
+page runs as intended. Footage of this company's own is the eventual answer; the same clip
+on two domains is the same signal as the same sentence.
+
+`public/samples/*` are stand-ins and `public/team/*` are flat placeholders, not people.
 
 ### 1.4 Supply the company's own facts
 

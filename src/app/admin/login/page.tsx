@@ -62,8 +62,8 @@ export default function AdminLoginPage() {
           <Image
             src="/brand/logo.png"
             alt={BRAND.name}
-            width={996}
-            height={440}
+            width={1180}
+            height={329}
             priority
             sizes="240px"
             className="mx-auto h-auto w-[min(11rem,22dvh)] drop-shadow-[0_6px_18px_rgb(0_0_0/0.35)] md:w-[min(15rem,30dvh)]"

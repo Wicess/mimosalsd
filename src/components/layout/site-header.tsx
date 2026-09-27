@@ -89,8 +89,8 @@ export function SiteHeader() {
           <Image
             src="/brand/logo.png"
             alt={BRAND.name}
-            width={996}
-            height={440}
+            width={1180}
+            height={329}
             priority
             sizes="112px"
             className="h-8 w-auto sm:h-9"

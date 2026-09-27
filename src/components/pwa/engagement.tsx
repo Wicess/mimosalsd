@@ -116,7 +116,7 @@ export function EngagementPrompts() {
         onClose={close}
         title={`Get ${SUBSCRIBER_DISCOUNT_PERCENT}% off your first order`}
         icon={<MailIcon className="size-6" />}
-        header={<Image src="/brand/logo.png" alt={BRAND.name} width={996} height={440} sizes="90px" className="h-8 w-auto" />}
+        header={<Image src="/brand/logo.png" alt={BRAND.name} width={1180} height={329} sizes="90px" className="h-8 w-auto" />}
       >
         <NewsletterForm path={pathname} onDone={newsletterSubscribed} />
       </PromptCard>

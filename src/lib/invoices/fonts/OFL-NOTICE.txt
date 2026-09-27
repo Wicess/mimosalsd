@@ -1,0 +1,4 @@
+Inter (Rasmus Andersson) and Space Grotesk (Florian Karsten) are licensed under the
+SIL Open Font License, Version 1.1: https://openfontlicense.org
+Static instances downloaded from Google Fonts (fonts.gstatic.com) on 2026-09-13, for
+rendering invoice images on the server with next/og. They are not served to browsers.

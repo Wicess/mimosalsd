@@ -1,0 +1,1597 @@
+// ─────────────────────────────────────────────────────────────────────────────
+//  SnypeGate — data model
+//
+//  Conventions enforced throughout:
+//   · All money is Int, in CENTS. Never Float, never Decimal-as-float.
+//   · Order state changes are append-only OrderEvent rows. You will need to
+//     reconstruct history for a regulator, a chargeback, or a PACT filing.
+//   · Compliance is DATA (StateRule), editable by an admin with zero deploys.
+//   · Nothing that identifies a payment credential is ever stored on a public row.
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider        = "prisma-client-js"
+  // Required for the Neon serverless adapter. Neon endpoints resolve IPv6-only and
+  // the default TCP query engine cannot always reach them; the adapter goes over
+  // HTTPS, which is also the recommended transport for serverless hosting.
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+enum ProductLine {
+  MIMOSA_HOSTILIS
+  AMANITA
+  VAPE
+}
+
+enum RuleStatus {
+  ALLOWED
+  RESTRICTED
+  BLOCKED
+}
+
+/// USPS cannot carry vaping products and UPS/FedEx/DHL refuse them, so vapes can
+/// never ride PARCEL. This field drives cart splitting and every delivery promise.
+enum FulfillmentChannel {
+  PARCEL
+  PACT_CARRIER
+  LOCAL_COURIER
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING_VERIFICATION
+  AWAITING_PAYMENT
+  PAYMENT_CLAIMED
+  PAID
+  PACKED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+  REJECTED
+}
+
+enum PaymentMethod {
+  CASHAPP
+  CHIME
+  APPLE_CASH // NOT Apple Pay — Apple Pay requires a card processor we do not have.
+  BITCOIN
+}
+
+enum AttestationKind {
+  NOT_FOR_HUMAN_CONSUMPTION
+  AGE_21_PLUS
+  PAYMENT_METHOD_ACKNOWLEDGED
+}
+
+enum AgeVerificationMethod {
+  SELF_DECLARED_DOB
+  ID_DOCUMENT
+  DATABASE_LOOKUP
+  DELIVERY_SIGNATURE
+}
+
+enum AgeVerificationResult {
+  PASS
+  FAIL
+  PENDING
+  ERROR
+}
+
+enum ModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED_COMPLIANCE
+}
+
+enum AdminRole {
+  /// Everything, including team management.
+  SUPERADMIN
+  /// Everything except team management.
+  ADMIN
+  /// Only the areas explicitly granted in `adminAreas`.
+  STAFF
+}
+
+enum ShipmentStatus {
+  PENDING
+  PACKED
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+  RETURNED
+}
+
+// ── Catalog ──────────────────────────────────────────────────────────────────
+
+model Category {
+  id           String      @id @default(cuid())
+  slug         String      @unique
+  name         String
+  productLine  ProductLine
+  /// Real intro copy — category pages rank, so this is content, not scaffolding.
+  intro        String?     @db.Text
+  metaTitle    String?
+  metaDesc     String?
+  heroImageKey String?
+  sortOrder    Int         @default(0)
+  isActive     Boolean     @default(true)
+  products     Product[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  productLine ProductLine
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+
+  shortDescription String? @db.Text
+  description      String? @db.Text
+  specs            Json?
+
+  // ── Compliance flags. These drive UI and cart behaviour, not just labelling.
+  /// Renders a non-dismissible banner above Add-to-Cart and forces an
+  /// intended-use attestation at checkout.
+  notForHumanConsumption Boolean            @default(false)
+  ageRestricted          Boolean            @default(false)
+  fulfillmentChannel     FulfillmentChannel @default(PARCEL)
+  pactRegulated          Boolean            @default(false)
+  /// Two-letter codes where this SKU appears on the state product directory.
+  /// Required for FL, NC, TN, VA, WI vape sales.
+  directoryStates        String[]           @default([])
+
+  isActive   Boolean @default(true)
+  isFeatured Boolean @default(false)
+  metaTitle  String?
+  metaDesc   String?
+
+  variants   ProductVariant[]
+  images     ProductImage[]
+  batches    ProductBatch[]
+  reviews    Review[]
+  orderItems OrderItem[]
+  priceTiers PriceTier[]
+  wishlists  WishlistItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productLine, isActive])
+  @@index([categoryId, isActive])
+  @@index([isFeatured, isActive])
+}
+
+model ProductVariant {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  sku            String  @unique
+  name           String // "100g", "10ct 500mg", "Blue Razz"
+  /// Integer cents. Never a float.
+  priceCents     Int
+  compareAtCents Int?
+  weightGrams    Int?
+  isActive       Boolean @default(true)
+  sortOrder      Int     @default(0)
+
+  inventory  Inventory?
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId, isActive])
+}
+
+model Inventory {
+  id        String         @id @default(cuid())
+  variantId String         @unique
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  quantityOnHand    Int       @default(0)
+  quantityReserved  Int       @default(0)
+  lowStockThreshold Int       @default(10)
+  /// Location this stock sits at — drives same-day courier eligibility.
+  locationId        String?
+  location          Location? @relation(fields: [locationId], references: [id])
+
+  updatedAt DateTime @updatedAt
+
+  @@index([locationId])
+}
+
+/// Bulk quantity breaks. Surfaces the "Bulk discount available" badge on cards.
+model PriceTier {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  minQuantity Int
+  priceCents  Int
+  label       String?
+
+  @@unique([productId, minQuantity])
+  @@index([productId])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// Cloudflare R2 object key. Never a full URL — the CDN host is environment config.
+  objectKey String
+  alt       String
+  width     Int
+  height    Int
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+
+  @@index([productId, sortOrder])
+}
+
+// ── Compliance ───────────────────────────────────────────────────────────────
+
+/// The single source of truth for legality. The cart AND /legality/[state] read
+/// from here, so content and checkout behaviour cannot drift apart.
+/// Admin-editable; every edit writes a ComplianceAuditLog row.
+model StateRule {
+  id          String      @id @default(cuid())
+  stateCode   String      @db.VarChar(2)
+  productLine ProductLine
+  status      RuleStatus
+
+  statuteCitation String?
+  statuteUrl      String?
+  /// Plain-English, customer-facing. Required whenever status != ALLOWED.
+  notes           String? @db.Text
+
+  minAge                   Int     @default(21)
+  requiresAdultSignature   Boolean @default(false)
+  requiresProductDirectory Boolean @default(false)
+  /// Legislation pending — surfaces in the admin review queue.
+  watch                    Boolean @default(false)
+
+  lastReviewedAt DateTime
+  reviewedBy     String
+  effectiveFrom  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([stateCode, productLine])
+  @@index([stateCode])
+  @@index([productLine, status])
+  @@index([watch])
+}
+
+/// Append-only. Who changed which rule, when, and what it was before.
+model ComplianceAuditLog {
+  id         String   @id @default(cuid())
+  entityType String // "StateRule" | "Product" | "Review" | ...
+  entityId   String
+  action     String // "CREATE" | "UPDATE" | "DELETE" | "PUBLISH_BLOCKED"
+  before     Json?
+  after      Json?
+  actorId    String?
+  actorEmail String?
+  reason     String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+/// Layer 4 of age verification: THE EVIDENCE. This record is the legal defence.
+/// Never deleted, never anonymised while the retention obligation stands.
+model AgeVerification {
+  id      String  @id @default(cuid())
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id])
+  userId  String?
+  user    User?   @relation(fields: [userId], references: [id])
+
+  provider  String
+  method    AgeVerificationMethod
+  result    AgeVerificationResult
+  /// Vendor reference so the check can be re-pulled during a dispute.
+  token     String?
+  ip        String?
+  userAgent String?               @db.Text
+
+  verifiedAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([result, verifiedAt])
+}
+
+/// What the customer affirmed, stored verbatim so we can show exactly what they saw.
+model Attestation {
+  id         String          @id @default(cuid())
+  orderId    String
+  order      Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  kind       AttestationKind
+  /// The exact text presented at the time. Wording changes; evidence must not.
+  text       String          @db.Text
+  acceptedAt DateTime        @default(now())
+  ip         String?
+
+  @@unique([orderId, kind])
+  @@index([orderId])
+}
+
+// ── Lab results / COA ────────────────────────────────────────────────────────
+
+model LabBatch {
+  id            String   @id @default(cuid())
+  batchCode     String   @unique
+  labName       String
+  /// ISO 17025 accreditation is the gold standard buyers are told to look for.
+  isoAccredited Boolean  @default(false)
+  labUrl        String?
+  testedAt      DateTime
+  /// R2 object key for the COA PDF.
+  pdfKey        String?
+  /// Full panel: potency, heavy metals, pesticides, mycotoxins, solvents.
+  summary       String?  @db.Text
+  isPublished   Boolean  @default(false)
+
+  results  LabResult[]
+  products ProductBatch[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, testedAt])
+}
+
+model LabResult {
+  id      String   @id @default(cuid())
+  batchId String
+  batch   LabBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  panel     String // "POTENCY" | "HEAVY_METALS" | "PESTICIDES" | "MYCOTOXINS" | "SOLVENTS" | "MICROBIALS"
+  analyte   String
+  value     String
+  unit      String?
+  limit     String?
+  passed    Boolean?
+  sortOrder Int      @default(0)
+
+  @@index([batchId, panel])
+}
+
+model ProductBatch {
+  productId String
+  batchId   String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  batch     LabBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@id([productId, batchId])
+  @@index([batchId])
+}
+
+// ── Locations (physical NAP — real local SEO + same-day radius) ───────────────
+
+model Location {
+  id   String @id @default(cuid())
+  slug String @unique
+  name String
+
+  // NAP must match the Google Business Profile byte-for-byte.
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  stateCode    String  @db.VarChar(2)
+  postalCode   String
+  phone        String
+  email        String?
+
+  latitude  Float
+  longitude Float
+
+  /// Structured hours for LocalBusiness JSON-LD.
+  hours       Json?
+  description String?  @db.Text
+  /// City-specific content. Templated filler is Doorway Abuse — this must be real.
+  cityContent String?  @db.Text
+  imageKeys   String[] @default([])
+
+  isPickupPoint Boolean  @default(false)
+  offersSameDay Boolean  @default(false)
+  /// ZIPs eligible for same-day courier from this location.
+  sameDayZips   String[] @default([])
+  sameDayCutoff String? // "14:00"
+  googlePlaceId String?
+
+  isPublished Boolean     @default(false)
+  inventory   Inventory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([stateCode, isPublished])
+  @@index([latitude, longitude])
+}
+
+// ── Customers ────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  phone         String?
+  passwordHash  String?
+
+  marketingOptIn Boolean @default(false)
+  smsOptIn       Boolean @default(false)
+
+  addresses        Address[]
+  orders           Order[]
+  reviews          Review[]
+  wishlistItems    WishlistItem[]
+  sessions         Session[]
+  supportThreads   SupportThread[]
+  ageVerifications AgeVerification[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // soft delete — CCPA/CPRA erasure
+
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+
+  @@index([userId])
+}
+
+model Address {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  label        String?
+  firstName    String
+  lastName     String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  stateCode    String  @db.VarChar(2)
+  postalCode   String
+  phone        String?
+  isDefault    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+// ── Orders ───────────────────────────────────────────────────────────────────
+
+model Order {
+  id          String @id @default(cuid())
+  orderNumber String @unique
+  /// Tokenised guest access to /order/[token]. Unguessable, expiring.
+  orderToken  String @unique
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  email String
+  phone String?
+
+  status OrderStatus @default(DRAFT)
+
+  // Snapshot of the delivery address at time of order.
+  firstName    String
+  lastName     String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  stateCode    String  @db.VarChar(2)
+  postalCode   String
+
+  // All money in integer cents.
+  subtotalCents Int
+  shippingCents Int @default(0)
+  /// Bitcoin discount in cents, frozen at order time so a rate change cannot rewrite it.
+  paymentDiscountCents Int @default(0)
+  /// Coupon discount in cents, frozen at order time like the payment discount.
+  discountCents Int @default(0)
+  /// The code that produced `discountCents`, in canonical upper case. A discount
+  /// with no record of what granted it cannot be reconciled against a campaign.
+  couponCode    String?
+  /// Welcome discounts (0018): a subscriber's first order, and a first order from someone
+  /// with the app. Stored like every other money figure, never re-derived.
+  subscriberDiscountCents Int @default(0)
+  appDiscountCents        Int @default(0)
+  totalCents    Int
+
+  freeShippingApplied Boolean @default(false)
+
+  // ── Where the order came from, stamped at checkout from the /r/ link cookie.
+  //    Last click wins, within 30 days. Kept on the order rather than recomputed,
+  //    because a link can be renamed or retired and the credit must not move.
+  /// The tracking link clicked before this order.
+  attributedLinkSlug   String?
+  attributedPromoterId String?
+  attributedPromoter   Promoter? @relation(fields: [attributedPromoterId], references: [id], onDelete: SetNull)
+  /// When that click happened.
+  attributedAt         DateTime?
+
+  preferredPaymentMethod PaymentMethod?
+
+  /// Snapshot of the compliance decision at time of order — what we knew, when.
+  complianceSnapshot Json?
+
+  items            OrderItem[]
+  shipments        Shipment[]
+  events           OrderEvent[]
+  refunds          Refund[]
+  attestations     Attestation[]
+  ageVerifications AgeVerification[]
+  paymentRequest   PaymentIntentRequest?
+
+  placedAt    DateTime?
+  paidAt      DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  expiresAt   DateTime? // unpaid orders auto-expire at 48h and restock
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@index([userId])
+  @@index([stateCode, createdAt]) // PACT monthly per-state delivery reports
+  @@index([couponCode])
+  @@index([attributedPromoterId])
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product        @relation(fields: [productId], references: [id])
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+
+  // Snapshot — product names and prices change; the order must not.
+  productName        String
+  variantName        String
+  productLine        ProductLine
+  fulfillmentChannel FulfillmentChannel
+
+  unitPriceCents Int
+  quantity       Int
+  lineTotalCents Int
+
+  shipmentId String?
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
+  @@index([orderId])
+  @@index([shipmentId])
+}
+
+/// One shipment per fulfillment channel. A cart with gummies and a vape produces two.
+model Shipment {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  channel FulfillmentChannel
+  status  ShipmentStatus     @default(PENDING)
+
+  carrier        String?
+  trackingNumber String?
+  trackingUrl    String?
+  shippingCents  Int     @default(0)
+
+  requiresAdultSignature Boolean @default(false)
+  signedBy               String?
+  idChecked              Boolean @default(false)
+
+  estimatedDelivery DateTime?
+  shippedAt         DateTime?
+  deliveredAt       DateTime?
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([status, createdAt])
+}
+
+/// Append-only. Never update, never delete.
+model OrderEvent {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  type       String // "CREATED" | "PAYMENT_CLAIMED" | "VERIFIED" | "SHIPPED" | ...
+  fromStatus OrderStatus?
+  toStatus   OrderStatus?
+  message    String?      @db.Text
+  metadata   Json?
+  actorId    String?
+  actorEmail String?
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
+  @@index([type, createdAt])
+}
+
+/// Money returned to a customer. APPEND-ONLY — see the note on `Refund`.
+///
+/// There is no `updatedAt` and nothing ever edits a row here. This system holds no
+/// payment processor by design: the money moved off-site, by hand, through Cash App
+/// or Chime or Bitcoin. So a row is not an instruction to refund — it is a record
+/// that an operator already sent money back, and a record of something that happened
+/// cannot be corrected by rewriting it. A mistake is corrected by a second row.
+model Refund {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  /// Integer cents, like every other amount in this schema. Always positive:
+  /// a negative refund is a charge, and this system cannot charge anyone.
+  amountCents Int
+
+  /// How the money was sent back. Null when it was returned by some other route.
+  method PaymentMethod?
+
+  /// The operator's own reference — a Cash App note, a transaction id. Free text
+  /// because every one of these rails names its receipt differently.
+  reference String?
+
+  /// Why. Required by the action, because a refund with no stated reason is the
+  /// one an auditor asks about and nobody can answer.
+  reason String @db.Text
+
+  /// Who sent it. Both, deliberately: an email can be changed later, an id cannot.
+  issuedById String?
+  issuedBy   String
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+/// Payment instructions issued for an order. Handles are resolved server-side,
+/// post-order, from the rotating pool — never rendered into static HTML.
+model PaymentIntentRequest {
+  id      String @id @default(cuid())
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  method      PaymentMethod
+  amountCents Int
+
+  /// Which pooled handle was shown, so a burned handle can be traced to its orders.
+  handleId String?
+  handle   PaymentHandle? @relation(fields: [handleId], references: [id])
+
+  // Bitcoin only — unique address per order, quote locked 15 minutes.
+  btcAddress       String?
+  btcAmountSats    BigInt?
+  btcQuoteLockedAt DateTime?
+  btcConfirmations Int       @default(0)
+
+  /// R2 keys for customer-uploaded receipts. PRIVATE prefix, signed URLs only —
+  /// these are screenshots of somebody's banking app.
+  ///
+  /// An ARRAY, not one key. A buyer legitimately sends more than one image: the bank
+  /// confirmation now and the app receipt ten minutes later, or a payment split
+  /// across two transfers. A single column silently loses the first one.
+  receiptKeys String[] @default([])
+  /// DEPRECATED — superseded by `receiptKeys`. Kept because the deployed build still
+  /// selects it: dropping it in the same step as its replacement took production's
+  /// order pages down with P2022. Remove in a later migration, once main no longer
+  /// references it. Never written.
+  receiptKey  String?
+  /// The buyer's own reference — a Cash App note, a transaction id, a BTC txid.
+  /// Free text because every one of these rails names its receipt differently.
+  txRef      String?
+  claimedAt  DateTime?
+  verifiedAt DateTime?
+  verifiedBy String?
+
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([method, verifiedAt])
+}
+
+/// Rotating handle pool. Static handles in HTML get scraped and the accounts frozen.
+model PaymentHandle {
+  id     String        @id @default(cuid())
+  method PaymentMethod
+  handle String
+  label  String?
+
+  isActive   Boolean   @default(true)
+  /// Set when the account is frozen or compromised. Never reuse a burned handle.
+  burnedAt   DateTime?
+  burnReason String?
+
+  timesIssued Int       @default(0)
+  lastUsedAt  DateTime?
+
+  requests PaymentIntentRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([method, handle])
+  @@index([method, isActive])
+}
+
+model Coupon {
+  id   String @id @default(cuid())
+  code String @unique
+
+  percentOff       Int?
+  amountOffCents   Int?
+  minSubtotalCents Int  @default(0)
+
+  maxRedemptions Int?
+  timesRedeemed  Int       @default(0)
+  isActive       Boolean   @default(true)
+  startsAt       DateTime?
+  endsAt         DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([isActive, endsAt])
+}
+
+// ── Content ──────────────────────────────────────────────────────────────────
+
+model Author {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  name      String
+  /// Real credentials. E-E-A-T is not decoration in a regulated category.
+  title     String?
+  bio       String? @db.Text
+  avatarKey String?
+  posts     Post[]
+  guides    Guide[]
+}
+
+model Post {
+  id       String   @id @default(cuid())
+  slug     String   @unique
+  title    String
+  /// Answer-first block, 40-60 words. The AI-extraction target.
+  summary  String   @db.Text
+  body     String   @db.Text
+  category String?
+  tags     String[] @default([])
+
+  authorId String?
+  author   Author? @relation(fields: [authorId], references: [id])
+
+  heroImageKey String?
+  metaTitle    String?
+  metaDesc     String?
+
+  /// Product slugs surfaced by <RecommendedProducts>. Blogs inform AND recommend.
+  recommendedProductSlugs String[] @default([])
+
+  /// The guide this post links UP to. Cluster posts point at their pillar and pillars
+  /// point back down, which is the internal-link loop the authored content already
+  /// uses; a post written in the admin without it would be the one page on the blog
+  /// that nothing links to and that links to nothing.
+  pillarSlug String?
+
+  isPublished      Boolean   @default(false)
+  publishedAt      DateTime?
+  updatedAtContent DateTime? // dateModified for Article schema
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+  @@index([category, isPublished])
+}
+
+/// Long-form pillar content. LLMs preferentially cite comprehensive guides.
+model Guide {
+  id      String @id @default(cuid())
+  slug    String @unique
+  title   String
+  summary String @db.Text
+  body    String @db.Text
+
+  authorId String?
+  author   Author? @relation(fields: [authorId], references: [id])
+
+  heroImageKey            String?
+  metaTitle               String?
+  metaDesc                String?
+  recommendedProductSlugs String[] @default([])
+  /// The posts this guide links DOWN to — the other half of the pillar/cluster loop.
+  clusterSlugs            String[] @default([])
+
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+}
+
+/// Editorial layer over StateRule. The legal facts come from StateRule; this holds
+/// the prose. Publication is gated on >=400 words of genuinely state-specific content.
+model StatePage {
+  id        String @id @default(cuid())
+  stateCode String @unique @db.VarChar(2)
+  slug      String @unique
+
+  /// Verdict in the first 2-3 sentences — the AI extraction target.
+  answerFirst        String  @db.Text
+  body               String  @db.Text
+  pendingLegislation String? @db.Text
+  wordCount          Int     @default(0)
+
+  metaTitle String?
+  metaDesc  String?
+
+  isPublished    Boolean   @default(false)
+  publishedAt    DateTime?
+  lastReviewedAt DateTime?
+  reviewedBy     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished])
+}
+
+model FAQ {
+  id          String  @id @default(cuid())
+  question    String
+  answer      String  @db.Text
+  category    String?
+  /// Attach to a PDP, a state page, or leave null for the global FAQ.
+  scope       String?
+  sortOrder   Int     @default(0)
+  isPublished Boolean @default(true)
+
+  @@index([scope, sortOrder])
+}
+
+model Tip {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  body        String    @db.Text
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+
+  @@index([isPublished, publishedAt])
+}
+
+/// Reviews are moderated BEFORE publish. A review claiming a cure creates the same
+/// FDA exposure as an advertisement, so the lexicon runs over every submission.
+model Review {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?   @relation(fields: [userId], references: [id])
+
+  authorName         String
+  rating             Int
+  title              String?
+  body               String  @db.Text
+  isVerifiedPurchase Boolean @default(false)
+
+  moderationStatus ModerationStatus @default(PENDING)
+  /// Lexicon matches found at submission, for the moderator to review.
+  complianceFlags  Json?
+  moderatedBy      String?
+  moderatedAt      DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([productId, moderationStatus])
+  @@index([moderationStatus, createdAt])
+}
+
+// ── Support & ops ────────────────────────────────────────────────────────────
+
+model SupportThread {
+  id     String  @id @default(cuid())
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  email     String?
+  subject   String?
+  isOpen    Boolean @default(true)
+  /// Anonymous visitor key so context survives before sign-in.
+  visitorId String?
+
+  // ── Live chat. Ported from WHAM's ChatThread onto this existing table, so the
+  //    contact form, bulk enquiries and live chat are ONE inbox rather than two.
+
+  /// Short quotable handle — "SG-7K3M9". Every thread gets one, anonymous visitors
+  /// included: without it an unidentified visitor is unaddressable, and there is no
+  /// way to refer to them in an alert or in conversation. Not a credential — the
+  /// thread is found by the visitor cookie, never by this.
+  publicId    String? @unique
+  /// What the operator sees in the inbox. Derived: given name > email local-part >
+  /// publicId. Recomputed as identity is learned.
+  displayName String?
+  name        String?
+  /// Last client IP seen sending here. The Visitor row keeps no raw IP by design, so
+  /// the thread is where an actionable one lives — it feeds BlockedIp.
+  lastIp      String?
+
+  // Denormalised summary, written in the SAME transaction as the message, so the
+  // inbox preview can never disagree with the last message behind it.
+  lastMessageAt   DateTime @default(now())
+  lastMessageText String?  @db.Text
+  /// CUSTOMER | ADMIN
+  lastSender      String?
+
+  unreadForAdmin    Int @default(0)
+  unreadForCustomer Int @default(0)
+
+  customerLastSeenAt DateTime?
+  adminLastSeenAt    DateTime?
+  /// Set while the customer is typing; stale after a few seconds.
+  customerTypingAt   DateTime?
+  /// What they have typed so far — WHAM's live preview in the operator inbox.
+  customerTypingText String?   @db.Text
+
+  messages SupportMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isOpen, updatedAt])
+  @@index([visitorId])
+  @@index([lastMessageAt])
+  @@index([email])
+}
+
+model SupportMessage {
+  id       String        @id @default(cuid())
+  threadId String
+  thread   SupportThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  fromCustomer Boolean
+  authorName   String?
+  body         String   @db.Text
+
+  /// A message written by the system rather than a person — the first-contact
+  /// welcome, "an order was placed". Rendered centred and unattributed.
+  isSystem Boolean @default(false)
+
+  /// Reached the other side's device. One tick.
+  deliveredAt DateTime?
+  /// They had the conversation open. Two ticks — shown to the operator only: telling
+  /// a buyer exactly when the shop read their message and had not yet replied
+  /// creates pressure the shop cannot always answer.
+  readAt      DateTime?
+
+  /// PRIVATE R2 key under `private/chat/`. Never a public URL: WHAM stores chat
+  /// attachments publicly, and a photo sent in a support chat is as private as the
+  /// conversation around it.
+  attachmentKey  String?
+  attachmentType String?
+  attachmentName String?
+
+  /// Operator corrected it after sending.
+  editedAt  DateTime?
+  /// Soft delete — render "removed", never vanish silently from a record.
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([threadId, createdAt])
+}
+
+/// Operator presence, for the "we are online" dot a customer sees.
+///
+/// A heartbeat, not a session. The inbox touches it while it is open; anything older
+/// than the online window reads as away. Keyed per operator so two people working
+/// the inbox do not overwrite each other.
+model AdminPresence {
+  adminId    String   @id
+  lastSeenAt DateTime @default(now())
+}
+
+/// Visitors the operator has blocked from chat.
+///
+/// Keyed by IP because an anonymous visitor has nothing else stable — clearing the
+/// visitor cookie would otherwise be an unblock button.
+model BlockedIp {
+  ip        String   @id
+  reason    String?
+  threadId  String?
+  publicId  String?
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  @@index([createdAt])
+}
+
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  source         String?
+  isActive       Boolean   @default(true)
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+}
+
+/// A browser, or an installed copy of the site, that agreed to receive push
+/// notifications. One row per push endpoint: the same phone subscribing again
+/// updates its row rather than adding a second one, so nobody is notified twice.
+///
+/// `visitorId` is the anonymous visitor cookie, which is how a chat reply or a
+/// payment-details message reaches the person it is for. No user-agent is kept,
+/// only the coarse platform the prompts need.
+model PushSubscription {
+  id         String    @id @default(cuid())
+  /// The push service URL. Only the known browser push services are accepted.
+  endpoint   String    @unique
+  /// The browser's public key and auth secret, which encrypt every message.
+  p256dh     String
+  auth       String
+  visitorId  String?
+  /// ios | android | desktop
+  platform   String?
+  /// Subscribed from the installed app rather than a browser tab.
+  installed  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  lastSeenAt DateTime  @default(now())
+  lastSentAt DateTime?
+  /// Consecutive failed deliveries. Reset by a success; a gone endpoint is deleted.
+  failures   Int       @default(0)
+
+  @@index([visitorId])
+  @@index([createdAt])
+}
+
+/// A notification the owner sent to everyone, kept with how it went.
+model PushBroadcast {
+  id         String   @id @default(cuid())
+  title      String
+  body       String
+  /// Where tapping the notification opens: a path on this site.
+  url        String
+  sentBy     String
+  recipients Int      @default(0)
+  delivered  Int      @default(0)
+  failed     Int      @default(0)
+  /// Endpoints the push service said no longer exist, removed during this send.
+  removed    Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+/// The site's VAPID key pair, which signs every push. Created once, on first use,
+/// and never shown anywhere: replacing it would silently cut off every existing
+/// subscriber, so it lives in its own table rather than in the admin's Settings.
+model PushKey {
+  id         String   @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime @default(now())
+}
+
+model NotificationLog {
+  id        String   @id @default(cuid())
+  channel   String // "NTFY" | "EMAIL" | "SMS"
+  topic     String?
+  subject   String?
+  body      String?  @db.Text
+  target    String?
+  success   Boolean  @default(true)
+  error     String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([channel, createdAt])
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         AdminRole @default(STAFF)
+  /// Area slugs a STAFF user may reach. Ignored for ADMIN and SUPERADMIN.
+  /// Nothing is accessible to STAFF unless granted here — including the dashboard.
+  adminAreas   String[]  @default([])
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+/// Site-wide banner. Used for shipping delays, legal changes, and holiday cut-offs.
+model Announcement {
+  id        String    @id @default(cuid())
+  title     String
+  body      String    @db.Text
+  /// INFO | WARNING | CRITICAL — drives the colour and the icon.
+  severity  String    @default("INFO")
+  href      String?
+  linkLabel String?
+  isActive  Boolean   @default(false)
+  startsAt  DateTime?
+  endsAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, startsAt])
+}
+
+/// Anonymous visitor, keyed on the same cookie the support widget uses.
+/// Deliberately minimal: no fingerprinting, no third-party identifiers.
+model Visitor {
+  id          String   @id @default(cuid())
+  visitorId   String   @unique
+  firstSeen   DateTime @default(now())
+  lastSeen    DateTime @updatedAt
+  /// Resolved ship-to state, when the visitor chose one.
+  stateCode   String?  @db.VarChar(2)
+  landingPath String?
+  referrer    String?
+  userAgent   String?  @db.Text
+  pageViews   Int      @default(1)
+
+  // ── Filed nightly from the visit buffer (lib/visitors). No IP address is kept:
+  //    location is the host's own coarse lookup, device is parsed from the
+  //    user-agent, and the user-agent itself is not stored.
+  /// Page the visitor was last seen on.
+  lastPath     String?
+  /// Visits separated by more than 30 minutes of quiet.
+  sessionCount Int     @default(0)
+  country      String? @db.VarChar(2)
+  /// Subdivision code from the host's geo lookup — a US state for US visitors.
+  region       String? @db.VarChar(8)
+  city         String?
+  /// ZIP code, coordinates and time zone from the host's IP lookup (0016): about a
+  /// city or ZIP code at best, never a street. The IP address is not stored.
+  postalCode   String?
+  latitude     Float?
+  longitude    Float?
+  timezone     String?
+  /// mobile | tablet | desktop
+  device       String?
+  browser      String?
+  os           String?
+  /// First-touch campaign tags.
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  /// Looks automated — hidden from the admin by default, never deleted.
+  isLikelyBot  Boolean @default(false)
+
+
+  @@index([lastSeen])
+  @@index([stateCode])
+  @@index([isLikelyBot, lastSeen])
+}
+
+/// One UTC day of visits, aggregated when the day is filed. Counts are kept for
+/// good; per-page history (PageView) is pruned after 90 days.
+model DailyVisitStat {
+  day           DateTime @id @db.Date
+  views         Int
+  visitors      Int
+  humanViews    Int
+  humanVisitors Int
+  newVisitors   Int
+  /// Requests from crawlers that name themselves, which get no visitor record.
+  crawlerViews  Int
+  /// { path: views } for people, not crawlers. Top 100.
+  paths         Json
+  referrers     Json
+  countries     Json
+  regions       Json
+  devices       Json
+  /// { crawler name: requests } — Googlebot, GPTBot, ClaudeBot and the rest.
+  crawlers      Json
+  updatedAt     DateTime @updatedAt
+}
+
+/// One recorded page view, waiting to be filed. The buffer that browsing writes
+/// into: the proxy batches views in memory and posts them here a batch at a time,
+/// and the nightly filing turns a finished day into visitor rows and daily counts,
+/// then deletes the day's rows. Nothing else reads this table.
+model VisitEvent {
+  id String @id
+  /// The UTC day the view happened on — what the filing groups by.
+  day DateTime @db.Date
+  /// The event exactly as recorded (see lib/visitors/page-view.ts).
+  payload Json
+  createdAt DateTime @default(now())
+
+  @@index([day])
+}
+
+/// A day that has been filed. Written in the same transaction as the day's rows,
+/// so a filing that is retried after a failure can never count a day twice.
+model VisitFlush {
+  day       DateTime @id @db.Date
+  events    Int
+  flushedAt DateTime @default(now())
+}
+
+/// One page view by a (non-crawler) visitor. Kept 90 days, then pruned.
+/// What a visitor DID, written the moment it happens (0015): installed the app,
+/// subscribed, added to the cart, turned on notifications, placed an order. Page views
+/// are batched and filed nightly; these are rare and matter, so the admin sees them
+/// live. No relation to Visitor — that row is only filed the night after a first visit.
+model VisitorActivity {
+  id        String   @id @default(cuid())
+  visitorId String
+  /// APP_INSTALLED | SUBSCRIBED | CART_ADD | NOTIFICATIONS_ENABLED | ORDER_PLACED
+  kind      String
+  /// A short human line: the product added, the order number and total.
+  detail    String?
+  path      String?
+  createdAt DateTime @default(now())
+
+  @@index([visitorId, createdAt])
+  @@index([kind, createdAt])
+}
+
+model PageView {
+  id        String   @id
+  /// The visitor cookie value, as on Visitor.visitorId. Never shown in full.
+  visitorId String
+  path      String
+  at        DateTime
+
+  @@index([visitorId, at])
+  @@index([at])
+}
+
+/// Cart events, so abandoned carts are recoverable and refusals are measurable.
+model CartActivity {
+  id        String  @id @default(cuid())
+  /// The visitor cookie. No relation to Visitor (0019): that row is only filed the
+  /// night after a first visit, and a cart is usually filled on the first.
+  visitorId String?
+
+  /// ADDED | UPDATED | REMOVED | CHECKOUT_STARTED | ORDER_PLACED | BLOCKED_BY_STATE
+  type        String
+  productSlug String?
+  productName String?
+  variantId   String?
+  variantName String?
+  /// Added (ADDED) or set to (UPDATED).
+  quantity    Int     @default(0)
+  /// The cart right after this change: its subtotal and item count.
+  cartValueCents Int  @default(0)
+  cartItems      Int  @default(0)
+  /// The tracking link the visitor followed, from its cookie, when they had one.
+  linkSlug    String?
+  stateCode   String? @db.VarChar(2)
+  /// Why the cart refused, when type is BLOCKED_BY_STATE. This is a demand signal:
+  /// it shows exactly where we are turning revenue away.
+  reason      String? @db.Text
+  valueCents  Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([stateCode, createdAt])
+  @@index([visitorId, createdAt])
+  @@index([linkSlug])
+}
+
+/// A one-off email blast to a segment. Distinct from transactional email.
+model EmailCampaign {
+  id        String  @id @default(cuid())
+  name      String
+  subject   String
+  body      String  @db.Text
+  /// ALL | NEWSLETTER | CUSTOMERS | STATE
+  segment   String  @default("NEWSLETTER")
+  stateCode String? @db.VarChar(2)
+
+  status          String @default("DRAFT") // DRAFT | SENDING | SENT | FAILED
+  recipients      Int    @default(0)
+  delivered       Int    @default(0)
+  failed          Int    @default(0)
+  /// Lexicon matches found at review time. A blast is content like any other surface.
+  complianceFlags Json?
+
+  scheduledFor DateTime?
+  sentAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
+
+/// Trackable inbound link. Organic is the only channel, so knowing which
+/// off-site placements actually convert is the whole measurement story.
+model TrackingLink {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  label     String
+  targetUrl String
+  source    String?
+  clicks    Int     @default(0)
+  orders    Int     @default(0)
+  isActive  Boolean @default(true)
+
+  /// The promoter this link belongs to, when it belongs to one at all: a link
+  /// can equally be our own post on a forum.
+  promoterId String?
+  promoter   Promoter? @relation(fields: [promoterId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime  @default(now())
+  lastClickAt DateTime?
+
+  @@index([isActive])
+  @@index([promoterId])
+}
+
+/// Someone who sends us customers: an affiliate, a forum poster, a shop that
+/// mentions us. They hold tracking links, and orders that follow a click on one
+/// are credited to them. No money is handled here — this site moves none — so a
+/// promoter is a name, their links, and what those links brought in.
+model Promoter {
+  id       String  @id @default(cuid())
+  /// Short handle, used in link slugs and in the admin.
+  slug     String  @unique
+  name     String
+  email    String?
+  notes    String? @db.Text
+  archived Boolean @default(false)
+
+  links  TrackingLink[]
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([archived])
+}
+
+/// Editable site settings, so an operator can change operational copy and
+/// thresholds without a deploy — the same principle as the state rules.
+model Setting {
+  key       String   @id
+  value     String   @db.Text
+  /// Short note shown in the admin so the next person knows what it does.
+  label     String
+  group     String   @default("general")
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([group])
+}
+
+/// Application errors, deduplicated.
+///
+/// One row per DISTINCT failure, not per occurrence. A crash loop that fires ten
+/// thousand times is one row with `count` at ten thousand — otherwise the table that
+/// exists to tell you what broke becomes the thing that fills the database, and the
+/// signal drowns in its own volume. `fingerprint` is the grouping key: source, error
+/// name and a message with its variable parts stripped, so "Order abc123 not found"
+/// and "Order def456 not found" are recognised as the same bug.
+///
+/// `notifiedAt` throttles the push. Knowing an error happened is the point; being
+/// woken ten thousand times for one bug is how alerting gets muted, and a muted
+/// alert channel is worse than none because it looks like it is working.
+model ErrorLog {
+  id          String    @id @default(cuid())
+  fingerprint String    @unique
+  /// FATAL — the request died. ERROR — handled but wrong. WARN — degraded.
+  severity    String    @default("ERROR")
+  /// Where it came from: render | route | action | proxy | client | mail | ntfy | db
+  source      String
+  name        String
+  message     String    @db.Text
+  stack       String?   @db.Text
+  /// Next's error digest, for matching a client report to the server-side log.
+  digest      String?
+  routePath   String?
+  requestPath String?
+  method      String?
+  /// Redacted before it lands here. Never store a payment handle or a session token.
+  context     Json?
+  count       Int       @default(1)
+  firstSeenAt DateTime  @default(now())
+  lastSeenAt  DateTime  @default(now())
+  /// Set when an operator marks it dealt with. Resolved rows re-open on recurrence.
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  /// Last time this fingerprint was pushed to ntfy.
+  notifiedAt  DateTime?
+
+  @@index([resolvedAt, lastSeenAt])
+  @@index([lastSeenAt])
+  @@index([severity, lastSeenAt])
+}
+
+/// Operator edits layered over the authored catalogue.
+///
+/// The catalogue itself lives in `lib/catalog/catalog.data.ts` and stays there for a
+/// reason: it is read synchronously by the EDGE proxy, which returns real 404s for
+/// slugs that do not exist and cannot reach Neon. Moving the catalogue into the
+/// database would break that, and with it the crawl budget it protects.
+///
+/// So this table does not replace the catalogue — it overlays it. One row per product
+/// slug, every column NULLABLE, and null means "inherit whatever the authored file
+/// says". That has three consequences worth understanding before editing this model:
+///
+///  · An override can never add or remove a product, so the set of valid slugs is
+///    still fully known at the edge and the proxy keeps working untouched.
+///  · Clearing a field in the admin restores the authored value rather than blanking
+///    the page, which makes every edit reversible without a deploy.
+///  · A product renamed here does NOT change its slug. URLs are the one thing that
+///    must not move; organic search is the only acquisition channel.
+///
+/// Distinct from the `Product` table, which is an older per-size modelling still
+/// referenced by OrderItem, Review and ProductBatch and therefore cannot be rewritten.
+/// A product posted from the admin panel rather than authored in code.
+///
+/// The whole definition is one validated document (lib/catalog/posted-product.ts),
+/// in the same shape as the authored catalogue, so the storefront merges the two
+/// without a second code path. Compliance flags are deliberately NOT stored: they
+/// follow from the category's product line, so an operator cannot post a vape
+/// without the PACT rules or root bark without the intended-use attestation.
+model PostedProduct {
+  slug         String   @id
+  categorySlug String
+  document     Json
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String?
+  updatedBy    String?
+
+  @@index([categorySlug, isActive])
+}
+
+model ProductOverride {
+  /// Matches Product.slug in the authored catalogue. Not a foreign key: the authored
+  /// file is the source of truth for which products exist, not this table.
+  slug String @id
+
+  name             String?
+  shortDescription String? @db.Text
+  description      String? @db.Text
+  /// Array of [label, value] pairs, replacing the authored spec table wholesale.
+  specs            Json?
+
+  /// Retired: the price of the old weight ladder's base size. Not read since 0020.
+  basePriceCents Int?
+  /// The price of a full pound, in integer cents (0020). 1/4, 1/3 and 1/2 lb are
+  /// derived from it, so this one number prices every size.
+  poundPriceCents Int?
+  /// Which size the PDP opens on.
+  defaultSizeKey String?
+  /// { [sku]: cents } for products sold without a ladder, such as vapes.
+  variantPrices  Json?
+  /// Array of { minQuantity, percentOff, label }. A PERCENTAGE, never a price.
+  priceTiers     Json?
+
+  // ── Compliance flags. Null inherits; these change cart behaviour, not just labels.
+  notForHumanConsumption Boolean?
+  ageRestricted          Boolean?
+  pactRegulated          Boolean?
+  fulfillmentChannel     String?
+  /// Array of two-letter codes. Json rather than String[] so "unset" and "empty" differ.
+  directoryStates        Json?
+
+  isActive   Boolean?
+  isFeatured Boolean?
+
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([updatedAt])
+}
+
+/// Operator edits to a category's COPY, layered over the authored catalogue.
+///
+/// Same contract as ProductOverride: null means inherit, and an override can only
+/// change a category, never add or remove one — `src/proxy.ts` reads the authored
+/// list synchronously on the edge to return real 404s, and the edge cannot reach Neon.
+///
+/// ── Why `name` and `sortOrder` are NOT here ──────────────────────────────────
+/// A category name is rendered in the header nav, the homepage cards, the product
+/// breadcrumb, the sitemap and llms.txt — all of which read the authored catalogue
+/// synchronously. Making it overridable would mean either converting every one of
+/// those to an async database read, or shipping a rename that appears on the category
+/// page and nowhere else. The second is a drift bug of exactly the kind this codebase
+/// keeps finding; the first puts a query behind the site header, which renders on
+/// every page.
+///
+/// So the overridable set is deliberately the fields the CATEGORY PAGE alone renders.
+/// Every one of them appears in exactly one place, and an edit cannot disagree with
+/// itself anywhere else. Renaming a category stays an authored change with a deploy,
+/// which is the correct weight for a URL-adjacent, sitewide label.
+model CategoryOverride {
+  /// Matches Category.slug in the authored catalogue. Not a foreign key, for the
+  /// same reason ProductOverride is not: the authored file decides what exists.
+  slug String @id
+
+  /// One or two sentences under the page title.
+  intro String? @db.Text
+  /// The long-form paragraph, for categories still using the fallback band.
+  detail String? @db.Text
+
+  metaTitle String?
+  metaDesc  String? @db.Text
+
+  /// The About band's heading and its opening definition.
+  ///
+  /// Only these two of the `about` block are editable. The sub-questions and the
+  /// spec sheet are structured content with a shape a textarea cannot express, and a
+  /// JSON field an operator edits by hand is a broken category page waiting to
+  /// happen. The lede is the sentence most likely to be quoted by an answer engine,
+  /// which makes it the one worth being able to correct without a deploy.
+  aboutHeading String?
+  aboutLede    String? @db.Text
+
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  @@index([updatedAt])
+}

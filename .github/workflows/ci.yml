@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Schema validation and `prisma generate` need a syntactically valid URL. No real
+  # database is touched by these jobs.
+  DATABASE_URL: postgresql://ci:ci@localhost:5432/ci?sslmode=disable
+  DIRECT_URL: postgresql://ci:ci@localhost:5432/ci?sslmode=disable
+  NEXT_PUBLIC_SITE_URL: https://example.com
+
+jobs:
+  # The compliance gate runs FIRST and alone. If content carries a health claim or
+  # extraction language, nothing else about the build matters.
+  compliance:
+    name: Compliance lexicon
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Scan content for banned terms
+        run: npm run compliance:scan
+
+  verify:
+    name: Typecheck, lint, test, build
+    runs-on: ubuntu-latest
+    needs: compliance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - name: Validate Prisma schema
+        run: npx prisma validate
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests + coverage thresholds
+        run: npm run test:coverage
+      - name: Build
+        run: npm run build
+
+  # Budgets FAIL the build. They are not advisory: 83% of users expect a page in under
+  # three seconds, and a 0.1s regression costs measurable conversion.
+  lighthouse:
+    name: Lighthouse budgets
+    runs-on: ubuntu-latest
+    needs: verify
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run build
+      - name: Run Lighthouse CI
+        run: npx --yes @lhci/cli@0.14.x autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

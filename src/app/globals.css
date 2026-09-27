@@ -1,0 +1,1389 @@
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Design tokens, mirrored from src/lib/design/tokens.ts.
+   That file is the source of truth and is contrast-tested; this file is how the
+   values reach the browser. Keep them in sync — tests/design/contrast.test.ts
+   guards the values, not this mapping.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Primitives — stone (green-tinted neutral ramp) */
+  --color-stone-950: #12160f;
+  --color-stone-900: #1a1f16;
+  --color-stone-800: #262d20;
+  --color-stone-700: #363e2e;
+  --color-stone-600: #48523b;
+  --color-stone-500: #5c6749;
+  --color-stone-400: #7e876c;
+  --color-stone-300: #b3baa4;
+  --color-stone-200: #e4e7e1;
+  --color-stone-100: #e9ebe0;
+  --color-stone-50: #f4f5ee;
+
+
+  /* Graphite — the neutral grey ramp the light theme uses */
+  --color-graphite-950: #16181a;
+  --color-graphite-900: #1f2225;
+  --color-graphite-800: #2c3033;
+  --color-graphite-700: #3d4246;
+  --color-graphite-600: #4e5459;
+  --color-graphite-500: #646b71;
+  --color-graphite-400: #868d94;
+  --color-graphite-300: #b4babf;
+  --color-graphite-200: #dfe2e5;
+  --color-graphite-100: #eef0f2;
+  --color-graphite-50: #f6f7f8;
+
+  /* Moss — deep botanical green, the primary brand colour */
+  --color-moss-900: #0f2417;
+  --color-moss-800: #153020;
+  --color-moss-700: #1c4429;
+  --color-moss-600: #255637;
+  --color-moss-500: #316b46;
+  --color-moss-400: #5c9370;
+  --color-moss-300: #8fbba0;
+  --color-moss-200: #c0d9c9;
+  --color-moss-100: #e3efe8;
+
+  /* Citron — light yellow, the single scarce CTA */
+  --color-citron-900: #332b05;
+  --color-citron-800: #4c4008;
+  --color-citron-700: #6b5a0d;
+  --color-citron-600: #877312;
+  --color-citron-500: #a88f1c;
+  --color-citron-400: #cdb443;
+  --color-citron-300: #e6d283;
+  --color-citron-200: #f2e6b2;
+  --color-citron-100: #faf4d9;
+
+  /* Type */
+  --font-display: var(--font-newsreader), Georgia, 'Times New Roman', serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /*
+    Products only — names, prices, batch codes. Not a third general-purpose face:
+    if it starts appearing on headings the site has three voices and no hierarchy.
+  */
+  --font-product: var(--font-product-face), 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+  --text-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.08rem + 0.22vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.18rem + 0.35vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.38rem + 0.6vw, 1.875rem);
+  --text-3xl: clamp(1.875rem, 1.65rem + 1.1vw, 2.5rem);
+  /*
+    The top of the scale was raised after measuring award-winning display type:
+    Siena sets its heading at 90px, Shopify Editions at 194px, and this scale topped
+    out at 72px. At 44px a headline is text; at 96px it becomes the image on the page,
+    which is work no amount of colour can do.
+
+    The mobile floor is unchanged — the growth is all in the vw term, so a phone sees
+    exactly what it saw before and a 1920px display finally gets a headline scaled to it.
+  */
+  --text-4xl: clamp(2.25rem, 1.85rem + 2.1vw, 3.75rem);
+  --text-5xl: clamp(2.75rem, 2rem + 4.2vw, 7rem);
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Shadows tinted with the stone hue — neutral black reads muddy over parchment */
+  --shadow-sm: 0 1px 2px 0 rgb(18 22 15 / 0.05);
+  --shadow-md: 0 2px 8px -2px rgb(18 22 15 / 0.08), 0 1px 3px -1px rgb(18 22 15 / 0.06);
+  --shadow-lg: 0 8px 24px -6px rgb(18 22 15 / 0.1), 0 2px 6px -2px rgb(18 22 15 / 0.06);
+  --shadow-xl: 0 16px 48px -12px rgb(18 22 15 / 0.14);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  /*
+    EXPONENTIAL EASE-OUTS. The house curves for anything that arrives.
+
+    They start fast and settle slowly, which is what makes motion read as weighted
+    rather than animated — the element behaves like it has mass and friction, not
+    like a value being interpolated. Quart for short distances, quint for the
+    default, expo for long travel where the deceleration has room to be felt.
+
+    THERE IS NO SPRING. `--ease-spring` was a cubic-bezier with a y-value above 1,
+    which overshoots the target and settles back. Overshoot is the single loudest
+    signal that an interface is playful, and this one sells age-restricted goods on
+    the strength of looking like it can be trusted. It was declared and never used;
+    it is not replaced, because nothing here should bounce.
+  */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* ── Semantic layer. Light is the base; dark redefines only what changes. ───── */
+
+:root {
+  /*
+    LIGHT SURFACES SIT ON THE BRAND'S OWN RAMP, NOT ON COOL GREY.
+
+    The dark theme was built from `stone` — neutrals carrying a moss cast — while
+    the light theme was built from `graphite`, which is a cool, blue-leaning grey.
+    The two themes were therefore not the same brand: dark had a hue and light had
+    none, which is the whole reason light read as flat. Nothing was wrong with any
+    individual value; the palette simply stopped being the brand's above 50%
+    lightness.
+
+    These are the same `stone` steps the dark theme uses, from the other end of the
+    ramp. The chroma is deliberately tiny — about 0.008, tinted toward moss, the
+    brand's own hue. That is the opposite move from the default warm tint that
+    turns every light UI into cream: this leans green because the brand is green.
+
+    `surface` stays pure white. It is the reading surface, it carries body text,
+    and the contrast it gives is worth more than a tint nobody would notice.
+  */
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-sunken: #f4f5ee;
+  --surface-data: #e9ebe0;
+
+  --foreground: #16181a;
+  --foreground-muted: #4e5459;
+  --foreground-subtle: #646b71;
+
+  /* Borders follow the surfaces onto the moss-tinted ramp. */
+  --border: #e0e3d6;
+  --border-strong: #8b9280;
+  --border-data: #69705d;
+
+  --primary: #16181a;
+  --primary-hover: #2c3033;
+  --primary-muted: #eef0f2;
+  --on-primary: #ffffff;
+
+  --accent: #e6d283;
+  --accent-hover: #cdb443;
+  --accent-muted: #faf4d9;
+  --accent-fg: #6b5a0d;
+  --on-accent: #16181a;
+
+  /*
+    Product-card field.
+
+    The card sets its photograph in a colour field rather than on the page — the
+    thing that makes a bottle or a bag of bark read as a product shot instead of a
+    stock photo. Semantic, so the dark theme swaps to the deep end of the same moss
+    ramp instead of leaving a pale mint panel glowing on a dark page.
+
+    There were `--product-band` tokens beside this for the green strip under the
+    photograph. The strip is gone and so are they — an unused token is a colour
+    the next person has to work out whether they are allowed to use.
+  */
+  --product-field: var(--color-moss-100);
+
+  --ring: #3d4246;
+
+  --success-fg: #0f3d22;
+  --success-bg: #d8f0e0;
+  /* The "staff online" signal. Brighter than success-fg, which is a text colour. */
+  --presence: #16a34a;
+  /* The glint on section lines (see .shine-rule). Deeper on white so it still shows. */
+  --shine: #6cc000;
+  --shine-core: #3f8a00;
+  --warning-fg: #6b3a08;
+  --warning-bg: #fbe8d2;
+  --danger-fg: #7a1a1a;
+  --danger-bg: #fbe0e0;
+  --info-fg: #123a44;
+  --info-bg: #d6eaef;
+
+  --z-sticky: 20;
+  --z-drawer: 40;
+  --z-overlay: 50;
+  --z-modal: 60;
+  --z-toast: 80;
+  --z-age-gate: 100;
+
+  color-scheme: light;
+}
+
+/*
+  Dark values are desaturated tonal variants, never inverted light values —
+  inverting produces vibrating saturated colour on dark and fails contrast
+  independently. Verified separately in tests/design/contrast.test.ts.
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --background: #12160f;
+    --surface: #1a1f16;
+    --surface-sunken: #0b0e09;
+    --surface-data: #262d20;
+
+    --foreground: #f6f7f0;
+    --foreground-muted: #e4e7e1;
+    --foreground-subtle: #b3baa4;
+
+    --border: #363e2e;
+    --border-strong: #7e876c;
+    --border-data: #7e876c;
+
+    --primary: #f6f7f0;
+    --primary-hover: #e4e7e1;
+    --primary-muted: #262d20;
+    --on-primary: #12160f;
+
+    --accent: #e6d283;
+    --accent-hover: #f2e6b2;
+    --accent-muted: #332b05;
+    --accent-fg: #e6d283;
+    --on-accent: #12160f;
+
+    --product-field: var(--color-moss-900);
+
+    --ring: #b3baa4;
+
+    --success-fg: #8fd9aa;
+    --success-bg: #0a2e19;
+    --presence: #4ade80;
+    --shine: #8fe000;
+    --shine-core: #f0ffb0;
+    --warning-fg: #f0c088;
+    --warning-bg: #3a2109;
+    --danger-fg: #f5a3a3;
+    --danger-bg: #3d0f0f;
+    --info-fg: #95cedc;
+    --info-bg: #0b2830;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --background: #12160f;
+  --surface: #1a1f16;
+  --surface-sunken: #0b0e09;
+  --surface-data: #262d20;
+  --foreground: #f6f7f0;
+  --foreground-muted: #e4e7e1;
+  --foreground-subtle: #b3baa4;
+  --border: #363e2e;
+  --border-strong: #7e876c;
+  --border-data: #7e876c;
+  --primary: #f6f7f0;
+  --primary-hover: #e4e7e1;
+  --primary-muted: #262d20;
+  --on-primary: #12160f;
+  --accent: #e6d283;
+  --accent-hover: #f2e6b2;
+  --accent-muted: #332b05;
+    --accent-fg: #e6d283;
+  --on-accent: #12160f;
+
+  --product-field: var(--color-moss-900);
+  --ring: #b3baa4;
+  --success-fg: #8fd9aa;
+  --success-bg: #0a2e19;
+  --presence: #4ade80;
+  --shine: #8fe000;
+  --shine-core: #f0ffb0;
+  --warning-fg: #f0c088;
+  --warning-bg: #3a2109;
+  --danger-fg: #f5a3a3;
+  --danger-bg: #3d0f0f;
+  --info-fg: #95cedc;
+  --info-bg: #0b2830;
+  color-scheme: dark;
+}
+
+/* Expose semantics as Tailwind utilities: bg-surface, text-foreground-muted, … */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-data: var(--surface-data);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-border-subtle: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-data: var(--border-data);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-muted: var(--primary-muted);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-fg: var(--accent-fg);
+  --color-on-accent: var(--on-accent);
+
+  /* Product-card field. Semantic; the raw values flip per theme above. */
+  --color-product-field: var(--product-field);
+  --color-ring: var(--ring);
+  --color-success-fg: var(--success-fg);
+  --color-success-bg: var(--success-bg);
+  --color-presence: var(--presence);
+  --color-warning-fg: var(--warning-fg);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-bg: var(--danger-bg);
+  --color-info-fg: var(--info-fg);
+  --color-info-bg: var(--info-bg);
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/*
+  THE ADMIN IS A TOOL, NOT A PAGE (owner, 2026-09-19: "admin panel font size on
+  mobile is too big").
+
+  The storefront's scale above is fluid, and `sm` is 375px, so on a phone an admin
+  title set `text-2xl sm:text-3xl` rendered at 30px in the display serif, section
+  heads at 18-20px and stat figures at 24px: marketing sizes on a working screen.
+  A tool wants a fixed, tighter scale. Every size utility reads these variables, so
+  redefining them on the admin root resizes all ~40 admin pages at once and leaves
+  every storefront page exactly as it was. One step smaller on a phone; the body
+  sizes stay at 16px so iOS does not zoom into a form field.
+*/
+[data-admin-ui] {
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.25rem;
+  --text-3xl: 1.375rem;
+  --text-4xl: 1.5rem;
+}
+
+@media (min-width: 64rem) {
+  [data-admin-ui] {
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.75rem;
+    --text-4xl: 2rem;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /*
+    Reserves the mobile tab bar's height so the footer is not trapped behind it.
+
+    The bar is 56px plus the safe-area inset, and it is `md:hidden` — above that
+    breakpoint there is no bar and the page reclaims the space. Without this the last
+    rows of the footer sat underneath it and could not be scrolled into view.
+  */
+  padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 48rem) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/*
+  `:where()` drops these defaults to zero specificity.
+
+  This block is unlayered, so as a plain `h1, h2, h3, h4` rule it outranked every
+  Tailwind utility — which live in `@layer utilities` and therefore lose to any
+  unlayered rule regardless of specificity. `font-product` on a product title was
+  silently ignored for exactly that reason: the class was emitted, applied, and
+  overruled. At zero specificity a utility on the element always wins, which is what
+  a utility is for.
+*/
+@layer base {
+  /*
+    In `@layer base`, and that is the load-bearing part — not the `:where()`.
+    Unlayered CSS beats every layer regardless of specificity, so as a plain rule
+    this silently outranked `font-product` even at zero specificity. Moving it into
+    the base layer is what lets a utility on a heading actually win.
+  */
+  :where(h1, h2, h3, h4) {
+    font-family: var(--font-display);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Focus must be visible and must clear 3:1 against both themes. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Data surfaces — COA panels, spec tables. Tabular figures stop column jitter. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/*
+  Reduced motion is honoured globally rather than per-component, so a new component
+  cannot forget it. `scroll-behavior: auto` matters as much as the durations — smooth
+  scroll triggers vestibular symptoms for some users.
+*/
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Developer signature ─────────────────────────────────────────────────────
+   Slow metallic sheen across the wordmark. Gradient text with an animated
+   background position, disabled entirely under prefers-reduced-motion (the
+   global reduced-motion block above already kills the animation; this also
+   removes the gradient so the text never renders mid-sweep and unreadable).
+*/
+.wice-sheen {
+  background: linear-gradient(
+    100deg,
+    var(--foreground-muted) 0%,
+    var(--foreground) 45%,
+    #ffffff 50%,
+    var(--foreground) 55%,
+    var(--foreground-muted) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: wice-sheen 6s linear infinite;
+}
+
+@keyframes wice-sheen {
+  0% { background-position: 150% 0; }
+  100% { background-position: -150% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wice-sheen {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--foreground);
+    animation: none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RISE — the entrance used by the trust rail.
+
+   CSS, not JavaScript, and deliberately: a CSS animation runs off the main
+   thread, so it stays smooth while the page is still fetching the hero image and
+   hydrating the cart. It also needs no client component, which this section
+   otherwise would have to become.
+
+   `backwards` fill is the load-bearing word. The stagger delays the later items,
+   and without `backwards` each one paints at full opacity, waits its turn, then
+   snaps to transparent to begin — a visible flash on every item but the first.
+
+   8px, not 24px. The point is to draw the eye left-to-right across four claims,
+   not to make the reader watch furniture arrive.
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/*
+  The header's install button, asking to be tapped (owner, 2026-09-14): the arrow
+  drops into the tray, settles, and rests, while one soft ring spreads from the
+  button. A 3.2s cycle that is mostly stillness, so it signals without nagging.
+  Transform and opacity only. Used under motion-safe:, so reduced motion keeps a
+  still icon.
+*/
+@keyframes install-drop {
+  0%,
+  46%,
+  100% {
+    transform: translateY(0);
+  }
+  14% {
+    transform: translateY(-2.5px);
+  }
+  28% {
+    transform: translateY(3px);
+  }
+  36% {
+    transform: translateY(-0.5px);
+  }
+}
+
+@keyframes install-halo {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  55%,
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+/* The install guide's arrow, nudging toward the browser toolbar just below the sheet. */
+@keyframes install-point {
+  0%,
+  100% {
+    translate: 0 -2px;
+    opacity: 0.65;
+  }
+  50% {
+    translate: 0 5px;
+    opacity: 1;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ADMIN SIDEBAR — fits the window, no scroll bar (owner's request, 2026-09-13)
+
+   On a computer every row takes an equal share of the height the window has:
+   what is left after the logo bar, the account bar and the group headings,
+   divided by the number of links (`--nav-rows`, set by the sidebar, which knows
+   how many this person may see). Never under 24px, the WCAG 2.2 minimum target
+   for a pointer; never over 40px, so a tall screen or a short menu does not
+   stretch into a column of gaps.
+
+   Below 760px of height the group headings give way to hairline dividers, which
+   is what lets a 1366×768 laptop with a browser toolbar (about 650px of page)
+   still show every link.
+
+   The phone drawer is left alone: 44px touch rows, and it scrolls with a finger.
+   ───────────────────────────────────────────────────────────────────────────── */
+.admin-nav-group + .admin-nav-group {
+  margin-top: 1rem;
+}
+.admin-nav-heading {
+  padding-bottom: 0.375rem;
+}
+
+@media (min-width: 64rem) {
+  .admin-nav {
+    /* 3.5rem logo bar + 3.5rem account bar + 1.5rem nav padding + 0.5rem slack,
+       and 2.125rem for each heading with the gap above it. */
+    --nav-chrome: calc(9rem + var(--nav-heads) * 2.125rem);
+  }
+  .admin-nav-group + .admin-nav-group {
+    margin-top: 0.75rem;
+  }
+  .admin-nav-heading {
+    line-height: 1rem;
+  }
+  .admin-nav .admin-nav-row {
+    min-height: 0;
+    height: clamp(1.5rem, calc((100dvh - var(--nav-chrome)) / var(--nav-rows)), 2.5rem);
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 760px) {
+  .admin-nav {
+    --nav-chrome: calc(9rem + var(--nav-heads) * 0.8125rem);
+  }
+  .admin-nav-heading {
+    display: none;
+  }
+  .admin-nav-group + .admin-nav-group {
+    margin-top: 0.375rem;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+    padding-top: 0.375rem;
+  }
+}
+
+/* A 720p screen with a browser toolbar (about 600px of page): slimmer top and
+   bottom bars, and rows may go down to 22px so nothing falls off the end. */
+@media (min-width: 64rem) and (max-height: 640px) {
+  .admin-nav {
+    --nav-chrome: calc(7.25rem + var(--nav-heads) * 0.8125rem);
+  }
+  .admin-nav .admin-nav-bar {
+    height: 3rem;
+  }
+  .admin-nav nav {
+    padding-block: 0.5rem;
+  }
+  .admin-nav .admin-nav-row {
+    height: clamp(1.375rem, calc((100dvh - var(--nav-chrome)) / var(--nav-rows)), 2.5rem);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ADMIN MOBILE DRAWER
+
+   The scrim fades and the panel slides from the edge it is anchored to, so the
+   motion says where the menu came from and where closing it will put it back.
+   Both are transform/opacity only — never width or left — so the drawer cannot
+   cause a reflow on the page behind it while it opens.
+
+   Applied with `motion-safe:`, so `prefers-reduced-motion` gets the drawer
+   instantly with no animation at all rather than a slower one.
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+/* The phone chat sheet rises from where the thumb already is. Transform only, and
+   applied under motion-safe:, so reduced-motion gets the sheet with no movement. */
+@keyframes slide-in-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+/* The chat inbox's customer panel arrives from the edge it lives on. */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+/* Presence: one slow expanding ring, WHAM's — ambient state breathes rather than
+   blinks. Used under motion-safe:, so reduced-motion keeps the still dot. */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  80%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+/*
+  The "Admin online" light in the customer chat (owner: very bright green, pulsing).
+
+  It used to blink by fading to a quarter of its brightness, so for half of every
+  second it looked dim, which is the opposite of what was asked for. Now it never
+  dims: the dot swells a little and its glow flares brighter, then settles, once
+  every 1.2 seconds, while rings spread out of it. No flashing (WCAG 2.3.1), and under
+  reduced motion it simply stays lit inside its glow.
+*/
+@keyframes presence-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 3px 1px color-mix(in oklab, var(--presence) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 6px 2px color-mix(in oklab, var(--presence) 55%, transparent);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THE SHINE RULE — a small green glint running right to left along the hairlines
+   between sections, all the time.
+
+   Asked for by the owner so the site feels alive, and built so that costs almost
+   nothing:
+
+   · One absolutely positioned 1px span per line (components/ui/shine-rule.tsx),
+     laid exactly over the section's existing border. It takes no space, so it
+     cannot move layout.
+   · The glint moves by `transform` alone: painted once, then slid by the
+     compositor, so a page full of them does no layout or repaint per frame.
+   · The distance is `100cqw` — the span is its own size container — so the glint
+     crosses the full width of whatever it sits on, phone to wide monitor.
+   · `overflow-x: clip` keeps it from ever widening the page; the glow may still
+     bloom a few pixels above and below the hairline.
+   · Each line further down the page starts a beat later, so the glints cascade
+     down the page in a wave instead of moving in lockstep.
+   · Reduced motion removes the glint entirely. The hairline stays.
+   ───────────────────────────────────────────────────────────────────────────── */
+.shine-rule {
+  --shine-length: 96px;
+  --shine-duration: 2.8s;
+  position: absolute;
+  inset-inline: 0;
+  z-index: 1;
+  height: 1px;
+  container-type: inline-size;
+  overflow-x: clip;
+  overflow-y: visible;
+  pointer-events: none;
+}
+.shine-rule[data-edge='top'] {
+  top: -1px;
+}
+.shine-rule[data-edge='bottom'] {
+  --shine-half: 0.5;
+  bottom: -1px;
+}
+.shine-rule::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: var(--shine-length);
+  height: 1px;
+  /* Moving right to left, so the bright head leads on the left and the tail fades right. */
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--shine-core) 8%,
+    var(--shine) 32%,
+    transparent
+  );
+  filter: drop-shadow(0 0 3px var(--shine));
+  animation: shine-rtl var(--shine-duration) linear infinite;
+  animation-delay: calc((var(--shine-step, 0) + var(--shine-half, 0)) * 0.3s);
+}
+@keyframes shine-rtl {
+  to {
+    transform: translateX(calc(-100cqw - var(--shine-length)));
+  }
+}
+/* Phones: a shorter glint over a shorter distance, at a similar pace. */
+@media (width < 48rem) {
+  .shine-rule {
+    --shine-length: 64px;
+    --shine-duration: 1.9s;
+  }
+}
+/* The wave: a line's start is delayed by its section's place on the page. */
+:nth-child(2) > .shine-rule { --shine-step: 1; }
+:nth-child(3) > .shine-rule { --shine-step: 2; }
+:nth-child(4) > .shine-rule { --shine-step: 3; }
+:nth-child(5) > .shine-rule { --shine-step: 4; }
+:nth-child(6) > .shine-rule { --shine-step: 5; }
+:nth-child(7) > .shine-rule { --shine-step: 6; }
+:nth-child(n + 8) > .shine-rule { --shine-step: 7; }
+@media (prefers-reduced-motion: reduce) {
+  .shine-rule::after {
+    display: none;
+  }
+}
+
+/* A new bubble settles in from just below — the message arriving, not a page event. */
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THE CATEGORY RAIL — focus by proximity of the pointer, not of the scroll.
+
+   Hovering anywhere in the rail pushes every tile back; the one actually under
+   the pointer comes forward again, brighter and larger. The result is that the
+   rail answers a hover with the whole row, not with one tile: you are not told
+   "this is hoverable", you are shown which one you are about to choose.
+
+   WRITTEN HERE RATHER THAN AS TAILWIND VARIANTS, and the reason is specificity.
+   `.rail:hover .tile` and `.tile:hover` have identical specificity, so which one
+   wins is decided purely by which appears later in the stylesheet. Tailwind
+   orders its output by variant, not by the order the classes were written in, so
+   expressing this as `group-hover/rail:opacity-40 hover:opacity-100` gives a
+   result that depends on Tailwind's internal sort — it worked or did not
+   depending on the variant table. Here the order is the source order, and the
+   dim rule is deliberately first.
+
+   Gated behind `@media (hover: hover)`. A touch device fires hover on tap, which
+   would leave one tile stuck forward and the rest dimmed after every swipe.
+   ───────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   FAQ DISCLOSURE — a <details> that opens smoothly.
+
+   A `<details>` normally snaps. The content has no box until the element is open,
+   so there is nothing for a height transition to run against, and every library
+   that "fixes" this reimplements the element in JavaScript — losing the keyboard
+   behaviour, the find-in-page integration and the works-without-JS property that
+   made `<details>` the right tag in the first place.
+
+   `::details-content` is the platform's own answer: it addresses the content box
+   directly, so it can be transitioned. `interpolate-size: allow-keywords` is what
+   lets `auto` be an animatable value; without it `block-size: auto` is a jump.
+
+   Wrapped in `@supports` and scoped to this class, so a browser without it gets
+   an ordinary snapping disclosure — correct, just not smooth. Nothing depends on
+   the animation.
+   ───────────────────────────────────────────────────────────────────────────── */
+@supports selector(::details-content) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 320ms var(--ease-standard),
+      content-visibility 320ms;
+    transition-behavior: allow-discrete;
+  }
+
+  .faq-item[open]::details-content {
+    block-size: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::details-content {
+      transition: none;
+    }
+  }
+}
+
+.cat-tile {
+  transition:
+    transform 420ms var(--ease-standard),
+    opacity 420ms var(--ease-standard),
+    filter 420ms var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Everything recedes … */
+  .cat-rail:hover .cat-tile,
+  .cat-rail:focus-within .cat-tile {
+    opacity: 0.4;
+    transform: scale(0.94);
+    filter: brightness(0.72);
+  }
+
+  /* … and the one being pointed at comes back. Must stay below the rule above. */
+  .cat-rail .cat-tile:hover,
+  .cat-rail .cat-tile:has(:focus-visible) {
+    opacity: 1;
+    transform: scale(1.06);
+    filter: brightness(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /*
+    The focus still happens — knowing which tile you are on is information, not
+    decoration — but it is carried by brightness alone. Nothing scales, and the
+    rail's drift is switched off in the component.
+  */
+  .cat-tile {
+    transition: opacity 200ms linear, filter 200ms linear;
+  }
+
+  .cat-rail:hover .cat-tile,
+  .cat-rail:focus-within .cat-tile,
+  .cat-rail .cat-tile:hover,
+  .cat-rail .cat-tile:has(:focus-visible) {
+    transform: none;
+  }
+}
+
+.animate-rise {
+  animation: rise 420ms var(--ease-enter) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /*
+    Reduced motion means gentler, not absent. The opacity fade carries the same
+    "these arrived together" meaning without any movement to trigger vestibular
+    discomfort — so the translate goes and the fade stays, at half the duration.
+  */
+  .animate-rise {
+    animation: rise-fade 200ms var(--ease-enter) backwards;
+  }
+
+  @keyframes rise-fade {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SCROLL REVEAL — driven by the scroll timeline, never by a class toggle.
+
+   The usual implementation sets `opacity: 0` in CSS and has an IntersectionObserver
+   add a class to bring it back. That ships a page whose content is invisible until
+   JavaScript says otherwise, and the failure modes are not hypothetical: the
+   observer never fires in a background tab, in a headless renderer, or for a
+   crawler that does not run scripts — and the section renders blank. On a site
+   whose only acquisition channel is organic search, that is the worst possible
+   bug to introduce for decoration.
+
+   So the reveal is inverted. The element is visible by default, in the HTML, with
+   no JavaScript involved. The animation is applied ONLY inside
+   `@supports (animation-timeline: view())` — so a browser that cannot drive it
+   simply shows the finished state, which is the correct state. Nothing is ever
+   hidden by something that might not run.
+
+   `animation-range: entry 8% cover 30%` finishes the reveal well before the
+   element reaches the middle of the screen: the reader should never be waiting
+   for text to finish arriving before they can read it.
+   ───────────────────────────────────────────────────────────────────────────── */
+/*
+  IT SLIDES. IT DOES NOT FADE — and that is a deliberate trade, not an oversight.
+
+  The obvious version animates opacity from 0. Measured in the browser, that
+  leaves every band below the fold sitting at `opacity: 0` until the reader
+  scrolls to it: correct for a human, and a page whose lower half renders blank
+  to anything that snapshots a viewport without scrolling. This site's entire
+  acquisition is organic search, and its own priority order puts SEO above
+  aesthetics, so a decoration is not worth even a small risk of content being
+  judged invisible.
+
+  Translating instead costs nothing visually — an element 20px out of place below
+  the fold is off-screen either way — and the element is fully opaque at every
+  scroll position, in every renderer, including ones that never scroll.
+*/
+@keyframes reveal-rise {
+  from {
+    transform: translateY(22px);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 30%;
+    }
+  }
+  /*
+    Reduced motion removes the movement entirely rather than substituting a
+    gentler one. With no opacity change left to carry the reveal, a shorter slide
+    would still be a slide — and movement is the thing the preference asks to be
+    spared. The element simply renders where it belongs.
+  */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   HERO ENTRANCE — one sequence, on load, in reading order.
+
+   The mark, the heading, the promise, the detail, the buttons. Each arrives 70ms
+   after the one before it, which is slow enough to read as deliberate and fast
+   enough that the whole sequence is finished before a reader has focused on the
+   second line. The eye is led down the column once; after that the page is still.
+
+   Unlike the scroll reveal, this one may safely animate opacity. A load animation
+   runs whether or not anyone scrolls, so there is no state in which it fails to
+   complete and leaves content hidden — the failure mode that made the scroll
+   version translate-only.
+
+   `backwards` fill is load-bearing. Without it every delayed child paints at full
+   opacity, waits its turn, then snaps to transparent to begin — a visible flash on
+   each element except the first.
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THE PHONE HERO'S STILL, DRIFTING.
+
+   Below `lg` the hero is a full-bleed picture behind the copy. Until a film is
+   playing over it (or when there is none), the photograph eases a few percent
+   closer over twenty-odd seconds and back — the Ken Burns convention, slow enough
+   to read as light moving rather than as an animation.
+
+   Transform only, on the compositor, so it costs no layout and no paint. Applied
+   under motion-safe:, so reduced-motion gets the still.
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes hero-drift {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(-2%, -1.5%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-seq > * {
+    animation: hero-in 760ms var(--ease-out-quint) backwards;
+  }
+  .hero-seq > *:nth-child(1) { animation-delay: 60ms; }
+  .hero-seq > *:nth-child(2) { animation-delay: 130ms; }
+  .hero-seq > *:nth-child(3) { animation-delay: 200ms; }
+  .hero-seq > *:nth-child(4) { animation-delay: 270ms; }
+  .hero-seq > *:nth-child(5) { animation-delay: 340ms; }
+  .hero-seq > *:nth-child(6) { animation-delay: 410ms; }
+
+  /*
+    The plate settles rather than sliding. A photograph arriving from below reads
+    as a card being dealt; easing a 3% scale off is the film convention for a shot
+    coming to rest, and it is the only element on the page big enough to earn it.
+  */
+  .hero-plate {
+    animation: hero-plate 1100ms var(--ease-out-expo) backwards;
+    animation-delay: 120ms;
+  }
+}
+
+@keyframes hero-plate {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   STAGGERED REVEAL — a row arrives as a row, left to right.
+
+   Same scroll timeline and the same translate-only rule as `.reveal`; the only
+   addition is that each child's range starts fractionally later than its
+   neighbour's, so four cards in a row resolve in sequence instead of together.
+
+   Offsetting the RANGE rather than adding `animation-delay` is what makes this
+   work on a scroll timeline: a delay measured in milliseconds has no meaning when
+   the clock is the scroll position, and would be ignored.
+   ───────────────────────────────────────────────────────────────────────────── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stagger > * {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+    }
+    .stagger > *:nth-child(1) { animation-range: entry 4% cover 24%; }
+    .stagger > *:nth-child(2) { animation-range: entry 7% cover 27%; }
+    .stagger > *:nth-child(3) { animation-range: entry 10% cover 30%; }
+    .stagger > *:nth-child(4) { animation-range: entry 13% cover 33%; }
+    .stagger > *:nth-child(5) { animation-range: entry 16% cover 36%; }
+    .stagger > *:nth-child(n + 6) { animation-range: entry 19% cover 39%; }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   HEADER ELEVATION — the bar earns its shadow by being scrolled past.
+
+   At the top of the page the header is part of the hero and should not be drawn
+   as a separate object. The moment content passes underneath it, it becomes a
+   layer over that content and says so. Driven by the document scroll timeline, so
+   there is no scroll listener, no `useState`, and nothing running on the main
+   thread during a scroll.
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes header-elevate {
+  to {
+    box-shadow: 0 6px 20px -14px color-mix(in oklab, var(--foreground) 55%, transparent);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .header-elevate {
+      animation: header-elevate linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 96px;
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   UNDERLINE SWEEP — the classic, and it is classic because it is honest.
+
+   The rule grows from the side the reader came from rather than fading in
+   everywhere at once, so the link reads as being drawn under rather than
+   switching state. `background-size` is animated, not `width` or `border`, so it
+   never touches layout.
+   ───────────────────────────────────────────────────────────────────────────── */
+.link-sweep {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 320ms var(--ease-out-quart);
+}
+
+.link-sweep:hover,
+.link-sweep:focus-visible {
+  background-size: 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-sweep {
+    transition: none;
+  }
+  .link-sweep:hover,
+  .link-sweep:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CARD LIFT — one hover, used everywhere a card is a link.
+
+   Deliberately NOT a 1px border plus a wide soft shadow. That pairing is the
+   stock "floating card" that makes every generated layout look identical, and at
+   16px+ of blur it also costs a real paint on every pointer move. This is a 2px
+   rise, a firmer edge, and a tight shadow that reads as contact with the page
+   rather than as levitation.
+
+   `translate` and `scale` are standalone properties in Tailwind v4, not
+   `transform` — a `transition-[transform]` here would animate nothing at all.
+   ───────────────────────────────────────────────────────────────────────────── */
+.card-lift {
+  transition:
+    translate 220ms var(--ease-standard),
+    border-color 220ms var(--ease-standard),
+    box-shadow 220ms var(--ease-standard);
+}
+
+.card-lift:hover,
+.card-lift:focus-visible,
+.card-lift:has(:focus-visible) {
+  translate: 0 -2px;
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 12px -4px color-mix(in oklab, var(--foreground) 22%, transparent);
+}
+
+.card-lift:active {
+  translate: 0 0;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-lift {
+    transition: border-color 160ms var(--ease-standard);
+  }
+  .card-lift:hover,
+  .card-lift:focus-visible,
+  .card-lift:has(:focus-visible) {
+    translate: none;
+    box-shadow: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Depth utilities.
+
+   Flat colour on flat colour is what made the old palette read as unfinished, and
+   swapping hues alone would not have fixed it. These add the two things a printed
+   page has and a CSS page does not: a ground that is not perfectly uniform, and
+   light that falls from somewhere.
+
+   Both are decorative and both sit behind `pointer-events: none`, so neither can
+   intercept a click or change what a screen reader announces.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/*
+  Grain. An SVG feTurbulence rendered once as a data URI — no image request, no
+  layout cost. Very low opacity: the point is that you cannot see it, only notice
+  its absence when it is removed.
+*/
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/*
+  An off-centre citron wash. Radial rather than a linear 45-degree fade, which is
+  the gradient every generated layout reaches for. Sits top-right so it lights the
+  hero from the same direction as the shadow tokens fall.
+*/
+/*
+  Held at 18%. The page is white and must read white — this is a warm cast in the
+  top corner, not a colour field. At the 42% it started on, the hero read as a yellow
+  section rather than a white page with light falling on it.
+*/
+.field-citron {
+  background-image: radial-gradient(
+    58rem 38rem at 88% -18%,
+    color-mix(in oklab, var(--accent) 18%, transparent),
+    transparent 62%
+  );
+}
+
+.field-moss {
+  background-image: radial-gradient(
+    52rem 34rem at 12% 108%,
+    color-mix(in oklab, var(--primary) 7%, transparent),
+    transparent 70%
+  );
+}
+
+/* A hairline that fades out at both ends — a rule that stops shouting at the edges. */
+.rule-fade {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--border) 12%,
+    var(--border) 88%,
+    transparent
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   The page shell.
+
+   NO max-width. The page occupies the screen it is given, and the only thing holding
+   content off the edge is a gutter that grows with the viewport — roughly 16px on a
+   phone and 88px on a 1920px display.
+
+   It was capped at 1440px, which on a 1920px screen parked 240px of nothing down each
+   side. A cap is the conventional advice and it is wrong for this site: the shop is a
+   grid of product cards and the legality pages are wide tables of state data, both of
+   which get better with room rather than worse.
+   ───────────────────────────────────────────────────────────────────────────── */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  /*
+    The gutter is published as a variable so components that need to match it —
+    the header's safe-area padding, the full-bleed bands that cancel it — read one
+    value instead of restating the clamp and drifting from it.
+  */
+  --shell-gutter: clamp(1rem, 4.5vw, 5.5rem);
+  padding-inline: var(--shell-gutter);
+}
+
+/*
+  A landscape phone puts the notch on one SIDE. `env(safe-area-inset-left/right)`
+  is zero everywhere else, so `max()` keeps the normal gutter on every device that
+  does not have one and widens only the side that does.
+*/
+@media (orientation: landscape) {
+  .shell {
+    padding-left: max(var(--shell-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--shell-gutter), env(safe-area-inset-right));
+  }
+}
+
+
+
+/*
+  Display tracking.
+
+  Letter-spacing that looks correct at 16px is visibly loose at 96px — the larger the
+  type, the more the gaps between letters read as holes. Every award-winning display
+  setting measured was negative; Siena runs −2.7px on a 90px heading, which is about
+  −0.03em. This applies a mild default to the display face, and the hero tightens
+  further because it is the largest thing on the site.
+*/
+@layer base {
+  /*
+    In the BASE layer deliberately.
+
+    Written as a plain rule at the end of the file it landed after Tailwind's
+    utilities and beat them on source order — the hero asked for `tracking-[-0.03em]`
+    and silently rendered at -0.018em. As a base rule it sets the default and any
+    utility still overrides it, which is the whole point of having one.
+  */
+  .font-display {
+    letter-spacing: -0.018em;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PRINT — for the invoice and packing slips, and nothing else.
+
+   Two things have to happen and neither is optional.
+
+   1. THE CHROME GOES. A sidebar is navigation, and navigation on paper is ink
+      spent on links nobody can click. The fixed sidebar also reserves a 16rem
+      gutter that becomes a blank column once it is hidden, so the shell's padding
+      is released with it.
+
+   2. THE INK INVERTS. This site's operator surface is dark. Browsers drop
+      background colours when printing but KEEP text colours, so a dark theme
+      prints pale grey text on white paper — technically rendered, practically
+      blank. The override below is deliberately blunt, with `!important` and a
+      universal selector inside the document: every token, every utility and every
+      inline colour has to lose, because a packing slip that comes out of the
+      printer illegible is discovered by the person holding an empty box.
+   ───────────────────────────────────────────────────────────────────────────── */
+@media print {
+  [data-admin-chrome],
+  .no-print {
+    display: none !important;
+  }
+
+  [data-admin-shell] {
+    padding: 0 !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .print-document,
+  .print-document * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #999 !important;
+    box-shadow: none !important;
+  }
+
+  /*
+    One document per sheet. `break-before` on the SECOND and later documents
+    rather than `break-after` on every one — `break-after` on the last document
+    ejects a blank final page, which on a three-parcel order is three wasted
+    sheets and a packer wondering what is missing.
+  */
+  .print-document + .print-document {
+    break-before: page;
+  }
+
+  .print-document {
+    break-inside: avoid-page;
+  }
+}
+
+/*
+  The customer chat on a phone: a floating card, not a full-height panel.
+
+  At most 34rem tall, and never taller than the visible screen less a margin. It sits
+  just above the bottom of what the visitor can see — the keyboard included, via the
+  --app-vh / --app-vv-top variables set by useViewportHeight — so the typing field
+  stays in view. From md the corner card's own utilities take over.
+*/
+@media (width < 48rem) {
+  .chat-card {
+    --chat-card-h: min(34rem, calc(var(--app-vh, 100dvh) - 1.5rem));
+    height: var(--chat-card-h);
+    top: calc(var(--app-vv-top, 0px) + var(--app-vh, 100dvh) - var(--chat-card-h) - 0.75rem);
+  }
+}

@@ -91,6 +91,41 @@ common single mistake, because the server-side variable alone lets the build pas
 
 ---
 
+## 4b. Brevo — verifying the sending domain
+
+Email will not send until Brevo trusts `mimosalsd.com`. Three DNS records and a key.
+
+1. **Add the domain.** Brevo → Senders, Domains & Dedicated IPs → **Domains** → Add a
+   domain → `mimosalsd.com`.
+2. **Add the records Brevo shows you**, at the same registrar as the Vercel records:
+
+| Type | Host | Value |
+|---|---|---|
+| TXT | `mimosalsd.com` (or `@`) | `brevo-code:...` — the exact string Brevo gives you |
+| TXT | `mail._domainkey` | The DKIM value Brevo gives you |
+| TXT | `mimosalsd.com` (or `@`) | `v=spf1 include:spf.brevo.com mx ~all` |
+| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:contact@mimosalsd.com` — optional, worth having |
+
+   If a record already exists at `@` for SPF, **merge** rather than adding a second one:
+   a domain with two SPF records fails both.
+3. **Wait for propagation** — usually minutes, up to a few hours — then press Verify in
+   Brevo. It will not authenticate until all of the records resolve.
+4. **Add the sender.** Senders → Add a sender → `contact@mimosalsd.com`, and confirm the
+   message it sends to that mailbox.
+5. **Create the key.** SMTP & API → API Keys → Create a new API key. Paste it into Vercel
+   as `BREVO_API_KEY` (it is blank in `.env` today, so nothing sends yet).
+6. **`EMAIL_FROM`** is `MIMOSALSD <contact@mimosalsd.com>`. The display name is optional
+   but it is what a recipient sees in their inbox list; a bare address shows as the
+   address. The address must be the sender you verified in step 4.
+
+**What still will not send after all of that:** marketing blasts. They require a postal
+address in the footer under CAN-SPAM, and `BRAND.postalAddress` is empty — deliberately,
+because an invented address on commercial mail is a false statement rather than a
+placeholder. Set the real one in Admin → Settings. Order and enquiry email is
+transactional and sends without it.
+
+---
+
 ## 5. Search engines — only after the copy pass
 
 **Do not verify the site with Google or Bing, and do not submit a sitemap, until

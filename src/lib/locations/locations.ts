@@ -52,23 +52,29 @@ export interface Location {
 }
 
 /**
- * PLACEHOLDER — deliberately unpublished.
+ * The California branch — deliberately UNPUBLISHED until its address is real.
  *
- * Replace with real addresses, phone numbers, hours and ZIP coverage, then set
- * isPublished. Until then nothing renders publicly, nothing enters the sitemap, and
- * the same-day promise is never shown.
+ * The business operates from California (owner, 2026-09-27), and that much the site
+ * states in its schema, its shipping policy and its FAQ. A locations PAGE is a
+ * different claim: it publishes a street address, a phone number and opening hours,
+ * and those have to match a Google Business Profile byte for byte or the page does
+ * the opposite of what it is for. So the row exists with the region filled in and
+ * everything else marked PENDING, and nothing renders, enters the sitemap, or
+ * promises same-day delivery until the real details replace them.
  */
 export const LOCATIONS: readonly Location[] = [
   {
-    slug: 'austin-tx',
-    name: 'Austin',
+    slug: 'california',
+    name: 'California',
     addressLine1: 'PENDING — real street address required',
-    city: 'Austin',
-    stateCode: 'TX',
-    postalCode: '78701',
+    city: 'PENDING — city',
+    stateCode: 'CA',
+    postalCode: 'PENDING',
     phone: 'PENDING',
-    latitude: 30.2672,
-    longitude: -97.7431,
+    // PENDING — the branch's own coordinates. These place the pin in California and
+    // nowhere more precise, which is honest for a row that does not render.
+    latitude: 36.7783,
+    longitude: -119.4179,
     hours: [
       { day: 'Mo', opens: '10:00', closes: '18:00' },
       { day: 'Tu', opens: '10:00', closes: '18:00' },
@@ -78,10 +84,9 @@ export const LOCATIONS: readonly Location[] = [
       { day: 'Sa', opens: '11:00', closes: '16:00' },
     ],
     cityContent: '',
-    isPickupPoint: true,
-    offersSameDay: true,
-    sameDayZips: ['78701', '78702', '78703', '78704', '78705'],
-    sameDayCutoff: '14:00',
+    isPickupPoint: false,
+    offersSameDay: false,
+    sameDayZips: [],
     isPublished: false,
   },
 ]

@@ -103,6 +103,8 @@ export const POLICIES: readonly Policy[] = [
         body: [
           // availability-allow: the owner's statement of the footprint (2026-09-19: "we already ship to all states").
           'We ship within the United States only — all 50 states and the District of Columbia. We do not ship internationally, we do not ship to freight forwarders, and we cannot accept an order for delivery outside the United States.',
+          // availability-allow: the owner's statement of the origin (2026-09-27: the main branch is in California).
+          'Orders leave our California branch. Nothing about where an order starts changes where it can go: every state is served from the same place.',
         ],
       },
       {

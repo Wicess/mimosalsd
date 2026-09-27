@@ -125,6 +125,14 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     category: 'Shipping',
+    // Owner, 2026-09-27: the main branch is in California, shipping to every state.
+    question: 'Where do you ship from?',
+    answer:
+      // availability-allow: the owner's own statement of origin and footprint.
+      'From our California branch, to all fifty states and the District of Columbia. Delivery time depends on how far a parcel travels, so we confirm a window with your order rather than publishing one here.',
+  },
+  {
+    category: 'Shipping',
     question: 'How much is delivery?',
     answer: `Standard parcel delivery is ${formatCents(795)}, free on parcel-eligible orders over ${formatCents(BRAND.freeShippingThresholdCents)}. Vapor products travel on a specialist age-restricted carrier at ${formatCents(1995)} and are never eligible for free shipping at any order value. We confirm a delivery window with your order rather than publishing one, because it depends on the carrier and destination.`,
   },

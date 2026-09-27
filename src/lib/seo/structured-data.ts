@@ -132,6 +132,18 @@ export function organization(email: string) {
     description: BRAND.description,
     email,
     areaServed: { '@type': 'Country', name: 'United States' },
+    /*
+      Region and country always; the street and locality only once a real postal
+      address is set. A PostalAddress with a region alone is valid and is what the
+      business can honestly claim today — an invented street would be a false entity
+      claim, which is worse than an incomplete one.
+    */
+    address: {
+      '@type': 'PostalAddress',
+      ...(BRAND.postalAddress ? { streetAddress: BRAND.postalAddress } : {}),
+      addressRegion: BRAND.location.regionCode,
+      addressCountry: BRAND.location.country,
+    },
     ...(BRAND.phone ? { telephone: BRAND.phone } : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),
     contactPoint: [

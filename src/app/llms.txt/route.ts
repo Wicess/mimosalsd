@@ -80,7 +80,7 @@ async function buildLlmsTxt(): Promise<string> {
     '',
     '## What this business is',
     '',
-    `${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap and cosmetic manufacture, craft and botanical research. We sell to the United States only. All products are age-restricted to ${BRAND.minimumAge} or over. We take no payment on our website: a customer submits an order request and selects a preferred method, we verify the order, and we contact them with instructions. No card data is processed or stored.`,
+    `${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap and cosmetic manufacture, craft and botanical research. We operate from California and sell to the United States only, shipping to all fifty states and the District of Columbia. All products are age-restricted to ${BRAND.minimumAge} or over. We take no payment on our website: a customer submits an order request and selects a preferred method, we verify the order, and we contact them with instructions. No card data is processed or stored.`,
     '',
     '## Product lines and their legal basis',
     '',

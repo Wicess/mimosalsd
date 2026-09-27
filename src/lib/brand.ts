@@ -46,6 +46,22 @@ export const BRAND = {
    */
   postalAddress: '' as string,
 
+  /**
+   * Where the business operates from (owner, 2026-09-27: the main branch is in
+   * California, and it ships to every state).
+   *
+   * The region is a fact the site can state and a search engine can use — "ships from
+   * California" is a real query, and Organization schema takes an address with a
+   * region and no street. The street address is deliberately NOT here: it belongs to
+   * `postalAddress` above, which is what CAN-SPAM and a Google Business Profile
+   * require, and neither is satisfied by a region.
+   */
+  location: {
+    region: 'California',
+    regionCode: 'CA',
+    country: 'US',
+  },
+
   social: {
     linkedin: '' as string,
     instagram: '' as string,

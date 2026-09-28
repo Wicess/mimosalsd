@@ -115,7 +115,7 @@ export function PushComposer({ subscribers }: { subscribers: number }) {
         <div className="mt-2 rounded-[1.75rem] bg-gradient-to-b from-stone-800 to-stone-950 p-4">
           <div className="rounded-2xl bg-white/12 p-3 text-white shadow-lg backdrop-blur">
             <div className="flex items-center gap-2 text-[11px] text-white/70">
-              <Image src="/brand/app-icon-192.png" alt="" width={20} height={20} className="size-5 rounded-md" />
+              <Image src="/brand/app-icon-v2-192.png" alt="" width={20} height={20} className="size-5 rounded-md" />
               <span className="font-medium tracking-wide uppercase">{BRAND.name}</span>
               <span className="ml-auto">now</span>
             </div>

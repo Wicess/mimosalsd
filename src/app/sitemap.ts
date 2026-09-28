@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { cacheTag } from 'next/cache'
+import { db } from '@/lib/db/client'
 import { CATALOG_TAG, LAB_TAG, listMergedBatches, listMergedProducts } from '@/lib/catalog/merged'
 import { catalog } from '@/lib/catalog/repository'
 import { getAllStateLegality } from '@/lib/legality/state-pages'
@@ -24,7 +25,8 @@ import { ROUTES, absoluteUrl, url } from '@/lib/seo/routes'
  * Real per-entry dates arrive with the content models in Steps 15–17; until then a
  * stable release date is both honest and cacheable.
  */
-const RELEASE_DATE = new Date('2026-08-28T00:00:00Z')
+// Moved to 2026-09-28: home, shop, about, FAQ and every policy were rewritten that day.
+const RELEASE_DATE = new Date('2026-09-28T00:00:00Z')
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   'use cache'
@@ -51,6 +53,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries = Object.values(ROUTES)
     .filter((r) => r.inSitemap && !r.pattern.includes('['))
+    // The locations hub is noindex until a real location is published (rule 12).
+    .filter((r) => r.id !== 'locations-hub' || publishedLocations().length > 0)
     .map((r) => ({
       url: absoluteUrl(r.pattern),
       lastModified: policyDates.get(r.pattern) ?? RELEASE_DATE,
@@ -75,9 +79,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     and the authored release date would predate the product itself. A sitemap
     date that is wrong is worse than none: search engines stop trusting all of them.
   */
+  /*
+    The real date a posted product last changed, from its own row: the merged shape
+    carries no date, but the database does. An authored product keeps the release date.
+  */
+  const postedDates = new Map(
+    (await db.postedProduct.findMany({ where: { isActive: true }, select: { slug: true, updatedAt: true } }).catch(() => [])).map(
+      (r) => [r.slug, r.updatedAt] as const,
+    ),
+  )
   const productEntries = merged.map((p) => ({
     url: absoluteUrl(url.product(p.slug)),
-    ...(catalog.getProduct(p.slug) ? { lastModified: RELEASE_DATE } : {}),
+    ...(postedDates.get(p.slug)
+      ? { lastModified: postedDates.get(p.slug) }
+      : catalog.getProduct(p.slug)
+        ? { lastModified: RELEASE_DATE }
+        : {}),
     changeFrequency: ROUTES.product.changeFrequency,
     priority: ROUTES.product.priority,
   }))

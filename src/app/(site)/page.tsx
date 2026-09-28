@@ -1,25 +1,19 @@
 import type { Metadata } from 'next'
 import Image, { getImageProps } from 'next/image'
-import { catalog } from '@/lib/catalog/repository'
-import { publishedGuides, publishedPosts } from '@/lib/content/content.data'
+import { listAllPosts } from '@/lib/content/merged-content'
 import { LegalityChecker } from '@/components/marketing/legality-checker'
 import { ProductCard } from '@/components/commerce/product-card'
-import { CategoryRail } from '@/components/commerce/category-rail'
-import { CategoryTile } from '@/components/commerce/category-tile'
-import { mixByCategory } from '@/lib/catalog/mix'
 import { Proprietor } from '@/components/marketing/proprietor'
 import { ShineRule } from '@/components/ui/shine-rule'
 import { SectionHeading } from '@/components/layout/section-heading'
 import { Standards } from '@/components/marketing/standards'
-import { Badge } from '@/components/ui/badge'
-import { CartIcon, FlaskIcon, ShieldIcon, TruckIcon } from '@/components/ui/icon'
+import { MapPinIcon, PackageIcon, ShieldIcon, TagIcon } from '@/components/ui/icon'
 import { PAYMENT_SECURITY_STATEMENT } from '@/lib/compliance/disclaimers'
 import { BRAND } from '@/lib/brand'
 import { url } from '@/lib/seo/routes'
 import { jsonLdScript, organization, website } from '@/lib/seo/structured-data'
 import { listMergedProducts } from '@/lib/catalog/merged'
 import { getCompanyEmail } from '@/lib/site/company-email.server'
-import { HeroVideo, type HeroVideoClip } from '@/components/marketing/hero-video'
 import { Mona_Sans } from 'next/font/google'
 
 /*
@@ -44,34 +38,70 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 }
 
+/*
+  Rewritten 2026-09-28, when the shop narrowed to root bark. Every item is something
+  the business does on every order: the old strip claimed lab testing by batch and
+  "51 jurisdictions, cited", and no state rule cites a statute.
+*/
 const TRUST_STRIP = [
-  [FlaskIcon, 'Lab-tested', 'Every batch, before sale'],
-  [CartIcon, 'Wholesale disposables', 'Volume pricing for retailers'],
-  [ShieldIcon, 'State-verified', '51 jurisdictions, cited'],
-  [TruckIcon, 'Free over $100', 'Parcel-eligible items'],
+  [MapPinIcon, 'Ships from California', 'To US addresses, with tracking'],
+  [PackageIcon, 'Sold by the pound', 'From 1/4 lb, bulk on request'],
+  [ShieldIcon, 'Checked by a person', 'Before payment is asked for'],
+  [TagIcon, 'Free over $100', 'On parcel orders'],
 ] as const
 
 /*
-  The disposables band's spec sheet. Every row is something the business does for
-  every disposable, never a claim about one product: what a device contains is
-  stated on its own page. Testing is "by batch", not "third-party" (the owner
-  describes the disposables' labs as second-party), and nothing here mentions
-  signatures, ID at the door or state restrictions (owner, 2026-09-15).
+  The three cuts, as a buyer chooses between them. The copy answers the question
+  people actually search ("powder vs shredded") and each card goes to its product.
 */
-const DISPOSABLE_FACTS = [
-  ['Families', 'Nicotine disposables, and hemp-derived THCA and THC disposables'],
-  ['Lab testing', 'By batch, before it is offered for sale'],
-  ['Certificates', 'Issued to verified buyers on request'],
-  ['Sold', 'By the unit, with wholesale pricing for retailers'],
-  ['Carrier', 'PACT Act compliant, shipped on its own'],
-  ['Age', '21 and over'],
+const CUTS = [
+  {
+    name: 'Shredded',
+    href: '/product/shredded-mimosa-hostilis-root-bark',
+    detail:
+      'The everyday dyeing cut. Strains cleanly, builds color steadily and gives a second and third bath from the same bark.',
+    best: 'Wool and silk dye lots, whole fleeces, leather',
+  },
+  {
+    name: 'Powder',
+    href: '/product/mimosa-hostilis-root-bark-powder',
+    detail:
+      'Milled fine for the fastest color release and the most color per ounce. Needs settling or fine straining before fiber goes in.',
+    best: 'Test skeins, small batches, cold-process soap color',
+  },
+  {
+    name: 'Whole chips and strips',
+    href: '/product/whole-mimosa-hostilis-root-bark',
+    detail:
+      'The least processed cut and the longest-keeping. Break it, soak it overnight, or mill a portion when a job needs powder.',
+    best: 'Stocking up, slow leather soaks, milling your own',
+  },
 ] as const
 
-/* When no disposable is posted yet, the band's right column names the two families instead. */
-const DISPOSABLE_FAMILIES = [
-  ['Nicotine disposables', 'Sealed, pre-filled and ready to use, with the contents stated on each product page.'],
-  ['THCA & THC disposables', 'Hemp-derived cannabinoid disposables, lab-tested by batch and sold by the unit.'],
+/* The spec sheet beside the products: stable facts about every root bark order. */
+const BARK_FACTS = [
+  ['Plant', 'Mimosa tenuiflora (syn. Mimosa hostilis), also sold as jurema preta'],
+  ['Cuts', 'Powder, shredded, whole chips and strips'],
+  ['Also stocked', 'Sassafras root bark (Sassafras albidum)'],
+  ['Sold by', 'The pound: 1/4, 1/3, 1/2 and 1 lb, bulk on request'],
+  ['Ships from', 'California, to US addresses only'],
+  ['Use', 'Natural dyeing, soap color, leather and craft. Not for human consumption'],
 ] as const
+
+/* The articles the home page points to: the three a new dyer needs first. */
+const STARTER_ARTICLES = [
+  'the-three-cuts-of-mimosa-root-bark',
+  'weighing-bark-against-fibre',
+  'iron-as-a-modifier-how-far-to-go',
+] as const
+
+/*
+  The hero photograph: whole root bark from the shop's own listing, served from
+  object storage. It replaced a sample photograph of Amanita muscaria when that
+  category was withdrawn.
+*/
+const HERO_PHOTO = `https://${process.env.NEXT_PUBLIC_R2_PUBLIC_HOST}/media/7a5f77fc5187e4717ac3854bf185d9a5.jpg`
+const HERO_ALT = 'Whole Mimosa hostilis root bark in thick chips, dark outer bark over a red-brown inner face'
 
 /*
   The specimen plate's <img> props, built once.
@@ -86,8 +116,8 @@ const DISPOSABLE_FAMILIES = [
   is exactly this page now — the heading on a phone, this plate from `lg`.
 */
 const { props: PLATE } = getImageProps({
-  src: '/samples/amanita-caps.jpg',
-  alt: 'An Amanita muscaria mushroom, its orange-red cap flecked with white, growing in moss.',
+  src: HERO_PHOTO,
+  alt: HERO_ALT,
   fill: true,
   sizes: '40vw',
   loading: 'eager',
@@ -105,7 +135,7 @@ const { props: PLATE } = getImageProps({
   bytes do. Decorative here (alt=""): the plate's <img> carries the description.
 */
 const { props: STAGE } = getImageProps({
-  src: '/samples/amanita-caps.jpg',
+  src: HERO_PHOTO,
   alt: '',
   fill: true,
   sizes: '66vw',
@@ -116,49 +146,19 @@ const { props: STAGE } = getImageProps({
 })
 
 /*
-  THE PHONE HERO'S FILM: two clips, crossfading. Empty the list and the photograph
-  above is the backdrop again, with no video code sent at all.
-
-  Generated with Veo in Google Flow in the site's own palette: the Amanita in moss,
-  then all three lines (bark, the cap, a vape) on slate. Each file was prepared for
-  this slot: 7 seconds, its last second crossfaded into its first so it loops
-  without a jump, no audio track (the page is muted, so audio was dead weight),
-  720x1280 H.264 at about 0.7 MB. MP4 comes first because every iPhone plays it;
-  the WebM is for browsers built without H.264, which skip the MP4 and use it.
-  Idle loading, reduced motion, data saver, pausing and the carousel itself are all
-  in components/marketing/hero-video.tsx.
+  THE PHONE HERO'S FILM was two generated clips, the Amanita in moss and a slate still
+  life with a vape in it. Both went with those categories; the photograph above is the
+  phone backdrop again, with no video code sent at all.
 */
-const HERO_VIDEO: readonly HeroVideoClip[] = [
-  {
-    sources: [
-      { src: '/videos/hero-amanita-moss.mp4', type: 'video/mp4' },
-      { src: '/videos/hero-amanita-moss.webm', type: 'video/webm' },
-    ],
-  },
-  {
-    sources: [
-      { src: '/videos/hero-products-slate.mp4', type: 'video/mp4' },
-      { src: '/videos/hero-products-slate.webm', type: 'video/webm' },
-    ],
-  },
-]
 
 /* A 1×1 transparent GIF. Inline, so selecting it costs no request at all. */
 const BLANK_PIXEL =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
 export default async function Home() {
-  const categories = catalog.listCategories()
-  /*
-   * Five, to fill the widest row. It was three, which left half the grid empty on a
-   * 1900px display — the row goes to five columns at 1600px and up.
-   */
-  // A mix: one from each category in turn, so the row shows the whole shop rather than its largest aisle.
-  const featured = mixByCategory(await listMergedProducts({ sort: 'featured' }), 5)
-  // The disposables band's own row: the business leads with them (owner, 2026-09-15).
-  const disposables = (await listMergedProducts({ categorySlug: 'disposable-vapes', sort: 'featured' })).slice(0, 8)
-  const guides = publishedGuides().slice(0, 3)
-  const posts = publishedPosts().slice(0, 2)
+  const bark = (await listMergedProducts({ categorySlug: 'mimosa-hostilis', sort: 'featured' })).slice(0, 8)
+  const allPosts = await listAllPosts()
+  const articles = STARTER_ARTICLES.flatMap((slug) => allPosts.filter((p) => p.slug === slug))
 
   /*
     Organization and WebSite are the site's identity nodes — the ones a knowledge
@@ -184,9 +184,8 @@ export default async function Home() {
         when nobody decided what it should look like. Content sits in seven columns and
         the specimen image in five, so the fold carries the promise AND the product.
 
-        The image is a real Amanita muscaria, which is a thing this business actually
-        sells — a decorative abstract would have been easier and would have said
-        nothing.
+        The image is the shop's own whole root bark, the thing the page is selling —
+        a decorative abstract would have been easier and would have said nothing.
 
         BELOW `lg` IT IS A DIFFERENT COMPOSITION, not the desktop one stacked. The
         picture goes full-bleed BEHIND the copy (the photograph drifting, or the film
@@ -209,8 +208,7 @@ export default async function Home() {
             <img {...STAGE} alt="" />
           </picture>
         </div>
-        {HERO_VIDEO.length > 0 ? <HeroVideo clips={HERO_VIDEO} /> : null}
-        {/*
+                {/*
           ONE GRADIENT, AND THE COPY SITS IN ITS DARK END.
 
           The film was covered by an even scrim plus a halo over the middle — together
@@ -294,7 +292,7 @@ export default async function Home() {
             */}
             {/* Named explicitly: the base styles set every h1 in the display serif. */}
             <h1 className="mt-5 font-[family-name:var(--font-hero)] text-3xl font-semibold [font-stretch:82%] lg:mt-7 leading-[1.08] tracking-[-0.02em] text-balance text-foreground max-lg:text-white max-lg:[text-shadow:0_1px_2px_rgb(0_0_0/0.5),0_2px_24px_rgb(0_0_0/0.55)]">
-              {['Disposable vapes.', 'Mimosa Hostilis root bark.', 'Amanita muscaria.'].map(
+              {['Mimosa hostilis root bark', 'for natural dye and soap.'].map(
                 (line) => (
                   <span key={line} className="block">
                     {line}
@@ -314,10 +312,10 @@ export default async function Home() {
             </p>
 
             <p className="mt-4 hidden max-w-xl text-base leading-relaxed text-foreground-muted lg:block">
-              A US distributor of nicotine, THCA and THC disposables, with Mimosa
-              Hostilis root bark and Amanita muscaria alongside. Distributed to all 50
-              states and the District of Columbia, with a laboratory report on file for
-              every batch, released to verified buyers who ask.
+              Powder, shredded and whole Mimosa hostilis root bark, plus sassafras root
+              bark, for natural dyers, soap makers and leather workers. Sold by the pound
+              from a quarter pound, shipped from {BRAND.location.region} to US addresses,
+              and trading since {BRAND.track.foundedYear}.
             </p>
 
           {/*
@@ -328,24 +326,24 @@ export default async function Home() {
           */}
             <div className="mt-7 flex flex-col gap-3 max-md:mx-auto max-md:max-w-[20rem] md:flex-row md:flex-wrap md:justify-center lg:justify-start">
               <a
-                href={url.category('disposable-vapes')}
+                href={url.category('mimosa-hostilis')}
                 className="inline-flex min-h-12 items-center justify-center rounded-md bg-accent px-7 text-base font-medium text-on-accent shadow-md max-lg:focus-visible:outline-white! transition-[translate,box-shadow] duration-[180ms] ease-[var(--ease-standard)] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
-                Shop disposables
+                Shop root bark
               </a>
               <a
-                href={url.shop()}
+                href={url.bulk()}
                 className="inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-surface px-7 text-base font-medium text-foreground transition-colors duration-[180ms] hover:border-primary hover:bg-surface motion-reduce:transition-none max-lg:border-white/60! max-lg:bg-stone-950/30 max-lg:text-white max-lg:hover:border-white! max-lg:hover:bg-stone-950/50 max-lg:focus-visible:outline-white!"
               >
-                Shop everything
+                Bulk pricing
               </a>
             </div>
 
             <dl className="mt-8 hidden border-t border-border pt-5 lg:block">
               {[
-                ['Disposables', 'Nicotine, THCA and THC, sold by the unit'],
-                ['Lab testing', 'Every batch, before it is offered for sale'],
-                ['Certificate', 'Issued to verified buyers on request, by batch code'],
+                ['Cuts', 'Powder, shredded, whole chips and strips'],
+                ['Sold by', 'The pound, from 1/4 lb; bulk on request'],
+                ['Ships from', `${BRAND.location.region}, to US addresses only`],
               ].map(([term, detail]) => (
                 <div key={term} className="flex gap-4 py-1.5 text-sm">
                   <dt className="w-28 shrink-0 text-foreground-subtle">{term}</dt>
@@ -408,8 +406,8 @@ export default async function Home() {
                 effect is the one thing the design must not do.
               */}
               <figcaption className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-3 bg-stone-950/72 px-4 py-3 text-xs text-white backdrop-blur-sm">
-                <span className="font-medium">Amanita muscaria</span>
-                <span className="opacity-80">Sample image</span>
+                <span className="font-medium">Whole Mimosa hostilis root bark</span>
+                <span className="opacity-80">Chips and strips</span>
               </figcaption>
             </figure>
           </div>
@@ -466,52 +464,45 @@ export default async function Home() {
       </section>
 
       {/*
-        2 — Disposables, distributed direct (owner, 2026-09-15: "we are a distributor
-        of disposable products").
-
-        The business is built around disposables, so they get the first band after the
-        hero and more of the page than any other line: what we distribute, how it is
-        tested and sold, and the real disposables posted in the admin.
-
-        Composition matches the category page's about band (a reading column, a bare
-        hairline spec sheet, no card around it), with the products on the wide side.
-        On a phone it stacks: the pitch, the two buttons under the thumb, then the
-        facts and the products.
+        2 — The root bark. Rewritten 2026-09-28 when the shop narrowed to it: the pitch
+        and spec sheet on the reading side, the live products on the wide side. On a
+        phone it stacks: the pitch, the buttons under the thumb, then the products.
       */}
-      <section aria-labelledby="home-disposables" className="relative border-b border-border bg-surface py-10 lg:py-14">
+      <section aria-labelledby="home-bark" className="relative border-b border-border bg-surface py-10 lg:py-14">
         <div className="shell">
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="reveal lg:col-span-5">
               <h2
-                id="home-disposables"
+                id="home-bark"
                 className="font-display text-3xl leading-tight tracking-[-0.015em] text-balance text-foreground"
               >
-                Disposables, distributed direct
+                Mimosa hostilis root bark, by the pound
               </h2>
               <div aria-hidden className="mt-4 h-0.5 w-10 rounded-full bg-accent" />
               <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-pretty text-foreground">
-                Disposable vapes are what {BRAND.name} is built around. We distribute
-                nicotine, THCA and THC disposables to adult customers and to retailers,
-                lab-tested by batch and sold by the unit.
+                The root bark of Mimosa tenuiflora is one of the richest natural dyes a
+                dyer can buy: dusky rose, plum and burgundy on wool and silk, slate and
+                charcoal with iron, and warm red-browns on leather. We sell it in three
+                cuts, with sassafras root bark alongside.
               </p>
 
               <div className="mt-7 flex flex-col gap-3 max-sm:max-w-[20rem] sm:flex-row sm:flex-wrap">
                 <a
-                  href={url.category('disposable-vapes')}
+                  href={url.category('mimosa-hostilis')}
                   className="inline-flex min-h-12 items-center justify-center rounded-md bg-accent px-7 text-base font-medium text-on-accent shadow-md transition-[translate,box-shadow] duration-[180ms] ease-[var(--ease-standard)] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
-                  Shop disposables
+                  Shop root bark
                 </a>
                 <a
                   href={url.bulk()}
                   className="inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-surface px-7 text-base font-medium text-foreground transition-colors duration-[180ms] hover:border-primary motion-reduce:transition-none"
                 >
-                  Wholesale pricing
+                  Bulk pricing
                 </a>
               </div>
 
               <dl className="mt-9 divide-y divide-border border-y border-border">
-                {DISPOSABLE_FACTS.map(([term, detail]) => (
+                {BARK_FACTS.map(([term, detail]) => (
                   <div key={term} className="flex flex-col gap-0.5 py-3 sm:grid sm:grid-cols-[minmax(0,12ch)_1fr] sm:gap-4">
                     <dt className="text-sm text-foreground-muted">{term}</dt>
                     <dd className="text-sm leading-relaxed text-pretty text-foreground">{detail}</dd>
@@ -521,140 +512,93 @@ export default async function Home() {
             </div>
 
             <div className="lg:col-span-7">
-              {disposables.length > 0 ? (
-                <>
-                  {/*
-                    The column count climbs with the width, and the number of cards
-                    climbs with it, so the products stay level with the reading column
-                    beside them instead of running a third of a screen past it.
-
-                    Four cards in two columns, six in three, eight in four — every
-                    configuration is two complete rows. Cards beyond the current row
-                    count are hidden rather than sliced away, because the slice would
-                    have to know the viewport and a ragged final row is what makes a
-                    product grid look unfinished.
-                  */}
-                  <div className="stagger grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
-                    {disposables.map((p, i) => (
-                      <ProductCard
-                        key={p.slug}
-                        product={p}
-                        compact
-                        className={i >= 6 ? 'hidden 2xl:flex' : i >= 4 ? 'hidden xl:flex' : ''}
-                      />
-                    ))}
-                  </div>
-                  <a
-                    href={url.category('disposable-vapes')}
-                    className="mt-5 inline-flex min-h-11 items-center gap-1.5 text-sm text-accent-fg underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
-                  >
-                    Every disposable we carry
-                    <span aria-hidden>&rarr;</span>
-                  </a>
-                </>
-              ) : (
-                <ul className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                  {DISPOSABLE_FAMILIES.map(([name, detail]) => (
-                    <li key={name}>
-                      <a
-                        href={url.category('disposable-vapes')}
-                        className="group/family flex h-full flex-col rounded-xl bg-surface-sunken p-6 ring-1 ring-border transition-colors duration-200 hover:ring-primary motion-reduce:transition-none lg:p-8"
-                      >
-                        <span className="font-display text-2xl leading-tight text-balance text-foreground">{name}</span>
-                        <span className="mt-2 max-w-[40ch] text-sm leading-relaxed text-pretty text-foreground-muted">
-                          {detail}
-                        </span>
-                        <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm text-accent-fg underline decoration-accent/40 underline-offset-4 group-hover/family:decoration-accent">
-                          Shop disposables
-                          <span aria-hidden>&rarr;</span>
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {/*
+                Two columns, then more as the width allows. `compact`: no buy button,
+                because the product page is where the size ladder and the real buy
+                controls are.
+              */}
+              <div className="stagger grid grid-cols-2 gap-3 sm:gap-4 2xl:grid-cols-3">
+                {bark.map((p) => (
+                  <ProductCard key={p.slug} product={p} compact />
+                ))}
+              </div>
+              <a
+                href={url.category('mimosa-hostilis')}
+                className="mt-5 inline-flex min-h-11 items-center gap-1.5 text-sm text-accent-fg underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+              >
+                Every cut and size
+                <span aria-hidden>&rarr;</span>
+              </a>
             </div>
           </div>
         </div>
       </section>
 
       {/*
-        3 — Most shopped.
-
-        Products lead now. The legality checker held this slot on the argument that
-        "can you even ship to me?" is the buyer's first question — true, but a visitor
-        who has not seen a single product yet has no reason to care about the answer.
-        Merchandise first, then the constraint that applies to it.
+        3 — Which cut? The question every first-time buyer searches ("powder vs
+        shredded"), answered where they will decide, with a link to each product.
       */}
-      <section className="shell py-8">
-        <SectionHeading title="Most shopped" />
-        {/*
-          `compact` — no buy button on these. This row is a showcase, not a picker:
-          the reader has arrived, seen a hero, and is being shown what the shop
-          sells. The button below each card was the tallest part of it and asked
-          for a decision several sections too early. Tapping a card still reaches
-          the product page, where the size ladder and the real buy controls are.
-        */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5">
-          {featured.map((p) => (
-            <ProductCard key={p.slug} product={p} compact />
-          ))}
-        </div>
-      </section>
-
-      {/* 4 — The legality checker, once there is something to want. */}
-      <LegalityChecker />
-
-      {/*
-        5 — Shop by category.
-
-        Below the state check, not above it. Someone who has just been told what
-        can reach their address is being pointed at aisles they can actually buy
-        from; above it, the same three tiles were an invitation that might not
-        survive the next section.
-
-        A drifting rail rather than three static cards. Three categories in a
-        three-column grid is a row that has nothing to say about itself — the
-        rail moves, which is what tells a reader these are places to go rather
-        than a legend, and it stops the moment a pointer lands on one.
-      */}
-      <section className="shell relative border-t border-border py-8">
+      <section aria-labelledby="home-cuts" className="shell relative py-10">
         <ShineRule />
-        <SectionHeading title="Shop by category" />
-        <CategoryRail label="Product categories">
-          {categories.map((c) => (
-            <CategoryTile key={c.slug} category={c} />
+        <SectionHeading
+          id="home-cuts"
+          title="Which cut of Mimosa hostilis should you buy?"
+          summary="The same root bark in three forms. Pick by the job, not the price."
+        />
+        <ul className="stagger grid gap-4 md:grid-cols-3">
+          {CUTS.map((cut) => (
+            <li key={cut.name}>
+              <a
+                href={cut.href}
+                className="card-lift flex h-full flex-col rounded-xl border border-border bg-surface p-6"
+              >
+                <h3 className="font-display text-xl text-foreground">{cut.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pretty text-foreground-muted">{cut.detail}</p>
+                <p className="mt-4 text-sm text-foreground">
+                  <span className="text-foreground-subtle">Best for: </span>
+                  {cut.best}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm text-accent-fg underline decoration-accent/40 underline-offset-4">
+                  See the {cut.name.toLowerCase()} cut
+                  <span aria-hidden>&rarr;</span>
+                </span>
+              </a>
+            </li>
           ))}
-        </CategoryRail>
+        </ul>
       </section>
+
+      {/* 4 — Where it ships. */}
+      <LegalityChecker />
 
       {/* 6 — Trust band. The honest payment line is the strongest thing on it. */}
       <section className="relative border-y border-border bg-accent-muted py-10">
         <ShineRule />
         <ShineRule edge="bottom" />
         <div className="shell reveal">
-          <SectionHeading title="Why you can check us" />
+          <SectionHeading title="How buying here works" />
           <div className="stagger grid gap-6 md:grid-cols-3">
             <div>
-              <h3 className="font-medium text-foreground">Every batch, tested</h3>
+              <h3 className="font-medium text-foreground">A person checks every order</h3>
               <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                Every batch is lab-tested before it is offered for sale, disposables
-                included. Ask for the certificate covering the code on your package and
-                we will send it.
+                You send an order request, not a payment. We check the stock and the
+                address it is going to before anything is asked of you, and reply with
+                how to pay.
               </p>
-              <a href={url.labResults()} className="mt-3 inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4">
-                Request a certificate
+              <a href={url.guide('how-ordering-and-payment-works')} className="mt-3 inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4">
+                How ordering works
               </a>
             </div>
             <div>
-              <h3 className="font-medium text-foreground">Every state, cited</h3>
+              <h3 className="font-medium text-foreground">Shipped from California</h3>
               <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                We publish the statute behind each position and the date we last reviewed
-                it — and our cart enforces the same data, so what you read is what
-                happens at checkout.
+                Once payment is confirmed the bark is weighed, packed in a double-sealed,
+                smell-proof bag flushed with nitrogen to keep it fresh, and shipped with
+                tracking, to any address in the United States. Parcel orders from 100
+                dollars ship free.
               </p>
               <a href={url.legalityHub()} className="mt-3 inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4">
-                Legality by state
+                Where we ship
               </a>
             </div>
             <div>
@@ -662,8 +606,8 @@ export default async function Home() {
               <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
                 {PAYMENT_SECURITY_STATEMENT}
               </p>
-              <a href={url.guide('how-ordering-and-payment-works')} className="mt-3 inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4">
-                How ordering works
+              <a href={url.contact()} className="mt-3 inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4">
+                Talk to a person
               </a>
             </div>
           </div>
@@ -694,18 +638,17 @@ export default async function Home() {
         <ShineRule edge="bottom" />
         <div className="shell reveal">
         <SectionHeading
-          title="Guides & blogs"
-          summary="Informative first. We publish what we can verify and cite what we rely on."
+          title="Dyeing with root bark: start here"
+          summary="How much bark to use, which cut to choose, and how to steer the color."
         />
         <div className="stagger grid gap-5 md:grid-cols-3">
-          {[...guides, ...posts].slice(0, 3).map((item) => (
+          {articles.map((item) => (
             <a
               key={item.slug}
-              href={'clusterSlugs' in item ? url.guide(item.slug) : url.blogPost(item.slug)}
+              href={url.blogPost(item.slug)}
               className="card-lift rounded-lg border border-border bg-surface p-5"
             >
-              {'clusterSlugs' in item && <Badge tone="accent">Guide</Badge>}
-              <h3 className="mt-2 font-display text-lg text-foreground">{item.title}</h3>
+              <h3 className="font-display text-lg text-foreground">{item.title}</h3>
               <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-foreground-muted">
                 {item.summary}
               </p>
@@ -723,9 +666,9 @@ export default async function Home() {
           <div className="min-w-0 flex-1">
             <h2 className="font-display text-2xl text-foreground">Buying in volume?</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-foreground-muted">
-              Disposables in volume for vape shops, retailers and resellers, and
-              botanical materials by the pound, all lab-tested by batch. Tell us what you
-              need and we will quote it.
+              Mimosa hostilis and sassafras root bark by the pound or by the case, for
+              dye studios, soap makers, schools and resellers. Tell us the cut and the
+              quantity and a person replies with a quote.
             </p>
           </div>
           <a

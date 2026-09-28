@@ -242,6 +242,12 @@ describe('every admin mutation writes to a trail', () => {
     */
     rewritePostedProduct: 'rewriteOne(',
     rewriteNextPostedProduct: 'rewriteOne(',
+    /*
+      The products-list Show/Hide button hands the work to setPostedProductActive,
+      which writes the UNPUBLISH/PUBLISH entry itself and is checked like any other
+      action in this file.
+    */
+    togglePostedProductActive: 'setPostedProductActive(',
   }
 
   it('audits every rewrite in the helper both rewrite actions delegate to', () => {

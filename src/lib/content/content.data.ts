@@ -130,53 +130,53 @@ export const GUIDES: readonly Guide[] = [
       'sassafras-albidum-the-north-american-dye-tree',
       'natural-dyeing-with-mimosa-hostilis',
     ],
-    recommendedProductSlugs: ['powdered-mimosa-hostils-root', 'mimosa-roots-stripped', 'mimosa-treee-bark'],
+    recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'shredded-mimosa-hostilis-root-bark', 'whole-mimosa-hostilis-root-bark'],
     isPublished: true,
   },
   {
+    /*
+      Rewritten 2026-09-28 for botanical dye material. It was written around cannabis
+      certificates (potency, THCa arithmetic) and linked to articles withdrawn with
+      that line.
+    */
     slug: 'how-to-read-a-certificate-of-analysis',
-    title: 'How to Read a Certificate of Analysis',
+    title: 'How to Read a Certificate of Analysis for Root Bark',
+    metaTitle: 'How to Read a Certificate of Analysis for Root Bark',
+    metaDesc:
+      'Read a botanical certificate in four steps: match the batch code, check the test date, check the lab\'s accreditation scope, then read identity and contaminants.',
     summary:
-      'Check four things in this order: does the batch code on the report match the package in your hand, when was it tested, is the laboratory listed in an accreditation directory for those tests, and does the panel cover contaminants rather than potency alone. Everything else is detail.',
+      'Check four things in this order: does the batch code on the report match the bag in your hand, when was it tested, is the laboratory accredited for those tests, and does the report cover species identity and contaminants such as heavy metals and microbes. A report that fails the first check describes different material.',
     body: [
-      'A certificate of analysis is a laboratory\'s report on one sample from one production run. Read in the right order it settles most questions in about two minutes. Read in the wrong order it is a page of numbers that proves nothing.',
+      'A certificate of analysis is a laboratory\'s report on one sample from one batch. For root bark sold as a dye material it answers two questions: is this the plant the label says it is, and what else came with it. Read in the right order, it settles both in a couple of minutes.',
       '## The order that matters',
-      '| Step | What you are checking | If it fails |',
-      '| --- | --- | --- |',
-      '| 1 | The batch code matches your package | The report describes different material |',
-      '| 2 | The test date | An old figure is history, not a description |',
-      '| 3 | The laboratory, in its accreditor\'s directory | It is one company\'s word |',
-      '| 4 | Which panels were run | Potency alone is not a safety test |',
-      'Step one first, always. The most common disappointment is not a forged report — it is a genuine report from a real accredited laboratory for a batch you do not have. Nothing was faked and nothing was proved. See [what a batch code is for](/blog/what-a-batch-code-is-for).',
-      '## Why the date is not a formality',
-      'Organic material changes. Aroma compounds go first, acid forms convert slowly, oxidation markers rise. A figure measured eighteen months ago was true when it was written and is no longer a statement about what is in the package. See [why a test date matters as much as the figure](/blog/why-a-test-date-matters-as-much-as-the-figure) and [what happens in heat, light and air](/blog/what-happens-in-heat-light-and-air).',
+      '| Step | What you are checking | If it fails |\n| --- | --- | --- |\n| 1 | The batch code matches your bag | The report describes different material |\n| 2 | The test date | An old report describes the bark as it was then |\n| 3 | The laboratory, in its accreditor\'s directory | It is one company\'s word |\n| 4 | Identity and contaminant results | Neither question has been answered |',
+      'Step one first, always. The most common disappointment is not a forged report but a genuine one for a batch you do not have. See [what a batch code is for](/blog/what-a-batch-code-is-for).',
+      '## Why the date matters',
+      'Dried bark keeps well but not forever. Moisture creeps in, light fades the cut faces, and oxygen slowly darkens the color compounds. Sealed, nitrogen-flushed packaging slows that a great deal, which is why a report dated close to when the bag was packed is the one that describes it best. See [why a test date matters as much as the figure](/blog/why-a-test-date-matters-as-much-as-the-figure).',
       '## Accreditation is scoped',
-      'A laboratory is accredited for **specific tests**, not in general. One accredited for potency is not thereby accredited for heavy metals, and its heavy-metal figures carry no accreditation even on the same letterhead. The accreditor publishes the scope; that document, not a logo, is the evidence. See [what ISO 17025 accreditation means](/blog/what-iso-17025-accreditation-means).',
-      '## The part most certificates leave out',
-      'Potency is the easiest thing to measure and the least useful thing to know. The panels that matter are heavy metals, pesticides, residual solvents, microbials and mycotoxins — and any process that concentrates material concentrates those too. A report showing a headline figure and nothing else has answered the least important question at length. See [what a full contaminant panel covers](/blog/what-a-contaminant-panel-actually-covers).',
-      '## Two places arithmetic hides',
-      'A total is calculated, not added: the acid figure is multiplied by 0.877 before the non-acid figure is added, because the conversion loses about 12 per cent of the mass. Skip the multiplier and a legitimate certificate supports a figure roughly 12 per cent too high. See [how a total figure is worked out](/blog/how-a-total-thc-number-is-worked-out).',
-      'And a percentage on a dry weight basis is not the same as one reported as received. The certificate says which; packaging usually does not. See [why potency belongs on a certificate](/blog/why-potency-belongs-on-a-certificate).',
+      'A laboratory is accredited for **specific tests**, not in general. One accredited for heavy metals is not thereby accredited for microbial counts, even on the same letterhead. The accreditor publishes the scope, and it takes a minute to check. See [what ISO 17025 accreditation means](/blog/what-iso-17025-accreditation-means).',
+      '## What a report on bark should cover',
+      '- **Identity**: that the material is the species named, by microscopy or a chemical fingerprint.\n- **Heavy metals**: lead, arsenic, cadmium and mercury, which a root can take up from its soil.\n- **Microbial counts**: bacteria, yeast and mold, which matter in anything handled by hand.\n- **Moisture and foreign matter**: damp bark spoils, and grit or soil is weight you paid for.',
+      'For what each line means, see [what a contaminant panel actually covers](/blog/what-a-contaminant-panel-actually-covers).',
+      '## Dry weight or as received',
+      'A result on a dry weight basis is not the same as one reported as received: bark that holds some moisture reads lower as received. The certificate says which basis it uses; the bag usually does not.',
       '## The abbreviations',
-      '**ND** not detected. **LOD** the smallest amount detectable. **LOQ** the smallest amount that can be given a reliable number — a result below it reads `<LOQ`, which is not zero. **Action limit** the regulatory threshold a pass is measured against, set by state and therefore variable. Full list in [a glossary of certificate terms](/blog/a-glossary-of-certificate-terms).',
+      '**ND** not detected. **LOD** the smallest amount the method can detect. **LOQ** the smallest amount it can put a reliable number on; a result below it reads `<LOQ`, which is not the same as zero. **Action limit** the threshold a result is judged against. The rest are in [a glossary of certificate terms](/blog/a-glossary-of-certificate-terms).',
       '## What to ask a seller',
-      'The full panel for the batch code printed on your package — not a sample report for the product line, and not a screenshot. A seller who can produce a potency figure but not a contaminant panel has answered your question.',
+      'Ask for the report held for the batch code printed on your bag, not a sample report for the product in general, and not a screenshot. You can ask us for ours through the [contact page](/contact).',
     ],
     authorSlug: 'editorial-team',
     publishedAt: '2026-09-27',
-    updatedAt: '2026-09-27',
+    updatedAt: '2026-09-28',
     clusterSlugs: [
       'what-iso-17025-accreditation-means',
       'what-a-contaminant-panel-actually-covers',
       'what-a-batch-code-is-for',
       'why-a-test-date-matters-as-much-as-the-figure',
-      'why-potency-belongs-on-a-certificate',
       'reading-a-label-line-by-line',
-      'how-cannabinoid-figures-are-measured',
       'a-glossary-of-certificate-terms',
-      'spotting-counterfeit-hardware',
     ],
-    recommendedProductSlugs: ['powdered-mimosa-hostils-root', 'sassafras-root-bark'],
+    recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'sassafras-root-bark'],
     isPublished: true,
   },
   {
@@ -196,26 +196,42 @@ export const GUIDES: readonly Guide[] = [
     updatedAt: '2026-09-18',
     clusterSlugs: ['what-is-muscimol', 'is-amanita-muscaria-legal-in-the-united-states'],
     recommendedProductSlugs: [],
-    isPublished: true,
+    // Unpublished 2026-09-28: parent-build text on a withdrawn line or an unconfirmed claim.
+    isPublished: false,
   },
   {
+    /*
+      Rewritten 2026-09-28 in this site's own words (it was the parent build's text).
+      Same slug, so every link to it still lands.
+    */
     slug: 'how-ordering-and-payment-works',
-    title: 'How Ordering and Payment Works Here',
+    title: 'How to Order Root Bark Here, and How Payment Works',
+    metaTitle: 'How to Order Root Bark Here, and How Payment Works',
+    metaDesc:
+      'Ordering here: send an order request, a person checks it, then you pay by Cash App, Chime, Apple Cash or Bitcoin. No card form and no card details, ever.',
     summary:
-      'We never take payment on this website. You submit an order request and choose a preferred method — Cash App, Chime, Apple Cash or Bitcoin — we check the stock is available and that we can ship to your address, then send instructions. Because no card details are entered on our site, there is nothing here for anyone to steal.',
+      'You order here by sending a request, not a payment. A person checks the stock and your address, then emails payment details for the method you chose: Cash App, Chime, Apple Cash or Bitcoin. Once payment arrives, the bark is weighed, nitrogen-sealed and shipped from California with tracking.',
     body: [
-      'Most online shops take your card at checkout. We do not, and the reason is worth explaining because it changes what you should expect.',
-      'When you check out here, you are submitting an order request rather than completing a purchase. You tell us where it is going and how you would prefer to pay. We then check two things: that we can lawfully ship every item to your address, and that we have the stock.',
-      'Once that is done we send payment instructions for the method you chose. You pay off-site, tell us you have sent it, and a person on our side confirms receipt before anything is despatched.',
-      'The trade-off is honest: it is slower than a card checkout. What you get in exchange is that no card data is processed or stored on our servers, so there is no card data here for anyone to steal — not in a breach, not in a leak, not ever.',
-      'One clarification, because the naming causes confusion: we accept Apple Cash, which is peer-to-peer, not Apple Pay. Apple Pay is a card-network wallet that requires a payment processor, and we deliberately do not have one. Any site showing you an Apple Pay button while claiming to take no card payments is telling you two things that cannot both be true.',
-      'Your Order ID is also your payment reference. Including it is what lets us match a payment to an order quickly, and leaving it off is the most common reason verification takes longer than it should.',
+      'Ordering root bark here takes one step more than a card checkout, and that step is a person. This is how it works from cart to doorstep.',
+      '## Five steps, start to finish',
+      '1. **Choose a cut and a size.** Every root bark comes in 1/4, 1/3, 1/2 and 1 lb, and the price for the size you pick is the price you are quoted.\n2. **Send the order request.** At checkout you give your delivery address and the way you would like to pay. Nothing is charged.\n3. **A person checks it.** We confirm the stock and the address, then email you payment details for your chosen method, with your Order ID.\n4. **Pay off the site.** Send the payment with your Order ID as the reference, and tell us it has gone.\n5. **We ship.** Once the payment is confirmed, the order is weighed, packed in a double-sealed, smell-proof bag flushed with nitrogen to keep the bark fresh, and shipped from California, and the tracking number follows.',
+      '## Ways to pay',
+      'Cash App, Chime, Apple Cash and Bitcoin. Bitcoin orders take a discount off the items, shown next to the payment choice at checkout. The payment details you receive belong to your order alone and are never printed on this website.',
+      'A note on names: we take Apple Cash, the person-to-person transfer in Apple Wallet, and not Apple Pay. Apple Pay runs on the card networks and needs a card processor, which this site does not have.',
+      '## Why there is no card form',
+      'Because a card form is the one thing on a shop that is worth attacking. With no processor behind this site, there are no card numbers here to leak in a breach. The cost is a short wait while a person checks your order; what you get is a checkout with nothing in it to steal.',
+      '## How long it takes',
+      'Payment details usually follow your request the same day. Delivery time depends on how far the parcel travels from California, so we confirm a window with your order rather than printing one here. Parcel orders from 100 dollars ship free.',
+      '## Changing or cancelling',
+      'Anything can be changed or cancelled free of charge until the order is packed. Tell us and it is done; if you have already paid and it has not shipped, the payment is refunded in full.',
+      '## Keeping yourself safe',
+      'We only ask for payment after you have placed an order, and only by email from our own company address with your Order ID in it. We never ask for payment in a text from an unknown number, never ask you to pay a different amount than your order shows, and never ask for a card number. If anything looks otherwise, stop and contact us before sending money.',
     ],
     authorSlug: 'editorial-team',
     publishedAt: '2026-08-15',
-    updatedAt: '2026-08-28',
-    clusterSlugs: ['what-the-pact-act-means-for-buyers'],
-    recommendedProductSlugs: ['powdered-mimosa-hostils-root', 'mimosa-roots-stripped', 'mimosa-treee-bark'],
+    updatedAt: '2026-09-28',
+    clusterSlugs: ['the-three-cuts-of-mimosa-root-bark', 'buying-by-the-pound-and-what-it-saves'],
+    recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'shredded-mimosa-hostilis-root-bark', 'whole-mimosa-hostilis-root-bark'],
     isPublished: true,
   },
 ]
@@ -267,7 +283,7 @@ export const POSTS: readonly Post[] = [
     publishedAt: '2026-09-27',
     updatedAt: '2026-09-27',
     pillarSlug: 'what-is-mimosa-hostilis-root-bark',
-    recommendedProductSlugs: ['powdered-mimosa-hostils-root', 'mimosa-roots-stripped', 'mimosa-treee-bark'],
+    recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'shredded-mimosa-hostilis-root-bark', 'whole-mimosa-hostilis-root-bark'],
     isPublished: true,
   },
   {
@@ -313,7 +329,8 @@ export const POSTS: readonly Post[] = [
     updatedAt: '2026-09-18',
     pillarSlug: 'amanita-muscaria-explained',
     recommendedProductSlugs: [],
-    isPublished: true,
+    // Unpublished 2026-09-28: parent-build text on a withdrawn line or an unconfirmed claim.
+    isPublished: false,
   },
   {
     slug: 'is-amanita-muscaria-legal-in-the-united-states',
@@ -356,7 +373,8 @@ export const POSTS: readonly Post[] = [
     updatedAt: '2026-09-18',
     pillarSlug: 'amanita-muscaria-explained',
     recommendedProductSlugs: [],
-    isPublished: true,
+    // Unpublished 2026-09-28: parent-build text on a withdrawn line or an unconfirmed claim.
+    isPublished: false,
   },
   {
     slug: 'what-the-pact-act-means-for-buyers',
@@ -400,7 +418,8 @@ export const POSTS: readonly Post[] = [
     updatedAt: '2026-09-18',
     pillarSlug: 'how-ordering-and-payment-works',
     recommendedProductSlugs: [],
-    isPublished: true,
+    // Unpublished 2026-09-28: parent-build text on a withdrawn line or an unconfirmed claim.
+    isPublished: false,
   },
   {
     slug: 'shipping-restrictions-explained',
@@ -444,8 +463,9 @@ export const POSTS: readonly Post[] = [
     publishedAt: '2026-08-18',
     updatedAt: '2026-09-13',
     pillarSlug: 'what-is-mimosa-hostilis-root-bark',
-    recommendedProductSlugs: ['powdered-mimosa-hostils-root', 'sassafras-root-bark'],
-    isPublished: true,
+    recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'sassafras-root-bark'],
+    // Unpublished 2026-09-28: parent-build text on a withdrawn line or an unconfirmed claim.
+    isPublished: false,
   },
   {
     slug: 'how-we-batch-test-every-product',
@@ -489,8 +509,9 @@ export const POSTS: readonly Post[] = [
     publishedAt: '2026-08-20',
     updatedAt: '2026-09-13',
     pillarSlug: 'how-to-read-a-certificate-of-analysis',
-    recommendedProductSlugs: ['powdered-mimosa-hostils-root', 'sassafras-root-bark'],
-    isPublished: true,
+    recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'sassafras-root-bark'],
+    // Unpublished 2026-09-28: parent-build text on a withdrawn line or an unconfirmed claim.
+    isPublished: false,
   },
 ]
 

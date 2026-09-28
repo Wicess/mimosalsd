@@ -1,7 +1,9 @@
 import { getRulesForState, getStateRule } from '@/lib/compliance/state-rules'
 import { JURISDICTIONS, jurisdictionName } from '@/lib/compliance/jurisdictions'
-import { PRODUCT_LINES, type ProductLine, type StateRule, type UsJurisdictionCode } from '@/lib/compliance/types'
-import { FEDERAL_HEMP_BAN, getStateProfile, type StateProfile } from './state-profiles'
+import type { ProductLine, StateRule, UsJurisdictionCode } from '@/lib/compliance/types'
+import { getStateProfile, type StateProfile } from './state-profiles'
+import { buildDyeingGuide, type StateDyeingGuide } from './state-dyeing'
+import { cityDelivery, cityQuestions } from './state-cities'
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -30,6 +32,16 @@ import { FEDERAL_HEMP_BAN, getStateProfile, type StateProfile } from './state-pr
 
 /** Minimum genuinely state-specific words before a page may be indexed. */
 export const MIN_PUBLISH_WORDS = 400
+
+/**
+ * The product lines a state page describes (owner instruction, 2026-09-28).
+ *
+ * Every Amanita and vapor listing was hidden that day, so a state page describing
+ * those lines would be describing products nobody can buy — and the hemp, PACT and
+ * psilocybin context that came with them. Add a line back here when its category
+ * has live products again.
+ */
+export const STATE_PAGE_LINES: readonly ProductLine[] = ['MIMOSA_HOSTILIS']
 
 export const LINE_LABEL: Record<ProductLine, string> = {
   MIMOSA_HOSTILIS: 'Mimosa Hostilis root bark',
@@ -68,6 +80,13 @@ export interface StateLegality {
   readonly wordCount: number
   /** State-specific regulatory context — the substance that makes this page real. */
   readonly profile: StateProfile
+  /** Dyeing with root bark in this state: water, storage, sassafras, the local fibre community. */
+  readonly dyeing: StateDyeingGuide
+  /** Delivery to the state's cities, and buyer questions phrased the way people search. */
+  readonly cities: {
+    readonly delivery: string
+    readonly questions: readonly { readonly question: string; readonly answer: string }[]
+  }
 }
 
 function verdictFor(stateCode: UsJurisdictionCode, productLine: ProductLine): LineVerdict {
@@ -113,41 +132,17 @@ function verdictFor(stateCode: UsJurisdictionCode, productLine: ProductLine): Li
 function buildAnswerFirst(
   state: string,
   verdicts: readonly LineVerdict[],
-  reviewYear: number,
 ): string {
-  const allowed = verdicts.filter((v) => v.rule.status === 'ALLOWED')
-  const restricted = verdicts.filter((v) => v.rule.status === 'RESTRICTED')
+  /*
+    Rewritten 2026-09-28. It said "all three of the product categories we sell" and
+    "our cart refuses any item we cannot lawfully send", and neither is true now: two
+    categories are withdrawn, and checkout stopped refusing by location on 2026-09-19.
+  */
   const blocked = verdicts.filter((v) => v.rule.status === 'BLOCKED')
-
-  const parts: string[] = []
-
-  if (blocked.length === 0 && restricted.length === 0) {
-    parts.push(
-      `All three of the product categories we sell — ${allowed.map((v) => LINE_SHORT[v.productLine]).join(', ')} — can lawfully be shipped to ${state} as of ${reviewYear}.`,
-    )
-  } else {
-    if (allowed.length > 0) {
-      parts.push(
-        `In ${state}, ${listOf(allowed.map((v) => LINE_SHORT[v.productLine]))} ${allowed.length === 1 ? 'is' : 'are'} lawful to buy and receive.`,
-      )
-    }
-    if (blocked.length > 0) {
-      parts.push(
-        `${listOf(blocked.map((v) => LINE_SHORT[v.productLine]))} cannot be shipped to ${state}${blocked[0]?.rule.statuteCitation ? ` under ${blocked[0].rule.statuteCitation}` : ''}.`,
-      )
-    }
-    if (restricted.length > 0) {
-      parts.push(
-        `${listOf(restricted.map((v) => LINE_SHORT[v.productLine]))} ${restricted.length === 1 ? 'ships' : 'ship'} to ${state} only under specific conditions, set out below.`,
-      )
-    }
+  if (blocked.length === verdicts.length) {
+    return `We do not currently ship root bark to ${state}. The position we hold is set out below, with the date it was last reviewed.`
   }
-
-  parts.push(
-    'We enforce this at checkout: our cart refuses any item we cannot lawfully send to your address.',
-  )
-
-  return parts.join(' ')
+  return `Yes. We ship Mimosa hostilis root bark, in powder, shredded and whole cuts, and sassafras root bark to ${state}, from California, with tracking. Every cut is sold by the pound, from a quarter pound to a full pound, and no payment is taken until a person has checked the order.`
 }
 
 function listOf(items: readonly string[]): string {
@@ -170,55 +165,20 @@ function buildOrderingGuidance(
   verdicts: readonly LineVerdict[],
 ): string {
   const parts: string[] = []
-
   const blocked = verdicts.filter((v) => v.rule.status === 'BLOCKED')
-  const signature = verdicts.filter(
-    (v) => v.rule.status !== 'BLOCKED' && v.rule.requiresAdultSignature,
-  )
-  const directory = verdicts.filter(
-    (v) => v.rule.status === 'RESTRICTED' && v.rule.requiresProductDirectory,
-  )
+
   parts.push(
-    `Ordering from ${state} works like this. Our cart evaluates every item against the address you are shipping to rather than the state you happen to be browsing from, so the decision is made before you reach payment rather than after.`,
+    `Ordering from ${state} takes three steps. Choose a cut and a size and send an order request with your ${state} delivery address; nothing is charged. A person checks the stock and the address and emails you payment details for the method you chose. Once the payment arrives, the bark is weighed, packed in a nitrogen-flushed, smell-proof bag and shipped from California, and the tracking number follows.`,
   )
 
   if (blocked.length > 0) {
     parts.push(
-      /*
-        It said blocked items "will be refused outright" at checkout. Checkout stopped
-        refusing by location on 2026-09-19 (owner), so the sentence was false. The page
-        keeps the position; it no longer describes a refusal that does not happen.
-      */
       `The position we hold for ${listOf(blocked.map((v) => LINE_SHORT[v.productLine]))} in ${state} is set out above, with the date it was last reviewed.`,
     )
   }
 
-  if (directory.length > 0) {
-    parts.push(
-      `${state} maintains a vapor product directory, so a given device ships only if that specific product is listed. We check each item individually at checkout instead of applying a blanket rule, because a blanket rule would either refuse products we can lawfully send or accept ones we cannot.`,
-    )
-  }
-
-  if (signature.length > 0) {
-    parts.push(
-      `Shipments containing ${listOf(signature.map((v) => LINE_SHORT[v.productLine]))} travel on a carrier that complies with the federal PACT Act. They are packed apart from the rest of an order in plain, double-sealed packaging, and tracking is emailed as soon as they leave us. Those shipments are never eligible for free shipping, because they are carried at a different cost and we will not advertise a discount we cannot honour.`,
-    )
-  } else {
-    parts.push(
-      /*
-        The same detail a PACT state gets in the paragraph above, for a state that only
-        takes parcels. It was one short sentence, which left these pages under the
-        400-word publication floor once a line was blocked (owner, 2026-09-19: "do not
-        hide the 22 states from google").
-      */
-      `Everything available to ${state} travels as a standard parcel with tracking, packed in plain double-sealed packaging that shows nothing of what is inside. Tracking is emailed as soon as it leaves us, and an order over one hundred dollars ships free.`,
-    )
-  }
-
-
-  /* A buyer's question the "2026 pricing" search title promises an answer to. */
   parts.push(
-    `Prices are the same for ${state} as for every other state we ship to, and the cart shows the delivery cost for your address before you order.`,
+    `Root bark travels to ${state} as a standard parcel with tracking, packed in a double-sealed, smell-proof bag flushed with nitrogen so it arrives fresh. Parcel orders over one hundred dollars ship free, and the cart shows the delivery cost for your address before you send the request. Prices are the same in ${state} as in every other state we ship to.`,
   )
 
   return parts.join(' ')
@@ -231,9 +191,9 @@ function countWords(text: string): number {
 export function getStateLegality(stateCode: UsJurisdictionCode): StateLegality {
   const jurisdiction = JURISDICTIONS.find((j) => j.code === stateCode)
   const name = jurisdiction?.name ?? stateCode
-  const verdicts = PRODUCT_LINES.map((line) => verdictFor(stateCode, line))
+  const verdicts = STATE_PAGE_LINES.map((line) => verdictFor(stateCode, line))
 
-  const rules = getRulesForState(stateCode)
+  const rules = getRulesForState(stateCode).filter((r) => STATE_PAGE_LINES.includes(r.productLine))
   const lastReviewedAt =
     rules.map((r) => r.lastReviewedAt).sort().at(-1) ?? '1970-01-01'
   const reviewedBy = rules[0]?.reviewedBy ?? 'UNREVIEWED'
@@ -243,23 +203,24 @@ export function getStateLegality(stateCode: UsJurisdictionCode): StateLegality {
   // and reading the clock during render is runtime data, which would stop these pages
   // from prerendering at all.
   const reviewYear = new Date(lastReviewedAt).getUTCFullYear()
-  const answerFirst = buildAnswerFirst(name, verdicts, reviewYear)
+  const answerFirst = buildAnswerFirst(name, verdicts)
 
   const profile = getStateProfile(stateCode)
   const orderingGuidance = buildOrderingGuidance(name, verdicts)
+  const cities = { delivery: cityDelivery(stateCode, name), questions: cityQuestions(stateCode, name) }
+  const dyeing = buildDyeingGuide(stateCode, name, (NEIGHBOURS[stateCode] ?? []).map(jurisdictionName))
 
-  // Everything genuinely specific to this state, for the publication gate. The
-  // regulatory profile is what lifts these pages past templated boilerplate — the
-  // hemp and psilocybin postures differ materially between states and are the reason
-  // a reader in Idaho gets a different page from a reader in Oregon.
+  // Everything genuinely specific to this state, for the publication gate. Since
+  // 2026-09-28 that is the dyeing guide — water hardness, climate, whether sassafras
+  // grows there and the state's own fibre community, each from a cited source — in
+  // place of the hemp and psilocybin postures of the withdrawn lines.
   const substantiveText = [
     answerFirst,
     ...verdicts.map((v) => `${v.headline} ${v.detail} ${v.rule.statuteCitation ?? ''}`),
     orderingGuidance,
-    profile.hempNote,
-    profile.psilocybinNote,
-    FEDERAL_HEMP_BAN.summary,
-    FEDERAL_HEMP_BAN.appliesToUs,
+    cities.delivery,
+    ...dyeing.paragraphs.map((p) => `${p.heading} ${p.text}`),
+    ...dyeing.events.map((e) => `${e.name}, ${e.place}${e.month ? `, usually in ${e.month}` : ''}`),
   ].join(' ')
   const wordCount = countWords(substantiveText)
 
@@ -272,7 +233,7 @@ export function getStateLegality(stateCode: UsJurisdictionCode): StateLegality {
   }
   if (wordCount < MIN_PUBLISH_WORDS) {
     publishBlockers.push(
-      `Only ${wordCount} words of state-specific content; ${MIN_PUBLISH_WORDS} required. Add the state's own statutory context rather than padding.`,
+      `Only ${wordCount} words of state-specific content; ${MIN_PUBLISH_WORDS} required. Add the state's own sourced facts rather than padding.`,
     )
   }
   /*
@@ -303,6 +264,8 @@ export function getStateLegality(stateCode: UsJurisdictionCode): StateLegality {
     reviewedBy,
     reviewYear,
     profile,
+    dyeing,
+    cities,
     hasPendingLegislation: verdicts.some((v) => v.rule.watch),
     isPublishable: publishBlockers.length === 0,
     publishBlockers,

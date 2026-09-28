@@ -245,7 +245,7 @@ export function InstallGuide() {
         </button>
 
         <div className="flex items-center gap-3 pr-10">
-          <Image src="/brand/app-icon-192.png" alt="" width={56} height={56} className="size-14 rounded-2xl shadow-md" />
+          <Image src="/brand/app-icon-v2-192.png" alt="" width={56} height={56} className="size-14 rounded-2xl shadow-md" />
           <div>
             <h2 id={titleId} className="font-display text-xl leading-tight text-foreground">
               {inApp ? 'Open in your browser to install' : `Install ${BRAND.name}`}

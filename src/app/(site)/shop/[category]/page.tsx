@@ -53,7 +53,7 @@ export default async function CategoryPage({
   params: Promise<{ category: string }>
 }) {
   const { category: slug } = await params
-  const category = await getMergedCategory(slug)
+  const [category, listed] = await Promise.all([getMergedCategory(slug), listMergedProducts({ categorySlug: slug })])
   if (!category) notFound()
 
   // Both branches of the About band shift every tone below them, so the alternation
@@ -69,11 +69,12 @@ export default async function CategoryPage({
     Visitor-independent, like the shop hub: the grid below is filtered per state, a
     rich result is not. Products are listed by the category they belong to rather
     than by what the current visitor can buy.
+
+    From the MERGED list: `catalog.listProducts()` is the authored catalogue, which
+    has been empty since the owner started posting products from the admin panel, so
+    this ItemList was always empty.
   */
-  const products = catalog
-    .listProducts()
-    .filter((p) => p.categorySlug === slug)
-    .map((p) => ({ name: p.name, path: url.product(p.slug) }))
+  const products = listed.map((p) => ({ name: p.name, path: url.product(p.slug) }))
 
   const jsonLd = [
     collectionPage({

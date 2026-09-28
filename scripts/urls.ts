@@ -19,7 +19,7 @@ import 'dotenv/config'
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { PrismaClient } from '@prisma/client'
 import { BRAND } from '../src/lib/brand'
-import { byGroup, collectUrls, type SiteUrl } from './lib/site-urls'
+import { byGroup, collectUrls, GROUP_PRIORITY, type SiteUrl } from './lib/site-urls'
 
 const FILE = 'URL.md'
 
@@ -114,7 +114,7 @@ function render(entries: SiteUrl[], base: string, today: string, added: string[]
   lines.push('## Every URL, by section')
   lines.push('')
   for (const [group, groupEntries] of groups) {
-    lines.push(`### ${group} — ${groupEntries.length}`)
+    lines.push(`### ${group} — ${groupEntries.length} (sitemap priority ${GROUP_PRIORITY[group]})`)
     lines.push('')
     lines.push('```')
     for (const entry of groupEntries) lines.push(abs(entry.path))

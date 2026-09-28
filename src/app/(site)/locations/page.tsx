@@ -1,22 +1,28 @@
 import type { Metadata } from 'next'
 import { pageMetadata } from '@/lib/seo/meta'
-import { publishedLocations, LOCATIONS, publishBlockers } from '@/lib/locations/locations'
-import { jurisdictionName } from '@/lib/compliance/jurisdictions'
+import { publishedLocations } from '@/lib/locations/locations'
 import { url } from '@/lib/seo/routes'
 import { MapPinIcon } from '@/components/ui/icon'
 import { collectionPage, jsonLdScript } from '@/lib/seo/structured-data'
 import { PageHeader } from '@/components/layout/page-header'
 import { PageSection } from '@/components/layout/page-section'
 
-export const metadata: Metadata = pageMetadata({
-  title: 'Locations & Pickup',
-  description: 'Where to find us in person, which ZIP codes we reach with same-day local delivery, and what each location can lawfully stock. Everything else ships nationwide.',
-  path: '/locations',
-})
+/*
+  Noindex while no location is published: the page then says only "we have no
+  storefront yet", which is thin, and CLAUDE.md rule 12 allows location pages only for
+  places that physically exist. It indexes itself the day a real one is published.
+*/
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: 'Visit Us in California, Locations',
+    description: 'Where to find us in person in California, once a storefront is listed. Until then, every order ships from our California branch to US addresses.',
+    path: '/locations',
+  }),
+  ...(publishedLocations().length === 0 ? { robots: { index: false, follow: true } } : {}),
+}
 
 export default function LocationsPage() {
   const published = publishedLocations()
-  const pending = LOCATIONS.filter((l) => !l.isPublished)
 
   return (
     <main>
@@ -52,8 +58,8 @@ export default function LocationsPage() {
         {published.length === 0 ? (
           <>
             <p className="mt-4 max-w-4xl text-lg text-foreground-muted">
-              We do not have a public storefront listed yet. Everything ships nationwide
-              from our fulfilment centre, and{' '}
+              We do not have a public storefront listed yet. Everything ships
+              from our California branch, and{' '}
               <a href={url.shopNearMe()} className="text-primary underline underline-offset-4">
                 you can check exactly what we send to your state
               </a>
@@ -61,34 +67,11 @@ export default function LocationsPage() {
             </p>
 
             {/*
-              Pending locations are shown to the operator with their blockers, never to
-              the public and never in the sitemap. A page for a location that does not
-              physically exist is the doorway pattern Google penalises — and it is fraud.
+              Pending locations used to be listed here with their blockers, under a
+              comment saying they were never shown to the public — but this component
+              IS the public page, so every visitor saw "PENDING — city". The operator's
+              view of them lives at /admin/locations.
             */}
-            {pending.length > 0 && (
-              <section className="mt-10 rounded-lg bg-warning-bg p-5 text-warning-fg">
-                <h2 className="font-display text-lg">
-                  {pending.length} location{pending.length === 1 ? '' : 's'} awaiting real data
-                </h2>
-                <ul className="mt-3 space-y-4 text-sm">
-                  {pending.map((l) => (
-                    <li key={l.slug}>
-                      <p className="font-medium">
-                        {l.name} — {l.city}, {jurisdictionName(l.stateCode)}
-                      </p>
-                      <ul className="mt-1 list-disc space-y-1 pl-5 opacity-90">
-                        {publishBlockers(l).map((b) => (
-                          <li key={b}>{b}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-xs opacity-90">
-                  Not rendered publicly and excluded from the sitemap until resolved.
-                </p>
-              </section>
-            )}
           </>
         ) : (
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -14,10 +14,9 @@ import { cn } from '@/lib/utils'
  * botanical from being sold as an unapproved drug — but it now sits underneath a
  * sentence about what we DO verify. Same information, opposite parting impression.
  *
- * The lead sentence is deliberately checkable rather than promotional: every clause
- * in it points at something a reader can go and confirm on this site (a batch report,
- * a cited statute), which is the only kind of reassurance worth printing in this
- * category. Nothing here is a health claim, and nothing here may become one.
+ * The lead sentence is deliberately plain rather than promotional: every clause in it
+ * is something the business actually does. Nothing here is a health claim, and
+ * nothing here may become one.
  */
 export function FdaDisclaimer({ className }: { className?: string }) {
   return (
@@ -39,11 +38,17 @@ export function FdaDisclaimer({ className }: { className?: string }) {
         className,
       )}
     >
+      {/*
+        Rewritten 2026-09-28. The old sentence promised an accredited third-party
+        laboratory and a statute printed beside every state. Neither is true of this
+        site: the owner has not confirmed a laboratory, and no state rule cites a
+        statute. What follows is only what the site actually does.
+      */}
       <p className="text-sm leading-relaxed text-pretty text-foreground">
-        <span className="font-medium">Everything here is checkable.</span> Each batch is
-        tested by an accredited third-party laboratory, a certified copy of its report goes
-        to verified buyers on request, and we ship only what the law of your state allows —
-        with the statute we relied on printed next to it.
+        <span className="font-medium">Sold for dyeing and craft.</span> Our root bark is
+        raw botanical material, sold by weight and shipped from California to US
+        addresses. Every order is checked by a person before payment is asked for, and
+        the report for your batch is available on request.
       </p>
       <p className="text-xs leading-relaxed text-pretty text-foreground-subtle">
         {FDA_DISCLAIMER}

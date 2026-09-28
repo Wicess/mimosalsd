@@ -40,8 +40,8 @@ export async function showReplyNotification(body: string, title = 'New reply fro
   const options: NotificationOptions = {
     body: body.slice(0, 140) || 'You have a new message.',
     tag: 'chat-reply',
-    icon: '/brand/app-icon-192.png',
-    badge: '/brand/notification-badge-96.png',
+    icon: '/brand/app-icon-v2-192.png',
+    badge: '/brand/notification-badge-v2-96.png',
     data: { url: CHAT_URL },
   }
   try {

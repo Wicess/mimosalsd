@@ -15,12 +15,12 @@ import { pageMetadata } from '@/lib/seo/meta'
 import { getCompanyEmail } from '@/lib/site/company-email.server'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'About Us',
-  description: `${BRAND.name} is a US distributor of disposable vapes: nicotine, THCA and THC disposables, lab-tested by batch. Meet our founder, ${BRAND.proprietor.name}, and the team behind every order.`,
+  title: `About Us, Mimosa Hostilis Root Bark Supplier Since ${BRAND.track.foundedYear}`,
+  description: `A California supplier of Mimosa hostilis root bark for natural dyeing since ${BRAND.track.foundedYear}. Meet owner Dr ${BRAND.proprietor.name} and the team behind every order.`,
   path: url.about(),
 })
 
-const REVIEWED = '2026-08-28'
+const REVIEWED = '2026-09-28'
 
 export default async function AboutPage() {
   const email = await getCompanyEmail()
@@ -52,71 +52,63 @@ export default async function AboutPage() {
       <PageSection first>
         <PolicyProse
           title={`About ${BRAND.name}`}
-          summary={`${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap making and craft, to customers in the United States. This page covers what we sell, how an order is handled from request to delivery, and how to reach a person about one.`}
+          summary={`${BRAND.name} has supplied Mimosa hostilis root bark and disposables to customers across the United States since ${BRAND.track.foundedYear}. This page covers who runs the business, what it sells, and how an order goes from request to doorstep.`}
           lastReviewedAt={REVIEWED}
           sections={[
             /*
-              The founder and the track record, as the owner supplied them on
-              2026-09-11 — see BRAND.proprietor and BRAND.track. Phrased as "more
-              than" so the figures stay true as they grow.
+              Every fact here is the client's own (2026-09-28): the owner, his
+              qualifications and experience, the founding year and the customer count
+              all read from BRAND, so this page and the schema cannot disagree. The
+              client also mentioned international orders; they are left out because
+              this site serves the United States only.
             */
             {
-              heading: 'Who we are',
+              heading: 'A new website, not a new business',
               body: [
-                `${BRAND.name} was founded by ${BRAND.proprietor.name}, a ${BRAND.proprietor.title}. John holds a PhD, and his research has focused on psychedelic compounds.`,
-                `The business has been running for more than ${BRAND.track.yearsInBusiness} years and has served more than ${BRAND.track.customers.toLocaleString('en-US')} customers across the United States. It still works the way a laboratory does: test first, and show the evidence behind what we say.`,
-              ],
-            },
-            /*
-              DISPOSABLES (owner, 2026-09-15): "we are a distributor of disposable
-              products". What the business is built around comes straight after who
-              runs it. Wording rules from the same day: 21+ stays; nothing about
-              signatures or ID at the door, nothing about state restrictions. Testing
-              is "lab-tested by batch", with certificates on request, never
-              "third-party" or "published" (the owner describes it as second-party).
-            */
-            {
-              heading: 'A distributor of disposable vapes',
-              body: [
-                `${BRAND.name} is built around disposables. We distribute ready-to-use disposable vapor products to adult customers and to retailers across the United States, and they are the largest part of what we sell.`,
-                'We carry two families. Nicotine disposables, and hemp-derived cannabinoid disposables, including THCA and THC. Every product page states exactly what that device contains, its flavour and its size, so you always know what you are ordering.',
+                `${BRAND.name} has been trading since ${BRAND.track.foundedYear}, and ${BRAND.track.customers.toLocaleString('en-US')} customers across the United States have ordered from us in that time. The website is the new part: it is how the business now takes orders.`,
+                `We operate from ${BRAND.location.region} and ship to every state.`,
               ],
             },
             {
-              heading: 'Tested by batch, before it is offered',
+              heading: 'Who runs it',
               body: [
-                'Every batch of disposables is lab-tested before we offer it for sale, and the results are kept against the batch code printed on the package.',
-                'Verified buyers and licensed retailers can ask us for a certified copy of the report for the batch they received. Send the batch code through the contact page and we will send the certificate.',
+                `Dr ${BRAND.proprietor.name} owns ${BRAND.name} and runs it as CEO. He holds a PhD in business and chemical engineering, specialising in fumes, and has more than thirty years of experience in the industry, across more than ten businesses.`,
+                'He is the person the rest of the team answers to, and the one who decides what the business sells.',
               ],
             },
             {
-              heading: 'By the unit, or by the case',
+              heading: 'What we sell',
               body: [
-                'Each disposable has one price per unit, and your total is that price times the number you order. There are no pack sizes to compare.',
-                'Retailers, vape shops and resellers can buy from us in volume. The bulk page takes your quantities, and a person replies with wholesale pricing.',
+                'Root bark comes first. Mimosa hostilis and sassafras root bark, sold by weight as raw material for natural dyeing, soap making and craft, in powder, shredded and stripped cuts.',
+                `Disposables sit alongside it: ready-to-use disposable vapor products for adults aged ${BRAND.minimumAge} and over. Each product page lists what the device contains, its flavour and its size, so you know exactly what you are ordering.`,
               ],
             },
             {
-              heading: 'How disposables reach you',
+              heading: 'How an order works',
               body: [
-                'Disposables are governed by the federal PACT Act. The postal service does not carry vapor products, and the major parcel carriers decline them, so every order of disposables travels with a specialist carrier that complies with the Act, separately from anything else in the order.',
-                `Every disposable is for adults aged ${BRAND.minimumAge} and over, and no payment is taken on this site: you place an order request, we verify it, and we contact you with how to pay.`,
+                'No payment is taken on this site. You send an order request, we check it against the address it is going to, and then we contact you with how to pay.',
+                'Once payment is confirmed, the order is weighed, packed and handed to the carrier, and the tracking number follows. Disposables travel as a separate parcel from root bark.',
+              ],
+            },
+            {
+              heading: 'Talk to a person',
+              body: [
+                `Email ${email} or call ${BRAND.phone}. Questions about an order, a cut of bark or a bulk quantity all come to the same people you can see below.`,
               ],
             },
           ]}
-          relatedHeading="Disposables"
+          relatedHeading="Shop"
           related={[
-            { label: 'Shop disposables', href: url.category('disposable-vapes') },
+            { label: 'Mimosa hostilis root bark', href: url.category('mimosa-hostilis') },
+            { label: 'Disposables', href: url.category('disposable-vapes') },
             { label: 'Wholesale and bulk pricing', href: url.bulk() },
-            { label: 'What the PACT Act means for buyers', href: url.blogPost('what-the-pact-act-means-for-buyers') },
           ]}
         />
       </PageSection>
 
       {/*
-        The people (owner's request, 2026-09-13): the founder, then the team, after
-        what the business distributes. How state rules and lab testing work, and how
-        payment works in detail, live on their own pages, linked below.
+        The people: the owner, then the team, after what the business sells and how
+        an order works.
       */}
       <Proprietor linkToAbout={false} />
 

@@ -27,30 +27,35 @@ import { BRAND } from '@/lib/brand'
  * a future edit cannot detach the two.
  */
 
+/*
+  Rewritten 2026-09-28. Two of the four claims were no longer true: no state rule
+  cites a statute, and checkout stopped refusing sales by location on 2026-09-19.
+  Each line below is something the business does on every order.
+*/
 const STANDARDS = [
   {
-    claim: 'Every batch is tested before it is offered.',
+    claim: 'A person checks every order before payment is asked for.',
     detail:
-      'The full panel — potency, heavy metals, pesticides, mycotoxins, solvents and microbials — not potency alone. A certified copy is issued to verified buyers who ask for it, against the code printed on the package.',
-    action: { label: 'Request a certificate', href: url.labResults() },
+      'You send an order request, not a payment. We check the stock, the cut and the address it is going to, then reply with how to pay.',
+    action: { label: 'How ordering works', href: url.guide('how-ordering-and-payment-works') },
   },
   {
-    claim: 'Every state position carries its statute.',
+    claim: 'Sold by weight, at one price per pound.',
     detail:
-      'And the date we last reviewed it. Our public pages and our cart read the same record, which is why this site cannot tell you one thing and the checkout another.',
-    action: { label: 'Legality by state', href: url.legalityHub() },
+      'Every cut comes in 1/4, 1/3, 1/2 and 1 lb sizes, and the size you choose sets the price you are quoted. Larger quantities are priced by a person.',
+    action: { label: 'Bulk and wholesale', href: url.bulk() },
   },
   {
-    claim: 'Where we are not certain, we refuse the sale.',
+    claim: 'Shipped from California, to US addresses only.',
     detail:
-      'No verified review for a product in your state means the cart declines rather than guesses. We would rather explain a refusal than defend a shipment.',
-    action: { label: 'What ships to you', href: url.shopNearMe() },
+      'Weighed, packed in double-sealed, smell-proof bags flushed with nitrogen to keep the bark fresh, and shipped with tracking once payment is confirmed. Parcel orders from 100 dollars ship free.',
+    action: { label: 'Where we ship', href: url.legalityHub() },
   },
   {
     claim: 'No payment is taken on this website.',
     detail:
-      'There is no card form here, no processor behind it and nothing stored — so there is nothing for anyone to take. You submit an order, we check the stock and that we can ship to your address, and payment instructions follow.',
-    action: { label: 'How ordering works', href: url.guide('how-ordering-and-payment-works') },
+      'There is no card form here, no processor behind it and nothing stored — so there is nothing for anyone to take.',
+    action: { label: 'Contact us', href: url.contact() },
   },
 ] as const
 

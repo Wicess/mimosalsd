@@ -42,7 +42,7 @@ export function TeamSlats() {
         Our team
       </h2>
       <p className="mt-3 max-w-[60ch] leading-relaxed text-foreground-muted">
-        The people who work alongside our founder. Each of them is responsible for a
+        The people who work alongside our owner. Each of them is responsible for a
         part of the business you can check from the outside.
       </p>
 

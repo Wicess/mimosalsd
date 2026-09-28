@@ -125,7 +125,7 @@ export function EngagementPrompts() {
         open={showing === 'install'}
         onClose={close}
         title={`Get the app: ${APP_DISCOUNT_PERCENT}% off`}
-        icon={<Image src="/brand/app-icon-192.png" alt="" width={44} height={44} className="size-11" />}
+        icon={<Image src="/brand/app-icon-v2-192.png" alt="" width={44} height={44} className="size-11" />}
       >
         <p className="mt-1 text-sm leading-relaxed text-foreground-muted">
           {install.method === 'in-app'

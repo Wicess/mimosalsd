@@ -21,9 +21,9 @@ import { GUIDES, POSTS } from '@/lib/content/content.data'
 
 /** Products that exist right now. Update alongside the catalogue, never around it. */
 const REAL_PRODUCT_SLUGS = new Set([
-  'powdered-mimosa-hostils-root',
-  'mimosa-roots-stripped',
-  'mimosa-treee-bark',
+  'mimosa-hostilis-root-bark-powder',
+  'shredded-mimosa-hostilis-root-bark',
+  'whole-mimosa-hostilis-root-bark',
   'sassafras-root-bark',
 ])
 

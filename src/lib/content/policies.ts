@@ -93,9 +93,13 @@ export const POLICIES: readonly Policy[] = [
   {
     slug: 'shipping',
     title: 'Shipping policy',
-    metaTitle: 'Shipping Policy — Carriers, Packaging and Free Shipping',
-    metaDescription: `We ship with USPS, UPS and local agencies, in double-sealed, smell-proof packaging. Free shipping on all orders from ${FREE_FROM}. United States only.`,
-    summary: `We ship within the United States and nowhere else, using USPS, UPS and other local agencies when necessary. Every order is packed in double-sealed, smell-proof packaging, and shipping is free on all orders from ${FREE_FROM}. Vapor products travel separately, as federal law requires.`,
+    metaTitle: 'Shipping Policy, Root Bark Shipped From California',
+    /*
+      The price is written in words: sanitizeMeta strips every currency amount, which
+      left this description reading "Free shipping on all orders from." in results.
+    */
+    metaDescription: 'Root bark ships from California in double-sealed, smell-proof, nitrogen-flushed bags, with tracking, to US addresses only. Free from one hundred dollars.',
+    summary: `We ship from California to addresses in the United States and nowhere else, using USPS, UPS and other local carriers. Every order is packed in a double-sealed, smell-proof bag flushed with nitrogen to keep oxygen out, so the bark stays fresh, and sent with tracking. Shipping is free on parcel orders from ${FREE_FROM}.`,
     lastReviewedAt: '2026-09-13',
     sections: [
       {
@@ -117,7 +121,7 @@ export const POLICIES: readonly Policy[] = [
       {
         heading: 'Packaging',
         body: [
-          'Every order is packed in double-sealed, smell-proof packaging.',
+          'Every order is packed in double-sealed, smell-proof packaging, flushed with nitrogen before it is sealed. The nitrogen displaces the oxygen in the bag, so the bark does not oxidize and stays fresh in transit and in storage.',
         ],
       },
       {

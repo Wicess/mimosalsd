@@ -13,7 +13,7 @@ import { formatCents } from '@/lib/utils'
  * rather than the site's general card. Made automatically for every product,
  * posted or built in. Colours are the dark theme's tokens, as on the site card.
  */
-export const alt = `A ${BRAND.name} product`
+export const alt = `Product card from ${BRAND.name}: the product photo, its name and its price per pound`
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -50,7 +50,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             </div>
           ) : null}
           <div style={{ display: 'flex', height: 2, width: 96, background: RULE }} />
-          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>Third-party lab tested · US shipping</div>
+          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>Sold by weight · Ships from California to US addresses</div>
         </div>
       </div>
     ),

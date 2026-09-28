@@ -37,40 +37,50 @@ export interface TeamMember {
 }
 
 /*
-  SAMPLE DATA (2026-09-27). Roles and wording are stand-ins so this section of the
-  design renders; the photographs are flat placeholders, not people. All of it is
-  replaced with the client's own before launch — see docs/00-LAUNCH-CHECKLIST.md.
+  The client's own team (2026-09-28): one photograph per role, labelled by role, no
+  names. So each panel is headed by its role, and `name` stays unset until the client
+  supplies one. Each sentence says what the role does, not what it has achieved.
 */
 export const TEAM: readonly TeamMember[] = [
   {
     id: 'compliance',
     role: 'Compliance',
-    accountableFor: 'Sample copy: who keeps the state positions current, and what is checked before a page is published.',
-    photo: '/team/compliance.jpg',
+    accountableFor:
+      'Reads every product page, article and customer review before it goes live, and keeps what this site says to what the business can stand behind.',
+    photo: '/team/compliance-portrait.jpg',
+    photoPosition: '65% 25%',
   },
   {
     id: 'quality',
-    role: 'Quality',
-    accountableFor: 'Sample copy: who handles batch records, and what is checked before a batch is offered for sale.',
-    photo: '/team/quality.jpg',
+    role: 'Quality & Lab',
+    accountableFor:
+      'Checks each incoming batch against its paperwork, for cut, colour and weight, before it is listed for sale, and keeps the record for that batch.',
+    photo: '/team/quality-portrait.jpg',
+    photoPosition: '55% 30%',
   },
   {
     id: 'fulfilment',
     role: 'Fulfilment',
-    accountableFor: 'Sample copy: who packs an order, what the packaging shows, and when tracking is sent.',
-    photo: '/team/fulfilment.jpg',
+    accountableFor:
+      'Weighs and packs each order, and sends the tracking number once the parcel is with the carrier.',
+    photo: '/team/fulfilment-portrait.jpg',
+    photoPosition: '40% 30%',
   },
   {
     id: 'support',
-    role: 'Support',
-    accountableFor: 'Sample copy: who answers the chat and the contact form, and how quickly.',
-    photo: '/team/support.jpg',
+    role: 'Customer service',
+    accountableFor:
+      'Answers the live chat, the contact form and the phone, and follows an order from the request to the doorstep.',
+    photo: '/team/support-portrait.jpg',
+    photoPosition: '50% 50%',
   },
   {
     id: 'editorial',
-    role: 'Editorial',
-    accountableFor: 'Sample copy: who writes the guides, and what every claim on them has to be backed by.',
-    photo: '/team/editorial.jpg',
+    role: 'Research & editorial',
+    accountableFor:
+      'Researches and writes the guides and articles on this site, from dyeing with root bark to reading a product label.',
+    photo: '/team/editorial-portrait.jpg',
+    photoPosition: '55% 40%',
   },
 ]
 

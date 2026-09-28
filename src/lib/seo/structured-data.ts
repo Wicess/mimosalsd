@@ -128,6 +128,7 @@ export function organization(email: string) {
     name: BRAND.name,
     legalName: BRAND.legalName,
     ...founder(),
+    ...(BRAND.track.foundedYear > 0 ? { foundingDate: String(BRAND.track.foundedYear) } : {}),
     url: absoluteUrl('/'),
     description: BRAND.description,
     email,
@@ -162,8 +163,8 @@ export function organization(email: string) {
 /**
  * The founder, nested in Organization, only once `BRAND.proprietor` names a real
  * person. Every property is one the page shows: the name and post-nominal, the role,
- * the one-line title and the portrait. No founding date is emitted, because the
- * owner gave a floor ("more than 10 years"), not a year.
+ * the one-line title and the portrait. The founding year sits on Organization
+ * itself, not here: it dates the business, not the person.
  */
 function founder() {
   const { name, postNominal, role, title, portrait } = BRAND.proprietor

@@ -1,0 +1,645 @@
+{
+  "_note": "Product copy for the four live products, written 2026-09-28 to replace the template writer's text. Applied by scripts/rewrite-products.ts, which renames slugs, validates each document against postedDocumentSchema and the compliance lexicon, and backs up the old rows first.",
+  "products": [
+    {
+      "oldSlug": "mimosa-hostilis-root-bark-powder",
+      "slug": "mimosa-hostilis-root-bark-powder",
+      "name": "Mimosa Hostilis Root Bark Powder",
+      "shortDescription": "Finely milled Mimosa hostilis root bark powder for natural dyeing and cold-process soap color. The fastest-releasing cut, sold by the pound from 1/4 lb, shipped from California.",
+      "seo": {
+        "metaTitle": "Mimosa Hostilis Root Bark Powder for Dyeing, by the Pound",
+        "metaDescription": "Buy fine Mimosa hostilis root bark powder for natural dye and soap color. Quarter pound to 1 lb, bulk on request, shipped from California to US addresses.",
+        "keywords": [
+          "mimosa hostilis root bark powder",
+          "buy mimosa hostilis root bark powder",
+          "mimosa hostilis powder for natural dye",
+          "mimosa hostilis powder for soap making",
+          "mhrb powder for sale",
+          "mimosa tenuiflora bark powder",
+          "mimosa hostilis root bark 1 lb",
+          "mimosa hostilis dye powder usa"
+        ]
+      },
+      "specs": [
+        [
+          "Botanical name",
+          "Mimosa tenuiflora (syn. Mimosa hostilis)"
+        ],
+        [
+          "Also sold as",
+          "MHRB, jurema preta bark, mimosa tenuiflora bark"
+        ],
+        [
+          "Family",
+          "Fabaceae (legume family)"
+        ],
+        [
+          "Part",
+          "Root bark"
+        ],
+        [
+          "Cut",
+          "Fine powder"
+        ],
+        [
+          "Color in the bag",
+          "Mauve to red-brown"
+        ],
+        [
+          "Sold by",
+          "The pound: 1/4, 1/3, 1/2 and 1 lb"
+        ],
+        [
+          "Ships from",
+          "California, to US addresses only"
+        ],
+        [
+          "Intended use",
+          "Natural dyeing, cold-process soap color, craft"
+        ],
+        [
+          "Use restriction",
+          "Not for human consumption"
+        ]
+      ],
+      "images": [
+        "Mimosa hostilis root bark powder, fine and red-brown, seen close up",
+        "A cone of mauve Mimosa hostilis root bark powder in a dark ceramic dish",
+        "Fine pink-mauve Mimosa hostilis root bark powder on a wooden table"
+      ],
+      "sections": [
+        {
+          "heading": "What you get",
+          "paragraphs": [
+            "Mimosa hostilis root bark, milled to a fine, even powder. It is the same bark as our [shredded](/product/shredded-mimosa-hostilis-root-bark) and [whole](/product/whole-mimosa-hostilis-root-bark) cuts, taken all the way down to a powder, and in the bag it reads mauve to red-brown depending on the light.",
+            "The plant is Mimosa tenuiflora, still sold under its older name Mimosa hostilis, a thorny tree of the legume family native to northeastern Brazil and southern Mexico. In Brazil it is called jurema preta. The root bark is the part dyers want: it is dense with tannins and with the red-purple pigments that make it one of the few natural dyes that goes straight from bag to pot without a separate mordant for most wool work."
+          ]
+        },
+        {
+          "heading": "Why choose the powder over shredded bark?",
+          "paragraphs": [
+            "Speed and concentration. A powder has far more surface in contact with the water than a strand of bark, so it gives up its color in a fraction of the simmer time. That makes it the cut for small, controlled jobs: test skeins, dye samples, a single scarf, and soap, where you want color in the oil rather than a pot to strain. [Why particle size changes everything in a dye pot](/blog/why-particle-size-changes-everything-in-a-dye-pot) goes into the trade-off in detail.",
+            "The price of that speed is straining. Powder stays suspended, so a powder bath has to be settled and poured off or run through fine cloth before the fiber goes in, or specks will lodge in the wool. If you are dyeing a full fleece or several pounds of yarn, the [shredded cut](/product/shredded-mimosa-hostilis-root-bark) is easier to lift out and gives more than one bath. [The three cuts of Mimosa root bark, and who each one suits](/blog/the-three-cuts-of-mimosa-root-bark) compares all three side by side."
+          ]
+        },
+        {
+          "heading": "What colors does Mimosa hostilis powder give?",
+          "paragraphs": [
+            "On wool and silk, a first bath gives dusky pinks, plum and a warm red-brown; more bark and a longer simmer push it toward burgundy and a deep chocolate. A little alum in the fiber first brightens the pinks. An iron afterbath turns the same bath slate, charcoal or near-black, which is one of the reasons dyers keep a pound of this on the shelf: one material, two very different palettes. [Iron as a modifier, and how far to go](/blog/iron-as-a-modifier-how-far-to-go) shows how quickly that shift happens.",
+            "The pot's pH moves the color as well. Keep the bath neutral to slightly acidic if you want to stay in the purples, and expect browns if it drifts alkaline. [Keeping a bark bath purple instead of brown](/blog/keeping-a-bark-bath-purple) is the short version of how to hold it there.",
+            "Cotton and linen take the color more palely than wool and silk, because plant fibers have no protein for the tannins to bind to. Mordanting them with tannin and then alum first closes most of that gap; [wool, silk, cotton and linen in the same bath](/blog/wool-silk-cotton-and-linen-in-the-same-bath) shows the difference on one set of swatches."
+          ]
+        },
+        {
+          "heading": "How much powder do you need per pound of fiber?",
+          "paragraphs": [
+            "Dyers measure bark against the dry weight of the fiber, written as a percentage \"of weight of fiber\" (WOF). A pale tint takes about 25 to 40 percent, 4 to 6 ounces for a pound of wool; a mid shade about 50 to 75 percent, 8 to 12 ounces; and the deepest plums up to an equal weight of bark and fiber. Powder gives up its color most completely, so start at the lower end of each range.",
+            "That makes a quarter pound enough to learn on with a few test skeins, and a full pound enough for one to two pounds of fiber in mid shades. [How much bark per pound of fibre](/blog/weighing-bark-against-fibre) has the full table, and [testing a dye before you commit a fleece](/blog/testing-a-dye-before-you-commit-a-fleece) is worth ten minutes before the first big pot."
+          ]
+        },
+        {
+          "heading": "Using it in cold-process soap",
+          "paragraphs": [
+            "Soap makers use the powder for color alone: it gives bars in tones from warm tan to dusky brown-purple depending on how much goes in and how it is added. The usual routes are infusing the powder in part of the recipe's oil and straining it, or adding a small amount at light trace. Start low, since the color deepens as the bar ages over the following weeks. [Bark as a colourant in cold process soap](/blog/bark-as-a-colourant-in-cold-process-soap) walks through both methods.",
+            "We make no claim about what the bark does for skin; it is sold here as a colorant."
+          ]
+        },
+        {
+          "heading": "Sizes, price and bulk",
+          "paragraphs": [
+            "Sold by weight at one price per pound, in four sizes: 1/4 lb, 1/3 lb, 1/2 lb and 1 lb. The size you pick sets the price shown in the buy box, and that is the price you are quoted. Orders of parcel items from 100 dollars ship free.",
+            "Buying for a studio, a class or a soap line? Several pounds at a time are priced individually on the [bulk and wholesale page](/bulk), and a person replies with a quote."
+          ]
+        },
+        {
+          "heading": "Ordering and delivery",
+          "paragraphs": [
+            "You place an order request here rather than paying on the site. We check it, then send payment instructions; once payment is confirmed, the order is weighed, sealed and shipped from California with tracking. We ship to addresses in the United States only. The [shipping policy](/policies/shipping) has the details. Every order is packed in a double-sealed, smell-proof bag that is flushed with nitrogen before it is closed: the nitrogen pushes the oxygen out, so the bark does not oxidize in transit or on your shelf and arrives as fresh as the day it was packed.",
+            "Powder keeps well if it stays dry and dark. Reseal the bag after each use, keep it out of a steamy kitchen, and it will still be strong a year from now. See [storing root bark so it lasts](/blog/storing-root-bark-so-it-lasts)."
+          ]
+        },
+        {
+          "heading": "Handling fine powder",
+          "paragraphs": [
+            "Fine bark powder lifts into the air when it is poured, so weigh it out away from drafts, wear a dust mask and gloves, and keep it away from food, children and pets. [Working safely with fine milled bark](/blog/working-safely-with-fine-milled-bark) covers the sensible basics.",
+            "This is raw botanical material for dyeing and craft. It is not food, not a supplement and not for human consumption."
+          ]
+        }
+      ],
+      "advantages": [
+        "The fastest-releasing cut: color comes out in a fraction of the simmer time of shredded bark.",
+        "Ideal for test skeins, small batches and cold-process soap color.",
+        "Packed in double-sealed, smell-proof bags flushed with nitrogen to keep oxygen out, so the bark stays fresh.",
+        "Four fixed sizes from 1/4 lb to 1 lb, with bulk pricing on request.",
+        "Ships from California to US addresses, free on parcel orders from 100 dollars."
+      ],
+      "faqs": [
+        {
+          "question": "What is Mimosa hostilis root bark powder used for?",
+          "answer": "It is used as a natural dye for wool, silk, leather and, once mordanted with tannin and alum, cotton and linen, and as a colorant in cold-process soap. The powder is the fastest-releasing cut, which makes it the usual choice for test skeins, small batches and soap. It is sold as raw botanical material and is not for human consumption."
+        },
+        {
+          "question": "Is powder or shredded Mimosa hostilis better for dyeing?",
+          "answer": "Powder releases color faster and is more concentrated, so it suits small, controlled jobs and soap. Shredded bark is easier to lift out of the pot and gives a second and third bath, so it suits larger dye lots and whole fleeces. Many dyers keep both."
+        },
+        {
+          "question": "How much Mimosa hostilis powder do I need to dye one pound of wool?",
+          "answer": "Plan on 25 to 40 percent of the dry fiber weight for a pale tint and 50 to 75 percent for a mid shade, which is 8 to 12 ounces of powder for a pound of wool. Deep plum and burgundy take up to an equal weight. Test a small skein first, since water and fiber change the result."
+        },
+        {
+          "question": "Do I need a mordant with Mimosa hostilis?",
+          "answer": "Not for most wool and silk work: the bark is rich in tannins, which help the color bind on protein fibers. An alum mordant brightens the pinks and improves lightfastness, and cotton or linen need a tannin-then-alum mordant for good depth."
+        },
+        {
+          "question": "What sizes does the powder come in, and is there bulk pricing?",
+          "answer": "It is sold by the pound in 1/4, 1/3, 1/2 and 1 lb sizes, each at one fixed price. For several pounds at a time, request a quote on the bulk and wholesale page and a person will reply with pricing."
+        },
+        {
+          "question": "How is the root bark packed?",
+          "answer": "In a double-sealed, smell-proof bag that is flushed with nitrogen before sealing. Nitrogen displaces the oxygen inside the bag, which stops the bark oxidizing, so the color and freshness hold in transit and in storage. Reseal the bag after each use to keep it that way."
+        },
+        {
+          "question": "Where does it ship from, and how long does it keep?",
+          "answer": "Orders ship from California to US addresses only, with tracking once payment is confirmed. Kept sealed, dry and out of the light, the powder holds its color for well over a year."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Mimosa tenuiflora — species overview",
+          "url": "https://en.wikipedia.org/wiki/Mimosa_tenuiflora"
+        },
+        {
+          "label": "Plants of the World Online: Mimosa tenuiflora",
+          "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:516914-1"
+        }
+      ]
+    },
+    {
+      "oldSlug": "shredded-mimosa-hostilis-root-bark",
+      "slug": "shredded-mimosa-hostilis-root-bark",
+      "name": "Shredded Mimosa Hostilis Root Bark",
+      "shortDescription": "Shredded Mimosa hostilis root bark in loose red-brown strands, the everyday working cut for natural dyers. Easy to strain, good for repeat baths, sold by the pound from 1/4 lb.",
+      "seo": {
+        "metaTitle": "Shredded Mimosa Hostilis Root Bark for Natural Dye",
+        "metaDescription": "Shredded Mimosa hostilis root bark for dyeing wool, silk and leather. Strains cleanly, gives repeat baths. Sold by the pound, shipped from California.",
+        "keywords": [
+          "shredded mimosa hostilis root bark",
+          "buy shredded mimosa hostilis root bark",
+          "mimosa hostilis inner root bark shredded",
+          "mimosa hostilis root bark for sale usa",
+          "mimosa hostilis dye for wool",
+          "mimosa hostilis root bark natural dye",
+          "shredded mhrb",
+          "mimosa hostilis root bark 1 lb"
+        ]
+      },
+      "specs": [
+        [
+          "Botanical name",
+          "Mimosa tenuiflora (syn. Mimosa hostilis)"
+        ],
+        [
+          "Also sold as",
+          "MHRB, jurema preta bark, mimosa tenuiflora bark"
+        ],
+        [
+          "Family",
+          "Fabaceae (legume family)"
+        ],
+        [
+          "Part",
+          "Root bark"
+        ],
+        [
+          "Cut",
+          "Shredded, loose fibrous strands"
+        ],
+        [
+          "Color in the bag",
+          "Red-brown with tan fibers"
+        ],
+        [
+          "Sold by",
+          "The pound: 1/4, 1/3, 1/2 and 1 lb"
+        ],
+        [
+          "Ships from",
+          "California, to US addresses only"
+        ],
+        [
+          "Intended use",
+          "Natural dyeing, leather work, craft"
+        ],
+        [
+          "Use restriction",
+          "Not for human consumption"
+        ]
+      ],
+      "images": [
+        "Shredded Mimosa hostilis root bark, a loose pile of fine reddish-brown fibers",
+        "Close view of shredded Mimosa hostilis root bark strands in red-brown and tan",
+        "A small heap of shredded Mimosa hostilis root bark on a wooden board"
+      ],
+      "sections": [
+        {
+          "heading": "What you get",
+          "paragraphs": [
+            "Mimosa hostilis root bark torn into loose, fibrous strands, red-brown with paler tan threads running through it. This is the cut most natural dyers reach for first: it releases its color steadily, lifts out of the pot in one go, and leaves a bath clean enough to dye in without straining through cloth.",
+            "The plant is Mimosa tenuiflora, sold for decades as Mimosa hostilis, a thorny legume tree native to northeastern Brazil and southern Mexico, where it is known as jurema preta. Its root bark is unusually rich in tannins and red-purple pigments, which is why it has a place on the shelf of so many wool and leather workers."
+          ]
+        },
+        {
+          "heading": "Why dyers choose shredded bark",
+          "paragraphs": [
+            "Control and economy. The strands give up color over a longer simmer, so the bath builds gradually and is easy to judge. When you lift the bark out, you can put it back into fresh water for a second and even a third bath, each a step paler than the last. That run of shades from one pound is the main reason shredded bark is the working cut. [Getting a second and third bath from one batch](/blog/getting-a-second-and-third-bath-from-one-batch) shows what each exhaust bath looks like.",
+            "If you want color in a hurry, for test skeins or soap, the [powder](/product/mimosa-hostilis-root-bark-powder) is quicker. If you want the most storable form and do not mind breaking it up, the [whole chips and strips](/product/whole-mimosa-hostilis-root-bark) keep longest. [The three cuts of Mimosa root bark](/blog/the-three-cuts-of-mimosa-root-bark) compares all three."
+          ]
+        },
+        {
+          "heading": "What colors does shredded Mimosa hostilis give on wool and silk?",
+          "paragraphs": [
+            "A first bath on unmordanted or alum-mordanted wool gives dusky rose, plum and red-brown. More bark per pound of fiber and a longer simmer carry it to burgundy and deep brown. An iron afterbath shifts the same bath to cool grey, slate and charcoal. See [iron as a modifier, and how far to go](/blog/iron-as-a-modifier-how-far-to-go).",
+            "Hold the bath neutral to slightly acidic to keep the purple tones; alkaline water pulls it toward brown. [Keeping a bark bath purple instead of brown](/blog/keeping-a-bark-bath-purple) has the practical steps. Silk takes the color with a softer sheen than wool, and cotton and linen come out paler unless they are mordanted with tannin and alum first."
+          ]
+        },
+        {
+          "heading": "How much shredded bark per pound of fiber?",
+          "paragraphs": [
+            "Weigh the bark against the dry fiber. A pale tint takes about 25 to 40 percent of the fiber's weight, a mid shade 50 to 75 percent, around 8 to 12 ounces of shredded bark to a pound of wool, and the deepest plums up to an equal weight. Because the same bark gives more than one bath, a pound of shredded bark goes further than its weight suggests. [How much bark per pound of fibre](/blog/weighing-bark-against-fibre) has a worked table.",
+            "Mordanting first is optional on wool, but it brightens the color and helps it hold in daylight. [Mordanting wool before a bark bath](/blog/mordanting-wool-before-a-bark-bath) explains alum at the right strength."
+          ]
+        },
+        {
+          "heading": "Leather and larger projects",
+          "paragraphs": [
+            "Tannin-rich barks have been used on leather for centuries, and Mimosa root bark is one of the richest. On vegetable-tanned leather it deepens the surface to warm browns and red-browns. [Dyeing leather with bark](/blog/dyeing-leather-with-bark) covers the method.",
+            "For fleeces, yardage or a class, buy by the pound or ask for a bulk quote on the [wholesale page](/bulk)."
+          ]
+        },
+        {
+          "heading": "Sizes, price and ordering",
+          "paragraphs": [
+            "Sold by weight at one price per pound, in 1/4 lb, 1/3 lb, 1/2 lb and 1 lb sizes. The buy box shows the price for the size you choose, and that is what you are quoted. Parcel orders from 100 dollars ship free.",
+            "You send an order request rather than paying on the site; we check it, send payment instructions, and ship from California with tracking once payment is confirmed. We ship to US addresses only. See the [shipping policy](/policies/shipping). Every order is packed in a double-sealed, smell-proof bag that is flushed with nitrogen before it is closed: the nitrogen pushes the oxygen out, so the bark does not oxidize in transit or on your shelf and arrives as fresh as the day it was packed."
+          ]
+        },
+        {
+          "heading": "Storage and handling",
+          "paragraphs": [
+            "Kept sealed, dry and out of the light, shredded bark holds its color for a long time. Dry it thoroughly before storing any bark you have already used once. [Storing root bark so it lasts](/blog/storing-root-bark-so-it-lasts) has more.",
+            "Wear gloves when handling a hot bath, keep dye pots separate from cooking pots, and keep the bark away from children and pets. This is raw botanical material for dyeing and craft. It is not food, not a supplement and not for human consumption."
+          ]
+        }
+      ],
+      "advantages": [
+        "The working cut for natural dyers: steady color release and a bath that is easy to judge.",
+        "Lifts out cleanly and gives a second and third bath, so one pound goes further.",
+        "Packed in double-sealed, smell-proof bags flushed with nitrogen to keep oxygen out, so the bark stays fresh.",
+        "Four fixed sizes from 1/4 lb to 1 lb, with bulk pricing on request.",
+        "Ships from California to US addresses, free on parcel orders from 100 dollars."
+      ],
+      "faqs": [
+        {
+          "question": "What is shredded Mimosa hostilis root bark used for?",
+          "answer": "Mainly natural dyeing: it gives rose, plum, burgundy and brown on wool and silk, grey to charcoal with an iron afterbath, and warm browns on vegetable-tanned leather. It is sold as raw botanical material for dyeing and craft and is not for human consumption."
+        },
+        {
+          "question": "Can I reuse shredded Mimosa hostilis bark for more than one dye bath?",
+          "answer": "Yes. Lift the bark out after the first bath and simmer it again in fresh water for a second bath, then a third. Each is paler than the last, which gives a matching run of shades from the same bark."
+        },
+        {
+          "question": "How much shredded bark do I need for a pound of wool?",
+          "answer": "About 50 to 75 percent of the dry fiber weight for a mid shade, which is 8 to 12 ounces for a pound of wool, or 25 to 40 percent for a pale tint. Deep plum takes up to an equal weight. Test a small skein first."
+        },
+        {
+          "question": "Why is my Mimosa hostilis dye bath turning brown instead of purple?",
+          "answer": "Usually because the water is alkaline or the bath has been held too hot for too long. Keep the bath neutral to slightly acidic and at a gentle simmer to hold the purple tones."
+        },
+        {
+          "question": "What is the difference between shredded, powder and whole root bark?",
+          "answer": "They are the same bark in different cuts. Powder releases color fastest and suits soap and small batches. Shredded is the everyday dyeing cut and gives repeat baths. Whole chips and strips store longest and are broken down before use."
+        },
+        {
+          "question": "How is the root bark packed?",
+          "answer": "In a double-sealed, smell-proof bag that is flushed with nitrogen before sealing. Nitrogen displaces the oxygen inside the bag, which stops the bark oxidizing, so the color and freshness hold in transit and in storage. Reseal the bag after each use to keep it that way."
+        },
+        {
+          "question": "Where does it ship from?",
+          "answer": "From California, to addresses in the United States only, with tracking once payment is confirmed. Parcel orders from 100 dollars ship free."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Mimosa tenuiflora — species overview",
+          "url": "https://en.wikipedia.org/wiki/Mimosa_tenuiflora"
+        },
+        {
+          "label": "Plants of the World Online: Mimosa tenuiflora",
+          "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:516914-1"
+        }
+      ]
+    },
+    {
+      "oldSlug": "whole-mimosa-hostilis-root-bark",
+      "slug": "whole-mimosa-hostilis-root-bark",
+      "name": "Whole Mimosa Hostilis Root Bark (Chips and Strips)",
+      "shortDescription": "Whole Mimosa hostilis root bark in thick chips and strips, dark outside and pink-purple within. The least processed cut, the longest-keeping, sold by the pound from 1/4 lb.",
+      "seo": {
+        "metaTitle": "Whole Mimosa Hostilis Root Bark Chips and Strips",
+        "metaDescription": "Whole Mimosa hostilis root bark in chips and strips for natural dyeing and leather work. Keeps longest. Sold by the pound, shipped from California.",
+        "keywords": [
+          "whole mimosa hostilis root bark",
+          "mimosa hostilis root bark chips",
+          "mimosa hostilis root bark strips",
+          "mimosa hostilis root bark for sale usa",
+          "mimosa tenuiflora bark",
+          "jurema preta bark",
+          "mimosa hostilis leather dye",
+          "mimosa hostilis root bark by the pound"
+        ]
+      },
+      "specs": [
+        [
+          "Botanical name",
+          "Mimosa tenuiflora (syn. Mimosa hostilis)"
+        ],
+        [
+          "Also sold as",
+          "MHRB, jurema preta bark, mimosa tenuiflora bark"
+        ],
+        [
+          "Family",
+          "Fabaceae (legume family)"
+        ],
+        [
+          "Part",
+          "Root bark"
+        ],
+        [
+          "Cut",
+          "Whole chips and strips"
+        ],
+        [
+          "Color in the bag",
+          "Dark outer bark, pink-purple to red inner face"
+        ],
+        [
+          "Sold by",
+          "The pound: 1/4, 1/3, 1/2 and 1 lb"
+        ],
+        [
+          "Ships from",
+          "California, to US addresses only"
+        ],
+        [
+          "Intended use",
+          "Natural dyeing, leather work, craft"
+        ],
+        [
+          "Use restriction",
+          "Not for human consumption"
+        ]
+      ],
+      "images": [
+        "Whole Mimosa hostilis root bark in thick chips, dark outer bark over a red-brown inner face",
+        "Strips of Mimosa hostilis root bark showing the deep pink-purple inner bark",
+        "Curled strips of whole Mimosa hostilis root bark, tan outside and red within"
+      ],
+      "sections": [
+        {
+          "heading": "What you get",
+          "paragraphs": [
+            "Mimosa hostilis root bark as it comes off the root: thick chips and curled strips, weathered dark or tan on the outside and a strong pink-purple to red on the inner face. That inner color is the dye. This is the least processed of our three cuts, and the one to buy if you want bark that will sit on the shelf for a long time before it meets a pot.",
+            "The plant is Mimosa tenuiflora, long sold as Mimosa hostilis, a thorny legume tree of northeastern Brazil and southern Mexico known locally as jurema preta. Its root bark carries a heavy load of tannins and red-purple pigments, the reason it is prized by dyers and leather workers alike."
+          ]
+        },
+        {
+          "heading": "Why buy whole root bark?",
+          "paragraphs": [
+            "It keeps. With less cut surface exposed to air and light, whole bark holds its color longer than any shredded or milled form, so it suits dyers who buy once a year and studios keeping a stock.",
+            "It also lets you choose your own cut. Break the chips up by hand for a slow bath, soak them overnight to soften before simmering, or mill a portion to powder when a job calls for it. [Milling your own powder from bark](/blog/milling-your-own-powder-at-home) explains how. If you would rather skip that step, the [shredded](/product/shredded-mimosa-hostilis-root-bark) and [powder](/product/mimosa-hostilis-root-bark-powder) cuts are ready for the pot."
+          ]
+        },
+        {
+          "heading": "How to use whole bark in a dye pot",
+          "paragraphs": [
+            "Break or cut the pieces small, cover them with water and leave them to soak overnight; the water will already be turning pink by morning. Then bring it to a gentle simmer and hold it there until the bath is as deep as you want, lift the bark out, and add your wetted fiber. Chips take longer to give up their color than shredded bark, and they give repeat baths the same way. See [getting a second and third bath from one batch](/blog/getting-a-second-and-third-bath-from-one-batch).",
+            "On wool and silk the color runs from rose and plum to burgundy and deep brown with more bark and time, and shifts to slate and charcoal with an iron afterbath. Keep the pot neutral to slightly acidic to stay in the purples. [Keeping a bark bath purple instead of brown](/blog/keeping-a-bark-bath-purple) covers the details."
+          ]
+        },
+        {
+          "heading": "Whole bark for leather work",
+          "paragraphs": [
+            "Tannin-rich barks are the traditional material of vegetable tanning, and Mimosa root bark is among the richest. Whole bark suits long, slow soaks for leather, and on vegetable-tanned hides it deepens the surface to warm red-browns. [Dyeing leather with bark](/blog/dyeing-leather-with-bark) has the method."
+          ]
+        },
+        {
+          "heading": "How much do you need?",
+          "paragraphs": [
+            "Measure against the dry weight of the fiber. A mid shade takes about 50 to 75 percent of the fiber's weight, 8 to 12 ounces of bark to a pound of wool, and a pale tint 25 to 40 percent. Whole bark releases its color more slowly than the other cuts, so give it an overnight soak and a longer simmer to get full value from it. [How much bark per pound of fibre](/blog/weighing-bark-against-fibre) has a full table."
+          ]
+        },
+        {
+          "heading": "Sizes, price and ordering",
+          "paragraphs": [
+            "Sold by weight at one price per pound, in 1/4 lb, 1/3 lb, 1/2 lb and 1 lb sizes, with the price for your size shown in the buy box. Parcel orders from 100 dollars ship free. For several pounds, ask for a quote on the [bulk and wholesale page](/bulk).",
+            "You place an order request, we check it and send payment instructions, and the order ships from California with tracking once payment is confirmed. US addresses only; see the [shipping policy](/policies/shipping). Every order is packed in a double-sealed, smell-proof bag that is flushed with nitrogen before it is closed: the nitrogen pushes the oxygen out, so the bark does not oxidize in transit or on your shelf and arrives as fresh as the day it was packed."
+          ]
+        },
+        {
+          "heading": "Storage and handling",
+          "paragraphs": [
+            "Store sealed, dry and dark and whole bark will keep its color for years. Keep it away from children and pets, use separate pots for dyeing and cooking, and wear gloves around a hot bath. This is raw botanical material for dyeing and craft. It is not food, not a supplement and not for human consumption."
+          ]
+        }
+      ],
+      "advantages": [
+        "The least processed cut and the longest-keeping, ideal for stocking up.",
+        "Break it, soak it or mill it: you choose the cut for each job.",
+        "Packed in double-sealed, smell-proof bags flushed with nitrogen to keep oxygen out, so the bark stays fresh.",
+        "Rich in tannins for natural dyeing and slow leather work.",
+        "Ships from California to US addresses, free on parcel orders from 100 dollars."
+      ],
+      "faqs": [
+        {
+          "question": "What is whole Mimosa hostilis root bark?",
+          "answer": "It is the root bark in thick chips and strips, dark outside and pink-purple within, before any shredding or milling. It is the longest-keeping cut and is broken down or soaked before use. It is sold as raw botanical material for dyeing and craft and is not for human consumption."
+        },
+        {
+          "question": "How do I get color out of whole root bark chips?",
+          "answer": "Break the chips small, soak them overnight in water, then simmer gently until the bath is as deep as you want. Lift the bark out before adding wetted fiber, and reuse it for paler second and third baths."
+        },
+        {
+          "question": "Is whole bark better than shredded or powder?",
+          "answer": "It stores longest and lets you choose your own cut, but it is slower to use. Shredded bark is the everyday dyeing cut, and powder is fastest for small batches and soap."
+        },
+        {
+          "question": "Can I use Mimosa hostilis bark on leather?",
+          "answer": "Yes. It is one of the richest tannin barks, and on vegetable-tanned leather it deepens the surface to warm red-browns. Long, slow soaks suit whole bark best."
+        },
+        {
+          "question": "How is the root bark packed?",
+          "answer": "In a double-sealed, smell-proof bag that is flushed with nitrogen before sealing. Nitrogen displaces the oxygen inside the bag, which stops the bark oxidizing, so the color and freshness hold in transit and in storage. Reseal the bag after each use to keep it that way."
+        },
+        {
+          "question": "Where does it ship from?",
+          "answer": "From California, to US addresses only, with tracking once payment is confirmed. Parcel orders from 100 dollars ship free."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Mimosa tenuiflora — species overview",
+          "url": "https://en.wikipedia.org/wiki/Mimosa_tenuiflora"
+        },
+        {
+          "label": "Plants of the World Online: Mimosa tenuiflora",
+          "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:516914-1"
+        }
+      ]
+    },
+    {
+      "oldSlug": "sassafras-root-bark",
+      "slug": "sassafras-root-bark",
+      "name": "Sassafras Root Bark, Cut (Sassafras albidum)",
+      "shortDescription": "Cut sassafras root bark from Sassafras albidum, a North American dye tree. Gives tan, orange-brown and rose-brown on wool. Sold by the pound for dyeing and craft only.",
+      "seo": {
+        "metaTitle": "Sassafras Root Bark by the Pound for Natural Dye",
+        "metaDescription": "Cut sassafras root bark (Sassafras albidum) for natural dyeing and craft: tans and rose-browns on wool. Sold by the pound, shipped from California.",
+        "keywords": [
+          "sassafras root bark",
+          "buy sassafras root bark",
+          "sassafras root bark cut",
+          "sassafras root bark natural dye",
+          "sassafras albidum root bark",
+          "sassafras root bark 1 lb",
+          "sassafras dye wool",
+          "sassafras root bark for potpourri"
+        ]
+      },
+      "specs": [
+        [
+          "Botanical name",
+          "Sassafras albidum"
+        ],
+        [
+          "Family",
+          "Lauraceae (laurel family)"
+        ],
+        [
+          "Native range",
+          "Eastern North America"
+        ],
+        [
+          "Part",
+          "Root bark"
+        ],
+        [
+          "Cut",
+          "Cut pieces"
+        ],
+        [
+          "Color in the bag",
+          "Warm red-brown"
+        ],
+        [
+          "Sold by",
+          "The pound: 1/4, 1/3, 1/2 and 1 lb"
+        ],
+        [
+          "Ships from",
+          "California, to US addresses only"
+        ],
+        [
+          "Intended use",
+          "Natural dyeing, potpourri, craft"
+        ],
+        [
+          "Use restriction",
+          "Not for human consumption; see 21 CFR 189.180"
+        ]
+      ],
+      "images": [
+        "Cut sassafras root bark pieces, warm red-brown, in a white bowl"
+      ],
+      "sections": [
+        {
+          "heading": "What you get",
+          "paragraphs": [
+            "Root bark of Sassafras albidum, cut into pieces: warm red-brown, with the spicy scent the tree is known for. Sassafras is a member of the laurel family native to eastern North America, from southern Maine to eastern Texas, and the easiest tree in an American wood to recognize by its three leaf shapes on one branch.",
+            "It is one of the older dye materials on the continent, and the root bark is the part that carries the most color. [Sassafras albidum, a North American dye tree](/blog/sassafras-albidum-the-north-american-dye-tree) tells more of that story."
+          ]
+        },
+        {
+          "heading": "What colors does sassafras root bark dye?",
+          "paragraphs": [
+            "On wool, sassafras root bark gives warm tans, orange-browns and rose-browns. Alum-mordanted wool comes out clearer and brighter; an iron afterbath takes the same bath to soft greys and grey-browns. Protein fibers take it best. Cotton and linen need a tannin-then-alum mordant to reach any real depth.",
+            "It pairs well with Mimosa hostilis: an overdye of sassafras on a pale [Mimosa hostilis](/product/shredded-mimosa-hostilis-root-bark) pink pushes it toward coral and terracotta."
+          ]
+        },
+        {
+          "heading": "How to use it",
+          "paragraphs": [
+            "Soak the cut bark overnight, then simmer it gently for an hour or more until the bath is well colored. Strain the bark out, add wetted and mordanted fiber, and hold the bath below a boil so the color stays warm rather than dull. A reasonable starting amount is 25 to 50 percent of the dry fiber's weight, since sassafras is lighter in color than Mimosa bark. As with any new dye, test a small skein first; see [testing a dye before you commit a fleece](/blog/testing-a-dye-before-you-commit-a-fleece).",
+            "Beyond the dye pot, the dried bark is used for its scent in potpourri blends and in historical and educational craft displays."
+          ]
+        },
+        {
+          "heading": "Not for human consumption",
+          "paragraphs": [
+            "Sassafras root bark contains safrole. Federal rules prohibit safrole, oil of sassafras and sassafras bark intended for flavoring from use in human food (21 CFR 189.180). We sell this bark for dyeing and craft only. It is not food, not a supplement and not for human consumption. Keep it away from children and pets, and use separate pots for dyeing."
+          ]
+        },
+        {
+          "heading": "Sizes, price and ordering",
+          "paragraphs": [
+            "Sold by weight at one price per pound, in 1/4 lb, 1/3 lb, 1/2 lb and 1 lb sizes. The buy box shows the price for the size you choose, and parcel orders from 100 dollars ship free. For larger quantities, ask on the [bulk and wholesale page](/bulk).",
+            "You send an order request, we confirm it and send payment instructions, and the order ships from California with tracking once payment is confirmed. US addresses only; see the [shipping policy](/policies/shipping). Every order is packed in a double-sealed, smell-proof bag that is flushed with nitrogen before it is closed: the nitrogen pushes the oxygen out, so the bark does not oxidize in transit or on your shelf and arrives as fresh as the day it was packed."
+          ]
+        }
+      ],
+      "advantages": [
+        "A traditional North American dye bark: tans, orange-browns and rose-browns on wool.",
+        "Overdyes beautifully with Mimosa hostilis for corals and terracottas.",
+        "Packed in double-sealed, smell-proof bags flushed with nitrogen to keep oxygen out, so the bark stays fresh.",
+        "Four fixed sizes from 1/4 lb to 1 lb, with bulk pricing on request.",
+        "Ships from California to US addresses, free on parcel orders from 100 dollars."
+      ],
+      "faqs": [
+        {
+          "question": "What color does sassafras root bark dye?",
+          "answer": "On wool it gives warm tans, orange-browns and rose-browns. Alum mordant makes the color clearer and brighter, and an iron afterbath shifts it to soft greys and grey-browns. Wool and silk take it best."
+        },
+        {
+          "question": "Is sassafras root bark legal to buy?",
+          "answer": "Yes, as raw botanical material for dyeing and craft. Federal rules prohibit safrole, oil of sassafras and sassafras bark intended for flavoring from use in human food (21 CFR 189.180), so it is sold here for dyeing and craft only and not for human consumption."
+        },
+        {
+          "question": "How much sassafras root bark do I need to dye wool?",
+          "answer": "Start around 25 to 50 percent of the dry fiber weight, which is 4 to 8 ounces for a pound of wool. Sassafras is lighter in color than Mimosa bark, so it takes more for the same depth."
+        },
+        {
+          "question": "Can sassafras be combined with Mimosa hostilis?",
+          "answer": "Yes. Overdyeing sassafras on a pale Mimosa hostilis pink moves it toward coral and terracotta, and the two share a dye pot well on alum-mordanted wool."
+        },
+        {
+          "question": "How is the root bark packed?",
+          "answer": "In a double-sealed, smell-proof bag that is flushed with nitrogen before sealing. Nitrogen displaces the oxygen inside the bag, which stops the bark oxidizing, so the color and freshness hold in transit and in storage. Reseal the bag after each use to keep it that way."
+        },
+        {
+          "question": "Where does it ship from?",
+          "answer": "From California, to US addresses only, with tracking once payment is confirmed. Parcel orders from 100 dollars ship free."
+        }
+      ],
+      "sources": [
+        {
+          "label": "21 CFR 189.180 — Safrole",
+          "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-189/subpart-C/section-189.180"
+        },
+        {
+          "label": "USDA Plants Database: Sassafras albidum",
+          "url": "https://plants.usda.gov/home/plantProfile?symbol=SAAL5"
+        }
+      ]
+    }
+  ]
+}

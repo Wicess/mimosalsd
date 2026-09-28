@@ -4,6 +4,7 @@ import { ContactForm } from '@/components/marketing/contact-form'
 import type { ContactTopic } from '@/lib/mail/templates'
 import { FdaDisclaimer } from '@/components/compliance/fda-disclaimer'
 import { PageSection } from '@/components/layout/page-section'
+import { PostalAddress } from '@/components/layout/postal-address'
 import { BRAND } from '@/lib/brand'
 import { getCompanyEmail } from '@/lib/site/company-email.server'
 import { absoluteUrl, url } from '@/lib/seo/routes'
@@ -13,7 +14,7 @@ import { PageHeader } from '@/components/layout/page-header'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Contact Us',
-  description: `How to reach ${BRAND.name} about an order, a wholesale enquiry, a lab report or a privacy request — and what to include so we can answer on the first reply.`,
+  description: `How to reach ${BRAND.name} about an order, a bulk quote, a batch report or a privacy request — and what to include so we can answer on the first reply.`,
   path: url.contact(),
 })
 
@@ -165,6 +166,7 @@ export default async function ContactPage({
               {BRAND.phone}
             </a>
           </p>
+          <PostalAddress className="mt-2 text-foreground-muted" />
 
           {/*
             A ruled list, not three bordered cards.

@@ -12,8 +12,8 @@ import { BulkQuoteForm } from '@/components/marketing/bulk-quote-form'
 import { JURISDICTIONS } from '@/lib/compliance/jurisdictions'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Bulk & Wholesale Purchasing',
-  description: 'Bulk and wholesale quotes, priced individually by a person, for one-off volumes and standing supply. Same third-party lab testing and the same per-state rules as a single unit.',
+  title: 'Wholesale Mimosa Hostilis Root Bark, Bulk Pricing by the lb',
+  description: 'Wholesale Mimosa hostilis root bark in powder, shredded and whole cuts, by the pound or the case. Request a bulk quote. Ships from California to US addresses.',
   path: url.bulk(),
 })
 

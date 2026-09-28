@@ -213,8 +213,8 @@ describe('the service worker', () => {
       const { title, options } = worker.shown[0]!
       expect(title).toBe('New reply from MIMOSALSD')
       expect(options.body).toBe('Your order is packed')
-      expect(options.icon).toBe('/brand/app-icon-192.png')
-      expect(options.badge).toBe('/brand/notification-badge-96.png')
+      expect(options.icon).toBe('/brand/app-icon-v2-192.png')
+      expect(options.badge).toBe('/brand/notification-badge-v2-96.png')
       expect(options.tag).toBe('chat-reply')
       expect(options.renotify).toBe(true)
       expect((options.data as { url: string }).url).toBe(`${ORIGIN}/account/chat`)

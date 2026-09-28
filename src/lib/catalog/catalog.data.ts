@@ -19,20 +19,66 @@ export const CATEGORIES: readonly Category[] = [
   {
     slug: 'mimosa-hostilis',
     name: 'Mimosa Hostilis Root Bark',
-    navLabel: 'Mimosa',
+    navLabel: 'Root bark',
     productLine: 'MIMOSA_HOSTILIS',
     intro:
-      'Raw botanical material for dyeing, soap and craft. Not food, and not sold for human consumption.',
+      'Mimosa hostilis root bark in powder, shredded and whole cuts, plus sassafras root bark, sold by the pound for natural dyeing, soap color and craft. Not for human consumption.',
     detail:
-      'Milled and shredded root bark, sourced in Brazil and packed in the United States. Natural dyers value it for the deep purple it yields on protein fibres and for its unusually high tannin content. Sold for dyeing, soap and cosmetic manufacture, craft and research.',
+      'Root bark sold by weight as raw material for natural dyers, soap makers and leather workers, shipped from California to US addresses.',
     /*
-      2026-09-18: the title ran to 68 characters and was cut in results, and the
-      description fixed "ships to all 50 states" into a string. Where a line ships is
-      read from state_rules at checkout; the meta says what the material is.
+      Rewritten 2026-09-28 around what buyers type: "mimosa hostilis root bark for
+      sale", "powder vs shredded", "how much per pound of wool", "what colors". Each
+      answer leads with its verdict so it can be quoted on its own. No sourcing or
+      testing claims: the owner has not supplied either for this line.
     */
-    metaTitle: 'Mimosa Hostilis and Sassafras Root Bark for Dyeing',
+    about: {
+      heading: 'Buying Mimosa hostilis root bark for dyeing',
+      lede:
+        'Mimosa hostilis root bark is the tannin-rich root bark of Mimosa tenuiflora, a legume tree of northeastern Brazil and southern Mexico also sold as jurema preta. Natural dyers use it for rose, plum, burgundy and brown on wool and silk, and grey to charcoal with iron. It is sold here by the pound for dyeing and craft, not for human consumption.',
+      blocks: [
+        {
+          question: 'Which cut should I buy: powder, shredded or whole?',
+          answer:
+            'Buy shredded for everyday dyeing: it strains cleanly and gives second and third baths. Buy powder for test skeins, small batches and soap, because it releases color fastest. Buy whole chips and strips to stock up, because they keep longest and can be broken or milled when needed.',
+          linkSlug: 'the-three-cuts-of-mimosa-root-bark',
+        },
+        {
+          question: 'How much root bark do I need for a pound of wool?',
+          answer:
+            'Plan on 50 to 75 percent of the dry fiber weight for a mid shade, which is 8 to 12 ounces of bark per pound of wool, and 25 to 40 percent for a pale tint. Deep plum takes up to an equal weight of bark and fiber. A quarter pound is enough to learn on with test skeins.',
+          linkSlug: 'weighing-bark-against-fibre',
+        },
+        {
+          question: 'What colors does Mimosa hostilis give?',
+          answer:
+            'On wool and silk it gives dusky rose, plum, red-brown and burgundy, deepening with more bark and a longer simmer. An iron afterbath turns the same bath slate grey to charcoal. Keep the pot neutral to slightly acidic to hold the purple tones; alkaline water pulls it toward brown.',
+          linkSlug: 'keeping-a-bark-bath-purple',
+        },
+        {
+          question: 'Do I need a mordant?',
+          answer:
+            'Not for most wool and silk: the bark is rich in tannins, which help the color bind to protein fiber. Alum brightens the pinks and helps the color hold in daylight. Cotton and linen need a tannin-then-alum mordant to reach good depth, because plant fibers carry no protein.',
+          linkSlug: 'mordanting-wool-before-a-bark-bath',
+        },
+        {
+          question: 'How is an order placed and shipped?',
+          answer:
+            'Choose a cut and a size, from a quarter pound to a full pound, and send an order request; no payment is taken on the site. We confirm it and send payment instructions, then the bark ships from California with tracking. We ship to US addresses only, and parcel orders from 100 dollars ship free.',
+        },
+      ],
+      facts: [
+        { label: 'Botanical name', value: 'Mimosa tenuiflora (syn. Mimosa hostilis)' },
+        { label: 'Also sold as', value: 'MHRB, jurema preta, mimosa tenuiflora bark' },
+        { label: 'Cuts', value: 'Powder, shredded, whole chips and strips' },
+        { label: 'Also in this range', value: 'Sassafras root bark (Sassafras albidum)' },
+        { label: 'Sold by', value: 'The pound: 1/4, 1/3, 1/2 and 1 lb; bulk on request' },
+        { label: 'Ships from', value: 'California, to US addresses only' },
+        { label: 'Use', value: 'Natural dyeing, soap color, leather work, craft; not for human consumption' },
+      ],
+    },
+    metaTitle: 'Buy Mimosa Hostilis Root Bark, Powder, Shredded or Whole',
     metaDesc:
-      'Milled, shredded and stripped Mimosa hostilis root bark, and sassafras root bark, sold as raw material for natural dyeing, soap making and craft.',
+      'Mimosa hostilis root bark for natural dyeing and soap, by the pound in powder, shredded and whole cuts, plus sassafras root bark. Ships from California.',
     sortOrder: 1,
   },
   {
@@ -207,6 +253,15 @@ export const CATEGORIES: readonly Category[] = [
     sortOrder: 4,
   },
 ]
+
+/**
+ * The categories the header and footer link to (owner instruction, 2026-09-28).
+ *
+ * Every listing in the other three was hidden that day, so their pages are empty and
+ * noindex. A menu link to an empty page is a dead end for a visitor and wasted crawl
+ * for a search engine. Put a slug back here when its category has live products again.
+ */
+export const NAV_CATEGORY_SLUGS: readonly string[] = ['mimosa-hostilis']
 
 export const DIRECTORY_STATES = ['FL', 'NC', 'TN', 'VA', 'WI'] as const
 

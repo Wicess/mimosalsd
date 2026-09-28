@@ -1,0 +1,184 @@
+[
+  {
+    "slug": "what-iso-17025-accreditation-means",
+    "title": "What ISO/IEC 17025 Accreditation Means for a Testing Lab",
+    "category": "testing",
+    "hero": "media/d299b3d94d08656ff8cdc3ce91bc1902.jpg",
+    "summary": "ISO/IEC 17025 is the international standard for the competence of testing and calibration laboratories. Accreditation means an independent body has assessed a lab's methods, staff, equipment and record-keeping for a defined list of tests. It covers only the tests on the lab's scope, so a buyer should check that scope, not just the logo.",
+    "body": [
+      "If you buy root bark by the pound for a dye pot, a soap batch or a tanning project, sooner or later a lab report enters the conversation. Many of those reports carry a line saying the laboratory is accredited to ISO/IEC 17025. That line is worth understanding, because it tells you something specific and useful, and it is easy to read more into it than is there.",
+      "## What is ISO/IEC 17025?",
+      "ISO/IEC 17025 is an international standard, published jointly by the International Organization for Standardization and the International Electrotechnical Commission, that sets out the general requirements for the competence of testing and calibration laboratories. It covers two broad areas. The first is management: impartiality, confidentiality, document control, how complaints are handled and how mistakes are corrected. The second is technical: whether staff are trained for the work they do, whether instruments are calibrated and traceable, whether methods are validated, and whether the lab can show how uncertain its numbers are.",
+      "A lab can say it *follows* the standard without anyone checking. Accreditation is different. It means an accreditation body has sent assessors, reviewed the records, watched the work and agreed that the lab meets the standard for particular tests.",
+      "## What does accreditation actually cover?",
+      "The single most important idea is the **scope of accreditation**. A lab is never accredited for everything it does. It is accredited for a listed set of tests, on listed kinds of material, by listed methods. A lab might be accredited for lead and arsenic in plant material by one instrumental method, and not accredited at all for microbial counts, even though it offers both.",
+      "So when a certificate for a batch of bark shows an accreditation mark, the fair question is whether each test on that page sits inside the lab's scope. Good reports flag any result that falls outside it, often with a symbol and a footnote.",
+      "## How can a buyer check an accreditation?",
+      "You do not need special access to verify a claim. The usual steps are:",
+      "- Find the accreditation body named on the report or the lab's website. In the United States the common ones are signatories to the ILAC mutual recognition arrangement.\n- Look up the lab in that body's public directory, using the certificate number printed on the report.\n- Open the scope document and confirm it is current, not expired or suspended.\n- Match the tests and methods on your report to the lines in that scope.\n- Check that the lab named on the report is the lab in the directory, including its address.",
+      "If any of those steps fails, the report may still be honest work, but it is not accredited work, and you should weigh it that way.",
+      "## What accreditation does not tell you",
+      "Accreditation is about the lab, not the bark. It says the lab can measure competently. It does not say the sample was chosen well, that the sample came from the bag in your hands, or that the result is good. A perfectly accredited lab can accurately report a figure you would not want. It also says nothing about a supplier's own handling, storage or packing.",
+      "That is why the report has to be tied to your material. The link between the two is the batch code, which we cover in [what a batch code is for](/blog/what-a-batch-code-is-for). A certificate with no batch code on it is a certificate about something, but you cannot know what.",
+      "## Why this matters for dye material",
+      "Bark for dyeing is handled by hand, weighed as dust and poured away as spent liquor. Knowing that a reputable lab looked at heavy metals and microbial counts is simply good practice, the same way you would want to know what is in a mordant. For a plain walk through those tests, see [what a contaminant panel actually covers](/blog/what-a-contaminant-panel-actually-covers).",
+      "If you buy [mimosa hostilis root bark powder](/product/mimosa-hostilis-root-bark-powder) or any other cut from us and want to see paperwork, note the batch code on your bag and [ask us for the report we hold for your batch](/contact). Read it with the scope in one hand and the directory listing in the other, and you will know exactly how much weight it can carry."
+    ],
+    "products": [
+      "mimosa-hostilis-root-bark-powder",
+      "shredded-mimosa-hostilis-root-bark"
+    ]
+  },
+  {
+    "slug": "what-a-contaminant-panel-actually-covers",
+    "title": "What a Contaminant Panel Actually Covers for Dried Bark",
+    "category": "testing",
+    "hero": "media/19430065403471bc536d45dadbbfaeb3.jpg",
+    "summary": "A contaminant panel for dried botanical material usually checks four heavy metals (lead, arsenic, cadmium, mercury), microbial counts such as total aerobic count and yeast and mold, pesticide residues, moisture and foreign matter. Each matters for bark you weigh, sift and handle by hand, and each figure only means something next to its method and units.",
+    "body": [
+      "A contaminant panel is the part of a botanical certificate that asks what else is in the material besides the plant. For root bark bought as a dye, soap colorant or tanning material, it is the page worth reading most carefully, because you will have the bark on your hands, in the air of your workroom as fine dust, and in a pot on your stove.",
+      "## What is on a typical contaminant panel?",
+      "Panels vary by lab and by what the client asks for, but most for dried plant material draw from the same five groups.",
+      "| Group | What it looks for | Usually reported as |\n| --- | --- | --- |\n| Heavy metals | Lead, arsenic, cadmium, mercury | ppm or ppb |\n| Microbial | Total aerobic count, yeast and mold, sometimes specific bacteria | CFU/g, or detected / not detected |\n| Pesticides | A screen of many residues at once | ppm or ppb per compound |\n| Moisture | Water left in the dried material | Percent by weight |\n| Foreign matter | Soil, stones, other plant parts, debris | Percent by weight |",
+      "## Why test for heavy metals in root bark?",
+      "Roots grow in soil, and soil carries whatever the ground has been exposed to: natural mineral deposits, old paint, traffic, mining, irrigation water. Root bark can hold on to some of that. The four metals on nearly every panel are **lead, arsenic, cadmium and mercury**, because they are widespread and persistent. For a dyer the practical points are simple. You breathe some dust when you weigh powder, your hands touch wet bark, and spent baths go down a drain or onto a garden. Low figures are what you hope to see, and a report lets you look rather than guess.",
+      "## What do microbial counts tell you?",
+      "Dried bark is not sterile, and nobody expects it to be. A microbial panel counts living organisms per gram. **Total aerobic count** is a broad measure of bacteria; **yeast and mold** counts show how well the material was dried and stored. A high mold count often points to bark that was bagged damp or stored somewhere humid. Some panels also test for specific bacteria and report them simply as detected or not detected in a stated sample size.",
+      "## Why do pesticides appear on a bark report?",
+      "Root bark is usually wild-harvested or taken from managed stands, but the land around it may have been sprayed, and bark can pick up residues during drying or transport. A pesticide screen runs many compounds at once and lists each against the lowest level the method can see. A long list of ND results is normal and good. Read the method name too: a screen that looks for fifty compounds says less than one that looks for three hundred.",
+      "## Moisture and foreign matter",
+      "These two are less dramatic but matter more day to day. **Moisture** decides how well bark keeps. Too wet and it molds; very dry bark keeps well but sheds more fine dust. It also changes your arithmetic, since you are paying for, and weighing, some water along with the bark. **Foreign matter** is anything that is not the named plant part: soil, grit, wood, leaves. Grit in powder shows up as sediment in the dye pot and specks on pale fiber.",
+      "## How to read the panel sensibly",
+      "- Check the units on every line before comparing any number.\n- Note whether results are \"as received\" or on a dry weight basis.\n- Look for the lab's detection limits, so you know what ND really means.\n- Confirm the batch code on the report matches the one on your bag.",
+      "Those terms are explained in [a glossary of certificate terms](/blog/a-glossary-of-certificate-terms). For habits that keep dust down while you work, read [working safely with fine-milled bark](/blog/working-safely-with-fine-milled-bark).",
+      "If you have a bag of [shredded mimosa hostilis root bark](/product/shredded-mimosa-hostilis-root-bark) or sassafras from us, find the batch code and [ask us for the report we hold for your batch](/contact). A panel is only useful when it belongs to the material in front of you."
+    ],
+    "products": [
+      "shredded-mimosa-hostilis-root-bark",
+      "mimosa-hostilis-root-bark-powder",
+      "sassafras-root-bark"
+    ]
+  },
+  {
+    "slug": "what-a-batch-code-is-for",
+    "title": "What a Batch Code on a Bag of Root Bark Is For",
+    "category": "testing",
+    "hero": "media/816fa8523a7ece22f1f294e67ac364fc.jpg",
+    "summary": "A batch code ties a bag of root bark to one harvest, one milling run and one set of paperwork. It lets you match your bag to its report, explains why two bags of the same cut can dye differently, and, written into your dye notes, turns a lucky color into one you can repeat.",
+    "body": [
+      "Every bag of root bark should carry a short code printed or written on the label. It is easy to ignore. It is also the single most useful line on the bag once you start dyeing seriously.",
+      "## What is a batch code?",
+      "A batch code, sometimes called a lot number, identifies a quantity of material that was handled as one unit: bark from the same source, dried and cut together, and packed in the same run. Everything in that batch is expected to behave alike. Bark from a different batch may be close, but it is a different unit, with its own history.",
+      "The format does not matter much. Some suppliers use dates, some use sequences, some mix letters and numbers. What matters is that the code is unique and that the supplier keeps a record behind it.",
+      "## How does a batch code link a bag to its paperwork?",
+      "Any report about a botanical, whether species identification or a contaminant panel, is a report about a sample. The sample came from a batch. The batch code is the thread that runs from the report to the bag in your hands. Without it, a certificate cannot be tied to anything you own.",
+      "So the habit is simple: read the code on your bag, then [ask us for the report we hold for your batch](/contact). When you have it, check that the code on the report matches the bag exactly, character for character. For what the rest of that report means, see [what a contaminant panel actually covers](/blog/what-a-contaminant-panel-actually-covers).",
+      "## Why can two bags of the same cut dye differently?",
+      "Because bark is a natural material, not a manufactured pigment. Two batches of [whole mimosa hostilis root bark](/product/whole-mimosa-hostilis-root-bark) can differ in:",
+      "- The age and size of the roots they came from.\n- The season and weather at harvest.\n- How the bark was dried, and how quickly.\n- How long it has been stored, and in what conditions.\n- The ratio of inner to outer bark in the cut.",
+      "Any of those can shift the depth or tone of the color in a bath, or how fast the bath exhausts. The difference is often small. On a pale wool or a large project where skeins must match, small is enough to notice.",
+      "## Why should you record the batch code with your dye results?",
+      "Dyers keep notes: fiber weight, mordant, bark weight, water, temperature, time. Add the batch code to that list. If a bath comes out exactly as you hoped, the code tells you which bark did it, and whether the bag you are about to open is the same material. If a bath goes wrong, the code helps separate a bark difference from a method difference, which is the first question when [the faults that spoil a first bath](/blog/the-faults-that-spoil-a-first-bath) show up.",
+      "For a big project, the practical rule follows: buy enough bark from one batch to finish it, or test each new batch on a sample skein first, as described in [testing a dye before you commit a fleece](/blog/testing-a-dye-before-you-commit-a-fleece).",
+      "## Keeping the code with the bark",
+      "Once a bag is opened, the label can end up in the recycling while the bark moves to a jar. Write the code on the jar. If you decant into several containers, write it on each. It takes a few seconds and it keeps the thread unbroken from harvest to finished skein.",
+      "## What a batch code cannot do",
+      "A code does not guarantee a result or a quality. It is a reference, nothing more. Its value comes from the records a supplier keeps behind it and from the notes you keep after it. Used together, those two sets of notes let you compare, repeat and ask good questions."
+    ],
+    "products": [
+      "whole-mimosa-hostilis-root-bark",
+      "mimosa-hostilis-root-bark-powder"
+    ]
+  },
+  {
+    "slug": "why-a-test-date-matters-as-much-as-the-figure",
+    "title": "Why a Test Date Matters as Much as the Figure",
+    "category": "testing",
+    "hero": "media/ef67577832e83aed76c042dff3d9e817.jpg",
+    "summary": "Dried bark keeps changing after it is tested. Moisture drifts, light fades the surface, and air slowly oxidizes tannins, which darkens and dulls the color a bath gives. A report describes the bark on the day it was sampled, so the date tells you how far the bag in your hands may have moved since.",
+    "body": [
+      "A lab report is a photograph, not a film. It shows what a sample looked like on one day. Dried root bark is not inert, so every report carries an unspoken question: how long ago was that day, and what has happened to the bark since?",
+      "## Does dried bark change after it is harvested?",
+      "Yes, slowly. Drying stops most of the obvious change, but not all of it. Four things keep working on bark in storage.",
+      "- **Moisture.** Dry bark takes up water from humid air and gives it back in dry air. Its weight and its keeping quality move with it.\n- **Light.** Sunlight and strong indoor light fade the surface of bark and powder, especially pale inner bark.\n- **Air.** Oxygen reacts with tannins and the colored compounds bound up with them. Over months, this tends to darken the bark itself while making the dye it gives duller and browner.\n- **Heat.** Warmth speeds all of the above.",
+      "Powder changes fastest, because it has the most surface exposed. Whole bark changes slowest. That is one reason the cut matters, as covered in [the three cuts of mimosa root bark](/blog/the-three-cuts-of-mimosa-root-bark).",
+      "## How does oxidation affect a dye bath?",
+      "Mimosa and sassafras root barks color fiber largely through tannins and related compounds. Oxidation changes those molecules. In practice, older bark often gives a warmer, browner, less clear color than the same batch gave when fresh, and the bath may exhaust differently. It is not ruined bark; it is different bark. For how tannins behave in the pot, see [what tannins do in a dye bath](/blog/what-tannins-do-in-a-dye-bath).",
+      "## Why does nitrogen-flushed packaging help?",
+      "Our bags are double-sealed, smell-proof and nitrogen-flushed. Flushing replaces most of the air in the bag with nitrogen, which does not react with the bark, before it is sealed. Less oxygen in the bag means slower oxidation while the bag stays closed. The double seal keeps humid air out and the flush in. Keeping the bag somewhere dark deals with light.",
+      "The protection ends when the bag is opened. After that, the bark is in ordinary air and the clock runs at the normal rate. Reseal tightly, press out the air, keep it cool and dark, and read [storing root bark so it lasts](/blog/storing-root-bark-so-it-lasts) for the details.",
+      "## Why does the date on a report matter?",
+      "Most figures on a botanical report describe things that can move. Moisture moves with the weather. Microbial counts can rise if bark gets damp. Color-related properties drift with oxidation. Heavy metals do not change with age, but moisture shifts how the figure reads if it was reported \"as received\". A report from last month and one from three years ago can carry the same numbers and mean very different things for the bag you are holding.",
+      "So when you read any report, check three dates:",
+      "| Date | What it tells you |\n| --- | --- |\n| Sample date | When the material was taken for testing |\n| Report date | When the lab issued its result |\n| Pack or batch date | When your bag was sealed |",
+      "The gap between the sample date and today is the span over which things could have changed. A short gap, with sealed storage in between, means the report is a fair picture. A long gap means the report is history, still useful, but not a description of today's bark.",
+      "## What should you do with an older bag?",
+      "Nothing drastic. Test it. Run a small sample skein before you commit a whole project, compare it to your notes from the same batch code, and adjust bark weight if the color has softened. If you want the paperwork, note the code and [ask us for the report we hold for your batch](/contact), then read its date first."
+    ],
+    "products": [
+      "whole-mimosa-hostilis-root-bark",
+      "mimosa-hostilis-root-bark-powder",
+      "sassafras-root-bark"
+    ]
+  },
+  {
+    "slug": "reading-a-label-line-by-line",
+    "title": "Reading a Root Bark Label Line by Line",
+    "category": "testing",
+    "hero": "media/7e10f3d6863b9755ab3021d3cb081d55.jpg",
+    "summary": "A root bark label should name the plant by its botanical name, state the part and the cut, give the net weight and a batch code, and carry a clear not for human consumption statement. Read each line in order, because Mimosa tenuiflora, sold as Mimosa hostilis, is not the leather trade's mimosa tanning material.",
+    "body": [
+      "A good label is short, and every line on it earns its place. Here is what each one tells a dyer, soap maker or leather worker, and what to question if it is missing.",
+      "## Why does the botanical name come first?",
+      "Common names travel. They change between countries, trades and centuries, and one name can cover several plants. The botanical name is the fixed point. For mimosa root bark that line should read **Mimosa tenuiflora**, ideally with the older synonym **Mimosa hostilis** alongside it. The two names refer to the same species; *hostilis* is the older name and the one most buyers search for. In Brazil the tree is widely called **jurema preta**. For sassafras the name is **Sassafras albidum**.",
+      "## Is mimosa bark the same as the \"mimosa\" used in leather tanning?",
+      "No, and this catches people out. In the leather trade, \"mimosa\" usually means the tanning material from **black wattle, Acacia mearnsii**, a different tree grown on a large scale for its bark. It is a legitimate and widely used vegetable tanning material, but it is not Mimosa tenuiflora. If you are following a tanning recipe that calls for mimosa, check which plant the writer meant before you substitute one for the other. For how several tannin barks compare in use, see [mimosa hostilis vs cutch, oak gall and quebracho](/blog/mimosa-hostilis-vs-cutch-oak-gall-and-quebracho).",
+      "## Part and cut",
+      "The label should state the plant part. Root bark, stem bark, wood and leaf are different materials with different colors and different behavior in a bath. Our Mimosa tenuiflora and sassafras are both **root bark**. A label that names only the plant and not the part leaves you guessing.",
+      "The cut tells you the physical form: powder, shredded or whole. It matters for how fast color comes out, how much fine dust you handle and how long the bark keeps. The trade-offs are laid out in [the three cuts of mimosa root bark](/blog/the-three-cuts-of-mimosa-root-bark). Pick powder for speed and even baths, whole for storage and control, shredded for a middle path.",
+      "## Net weight",
+      "Net weight is the bark alone, without the bag. We sell by the pound, so the figure you plan from is in pounds. Since dye recipes work by weight of fiber, this is the number you plan from; see [weighing bark against fibre](/blog/weighing-bark-against-fibre) for the ratios.",
+      "## What is the batch code for?",
+      "The batch code links your bag to one lot of material and to the paperwork held for it. Note it in your dye records and, if you want a report, [ask us for the report we hold for your batch](/contact). The full reasoning is in [what a batch code is for](/blog/what-a-batch-code-is-for).",
+      "## The \"not for human consumption\" statement",
+      "This line states the intended use plainly: the bark is sold as a raw material for dyeing, soap color, leather work and craft. It is part of the label, not small print, and it should be clear and easy to find.",
+      "## A quick checklist",
+      "- Botanical name, with any common synonym.\n- Plant part.\n- Cut.\n- Net weight.\n- Batch code.\n- Intended-use statement, including not for human consumption.\n- Supplier name and a way to reach them.",
+      "If a line is missing from a bag you bought anywhere, ask before you use it on a project that matters. A label is the supplier's first statement about what is in the bag, and a careful one makes every later step easier."
+    ],
+    "products": [
+      "mimosa-hostilis-root-bark-powder",
+      "whole-mimosa-hostilis-root-bark",
+      "sassafras-root-bark"
+    ]
+  },
+  {
+    "slug": "a-glossary-of-certificate-terms",
+    "title": "A Glossary of Certificate of Analysis Terms for Botanicals",
+    "category": "testing",
+    "hero": "media/7ead9637654a35b0f657cca5774b0298.jpg",
+    "summary": "A botanical certificate of analysis uses a small working vocabulary: LOD and LOQ set what a method can see and measure, ND means nothing was found above that level, ppm and ppb express tiny amounts, and CFU/g counts living microbes. Knowing these terms lets you read any bark report in minutes.",
+    "body": [
+      "A certificate of analysis, or COA, packs a lot into one page. The numbers are only half of it; the other half is the small print that says what each number means. This glossary covers the terms you are most likely to meet on a report for dried root bark.",
+      "## What does a certificate of analysis contain?",
+      "A typical COA names the lab and the client, identifies the sample, usually by batch code, lists each test with its method, result, units and limits, and gives the dates the sample was received and the report issued. Some add a pass or fail column against a stated specification. The dates matter more than they look; see [why a test date matters as much as the figure](/blog/why-a-test-date-matters-as-much-as-the-figure).",
+      "## The core terms",
+      "| Term | Meaning |\n| --- | --- |\n| COA | Certificate of analysis: the lab's formal report for one sample |\n| LOD | Limit of detection: the lowest level a method can tell apart from zero |\n| LOQ | Limit of quantitation: the lowest level a method can measure with a stated confidence |\n| ND | Not detected: below the LOD for that test |\n| < LOQ | Seen, but too low to put a reliable number on |\n| ppm | Parts per million; the same as mg/kg |\n| ppb | Parts per billion; the same as µg/kg, a thousand times smaller than ppm |\n| CFU/g | Colony-forming units per gram: living microbes able to grow on the test plate |\n| As received | Result on the sample as it arrived, water included |\n| Dry weight basis | Result recalculated as if all moisture were removed |\n| Action limit | A level set by the lab or client above which a result needs follow-up |\n| Specification | The range a result must fall in to pass |\n| Chain of custody | The signed record of who held the sample, and when |\n| Method | The named procedure used for a test |\n| Measurement uncertainty | The stated margin around a result |",
+      "## Why do ND and zero mean different things?",
+      "ND does not mean none. It means the test could not see any above its detection limit. A method with a low LOD says more with its ND than a method with a high one. So an ND should always be read next to the LOD printed beside it. The same goes for results shown as below the LOQ: something was seen, but not enough to measure well.",
+      "## As received or dry weight basis?",
+      "Bark always holds some water. A result on an as-received basis includes that water in the weight; a dry weight basis result removes it. The dry weight figure is always a little higher for the same sample. Neither is wrong, but comparing one of each is. Check which basis each report uses before setting two side by side.",
+      "## What is species identification, and how is it done?",
+      "Identification confirms that the material is the plant named on the label. Labs use one or more of these:",
+      "- **Macroscopic:** examining the bark by eye for color, texture, fracture and smell against a known reference.\n- **Microscopic:** looking at cell structures and characteristic features under magnification.\n- **HPTLC:** high-performance thin-layer chromatography, which compares a chemical fingerprint of the sample with a reference material.\n- **DNA methods:** used by some labs, more often on whole material than on heavily processed powder.",
+      "A report should say which method was used. This matters for bark because names get mixed up in the trade, as covered in [reading a label line by line](/blog/reading-a-label-line-by-line).",
+      "## Chain of custody and accreditation",
+      "Chain of custody shows the sample moved from bag to lab without an unrecorded hand in between. Accreditation shows the lab is competent for the listed tests; see [what ISO/IEC 17025 accreditation means](/blog/what-iso-17025-accreditation-means). For everyday dyeing terms rather than lab ones, keep [a plain glossary of natural dyeing terms](/blog/a-plain-glossary-of-natural-dyeing-terms) nearby.",
+      "If you would like to read a real one, note the batch code on your bag and [ask us for the report we hold for your batch](/contact)."
+    ],
+    "products": [
+      "mimosa-hostilis-root-bark-powder",
+      "sassafras-root-bark"
+    ]
+  }
+]

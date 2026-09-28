@@ -168,7 +168,7 @@ export function ProductCard({
             {image ? (
               <Image
                 src={image.src}
-                alt={image.isSample ? image.alt : product.name}
+                alt={image.alt}
                 fill
                 // Describes the real grid: two-up to 1023px, three to 1279px, then
                 // four (five on the shop grid past 1600px). Given as a percentage

@@ -330,7 +330,7 @@ export default async function ProductPage({
           <div className="order-1 lg:col-start-1 lg:row-start-1">
             <ProductGallery
               views={image ? image.srcSet : []}
-              alt={image?.isSample ? image.alt : product.name}
+              alt={image?.alt ?? product.name}
               {...(image && !image.isSample ? { alts: image.alts } : {})}
               caption={
                 image?.isSample ? (

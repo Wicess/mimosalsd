@@ -38,7 +38,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // The body background, for the splash before first paint.
     background_color: '#12160f',
     /*
-      The round MIMOSALSD badge. The 192 and 512 are the two Android requires, and
+      The round MIMOSALSD badge, "Mi" with the mushroom i (scripts/brand-icons.mjs
+      rebuilds the whole set). The 192 and 512 are the two Android requires, and
       the round art sits on transparency, which desktop installs show as it is.
 
       The maskable plate is the badge's own dark ground run to the edges with the
@@ -51,9 +52,10 @@ export default function manifest(): MetadataRoute.Manifest {
       The iPhone home-screen icon is app/apple-icon.png, the same plate at 180px.
     */
     icons: [
-      { src: '/brand/app-icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/brand/app-icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: '/brand/app-icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      { src: '/brand/app-icon-v2-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/brand/app-icon-v2-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/brand/app-icon-maskable-v2-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+      { src: '/brand/app-icon-maskable-v2-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
     /*
       Points at itself, which is what lets a browser tab ask Chrome "is this site

@@ -1,11 +1,3 @@
-/**
- * compliance-allow: psilocybin -- the single most valuable question on this page is
- * whether Amanita muscaria is the same thing as psilocybin mushrooms. It is not, and
- * answer engines conflate them constantly. Refusing to name the substance we are
- * distinguishing ourselves FROM would leave the misconception standing, which is the
- * outcome the rule exists to avoid.
- */
-
 import { discountPercent } from '@/lib/orders/payment-discount'
 import { BRAND } from '@/lib/brand'
 import { COMPANY_EMAIL_TOKEN } from '@/lib/site/company-email'
@@ -39,48 +31,66 @@ export interface FaqItem {
   readonly question: string
   /** Answer-first. The first sentence must stand alone as the answer. */
   readonly answer: string
-  readonly category: 'Disposables' | 'Ordering and payment' | 'Shipping' | 'Legality' | 'Products and testing'
+  readonly category: 'Root bark' | 'Dyeing with root bark' | 'Ordering and payment' | 'Shipping' | 'Batches and bulk'
 }
 
 export const FAQ_ITEMS: readonly FaqItem[] = [
   /*
-    ── Disposables ────────────────────────────────────────────────────────────
-    First, because the business is a distributor of disposables (owner,
-    2026-09-15). Deliberately not the same questions as the About band on
-    /shop/disposable-vapes: the same answer on two URLs is the duplication Bing names.
+    ── Root bark ──────────────────────────────────────────────────────────────
+    Rewritten 2026-09-28 when the shop narrowed to root bark. The questions are the
+    ones buyers type before they order, and each answer leads with its verdict.
   */
   {
-    category: 'Disposables',
-    question: 'Is MIMOSALSD a disposable vape distributor?',
+    category: 'Root bark',
+    question: 'What is Mimosa hostilis root bark used for?',
     answer:
-      'Yes. MIMOSALSD is a US distributor of disposable vapor products, supplying adult customers by the unit and retailers in volume. Our range covers nicotine disposables and hemp-derived cannabinoid disposables, including THCA and THC, and every batch is lab-tested before it is offered for sale.',
+      'It is sold as raw botanical material for natural dyeing, soap color, leather work and craft. Dyers use it for rose, plum, burgundy and brown on wool and silk, and grey to charcoal with an iron afterbath. It is not food and it is not for human consumption; at checkout you confirm that is what you are buying it for, and that confirmation is stored with your order.',
   },
   {
-    category: 'Disposables',
-    question: 'How do I know what is in a disposable before I order it?',
+    category: 'Root bark',
+    question: 'Is Mimosa hostilis the same plant as Mimosa tenuiflora?',
     answer:
-      'Read its product page. Each disposable lists what it contains, its flavour and its size on its own page, because a category covers more than one kind of product. If anything is unclear, ask us in the chat before you order and a person will answer.',
+      'Yes. Mimosa tenuiflora is the accepted botanical name and Mimosa hostilis is an older synonym that the trade still uses. In Brazil the tree is called jurema preta. The root bark sold under any of these names is the same material.',
   },
   {
-    category: 'Disposables',
-    question: 'Can I buy disposables wholesale for my shop?',
+    category: 'Root bark',
+    question: 'Should I buy powder, shredded or whole root bark?',
     answer:
-      'Yes. Retailers, vape shops and resellers can buy disposables in volume, including mixed-flavour cases, at wholesale pricing. Send the quantities you need from the bulk order page and a person replies with a quote. A certified copy of the lab report for any batch you buy is available on request.',
+      'Shredded for everyday dyeing: it strains cleanly and gives second and third baths from the same bark. Powder for test skeins, small batches and cold-process soap, because it releases color fastest. Whole chips and strips for stocking up, because they keep longest and can be broken or milled when you need them.',
   },
   {
-    category: 'Disposables',
-    question: 'Why do disposables ship separately from the rest of my order?',
+    category: 'Root bark',
+    question: 'What is sassafras root bark used for?',
     answer:
-      'Because the federal PACT Act governs how vapor products travel. They go with a PACT Act compliant carrier, so a disposable cannot share a box with anything else in your order. The cart shows the separate delivery before you order.',
-  },
-  {
-    category: 'Disposables',
-    question: 'Do disposables qualify for free shipping?',
-    answer:
-      'No. Free shipping applies to parcel orders only, and disposables travel on a specialist carrier that we pay for per shipment. The delivery cost for disposables is shown in the cart before you place your order, whatever the order value.',
+      'Natural dyeing and craft. On wool it gives warm tans, orange-browns and rose-browns, and soft greys with iron; the dried bark is also used for its scent in potpourri. Federal rules prohibit safrole and sassafras bark intended for flavoring from use in human food, so it is sold here for dyeing and craft only.',
   },
 
-  // ── Ordering and payment ─────────────────────────────────────────────────
+  // ── Dyeing with root bark ────────────────────────────────────────────────
+  {
+    category: 'Dyeing with root bark',
+    question: 'What colors does Mimosa hostilis dye?',
+    answer:
+      'Dusky rose, plum, red-brown and burgundy on wool and silk, deepening with more bark and a longer simmer. An iron afterbath turns the same bath slate grey to charcoal. A neutral to slightly acidic bath keeps the purple tones; alkaline water pulls the color toward brown.',
+  },
+  {
+    category: 'Dyeing with root bark',
+    question: 'How much Mimosa hostilis do I need to dye a pound of wool?',
+    answer:
+      'Plan on 50 to 75 percent of the dry fiber weight for a mid shade, which is 8 to 12 ounces of bark per pound of wool, or 25 to 40 percent for a pale tint. Deep plum and burgundy take up to an equal weight of bark and fiber. Test a small skein first, because water and fiber change the result.',
+  },
+  {
+    category: 'Dyeing with root bark',
+    question: 'Do I need a mordant for Mimosa hostilis?',
+    answer:
+      'Not for most wool and silk. The bark is rich in tannins, which help the color bind to protein fiber on its own. An alum mordant brightens the pinks and helps the color hold in daylight, and it is worth using on anything that will be worn or washed often.',
+  },
+  {
+    category: 'Dyeing with root bark',
+    question: 'Can I dye cotton or linen with Mimosa hostilis?',
+    answer:
+      'Yes, but plant fibers come out paler than wool or silk because they carry no protein for the tannins to bind to. Mordant them with tannin and then alum before the dye bath and the color comes much closer to what the same bath gives on wool.',
+  },
+
   {
     category: 'Ordering and payment',
     question: 'Why can I not pay on your website?',
@@ -112,7 +122,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     category: 'Ordering and payment',
     question: 'Can I return something?',
-    answer: `Unopened items in their original sealed packaging can be returned within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened age-restricted goods cannot lawfully be resold, so they cannot be accepted back. If we sent the wrong item, it arrived damaged, or a batch does not match its published laboratory report, we cover everything including return postage.`,
+    answer: `Unopened items in their original sealed packaging can be returned within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened age-restricted goods cannot lawfully be resold, so they cannot be accepted back. If we sent the wrong item or it arrived damaged, we cover everything, including return postage.`,
   },
 
   // ── Shipping ─────────────────────────────────────────────────────────────
@@ -121,7 +131,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     question: 'Do you ship to my state?',
     answer:
       // Owner, 2026-09-19: "we already ship to all states" — no restriction wording.
-      'Yes. We ship within the United States, and your cart shows the delivery option and cost for your address before you order. Vapor products travel separately, on their own carrier.',
+      'Yes. We ship to every US state and the District of Columbia, and your cart shows the delivery option and cost for your address before you order.',
   },
   {
     category: 'Shipping',
@@ -134,13 +144,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     category: 'Shipping',
     question: 'How much is delivery?',
-    answer: `Standard parcel delivery is ${formatCents(795)}, free on parcel-eligible orders over ${formatCents(BRAND.freeShippingThresholdCents)}. Vapor products travel on a specialist age-restricted carrier at ${formatCents(1995)} and are never eligible for free shipping at any order value. We confirm a delivery window with your order rather than publishing one, because it depends on the carrier and destination.`,
-  },
-  {
-    category: 'Shipping',
-    question: 'Why did my order arrive in two separate shipments?',
-    answer:
-      'Because vapor products are not legally permitted to travel with anything else. If your order contained both a parcel-eligible item and a vapor product, it ships as two deliveries on two different carriers, arriving at different times. Your cart shows this before you order, with a separate card, cost and estimate for each shipment.',
+    answer: `Standard parcel delivery is ${formatCents(795)}, and free on parcel orders over ${formatCents(BRAND.freeShippingThresholdCents)}. We confirm a delivery window with your order rather than publishing one, because it depends on the carrier and how far the parcel travels from California.`,
   },
   {
     category: 'Shipping',
@@ -154,59 +158,33 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     category: 'Shipping',
     question: 'Will my order arrive discreetly?',
     answer:
-      'Yes. Orders ship in plain outer packaging with no product imagery or branding visible, showing only the information the carrier needs.',
+      'Yes. Orders ship in plain outer packaging with no product imagery or branding visible, showing only the information the carrier needs. Inside, the bark is in a double-sealed, smell-proof bag.',
+  },
+  {
+    category: 'Shipping',
+    question: 'How is the root bark packed?',
+    answer:
+      'In a double-sealed, smell-proof bag that is flushed with nitrogen before it is closed. Nitrogen displaces the oxygen in the bag, which stops the bark oxidizing, so its color and freshness hold in transit and on your shelf. Reseal the bag after each use to keep it that way.',
   },
 
-  // ── Legality ─────────────────────────────────────────────────────────────
+  // ── Batches and bulk ─────────────────────────────────────────────────────
   {
-    category: 'Legality',
-    question: 'Is Amanita muscaria the same as psilocybin mushrooms?',
+    category: 'Batches and bulk',
+    question: 'How do I get the report for the batch I received?',
     answer:
-      'No, and the difference is the whole legal basis on which it is sold. Amanita muscaria contains muscimol and ibotenic acid. It does not contain psilocybin, which is a Schedule I controlled substance under federal law. Amanita muscaria is unscheduled federally. Conflating the two makes a lawful product sound illegal and an illegal one sound lawful.',
+      `Ask us for it. Send the batch code printed on your package through the contact page or to ${COMPANY_EMAIL_TOKEN}, and we reply with the report we hold for that exact batch. Reports are not posted publicly.`,
   },
   {
-    category: 'Legality',
-    question: 'Is Amanita muscaria legal in the United States?',
-    answer:
-      'Federally, yes — Amanita muscaria is not listed under the Controlled Substances Act, and neither is muscimol. State law is a separate question and it moves, so we publish the current position for every state with the statute and the date we last checked it. Separately, the FDA stated in December 2024 that Amanita muscaria is not authorised for use in conventional food, so edible formats sit in a regulatory grey area rather than having been affirmatively cleared.',
-  },
-  {
-    category: 'Legality',
-    question: 'What is Mimosa Hostilis root bark used for?',
-    answer:
-      'It is sold strictly as a raw botanical material for natural dyeing, soap and cosmetic manufacture, craft and botanical research. Natural dyers value it for the deep purple it produces on wool, silk and leather, and soap makers for its high tannin content. It is not food, and it is not for human consumption. At checkout you confirm that this is what you are buying it for, and that confirmation is stored with your order.',
-  },
-  {
-    category: 'Legality',
-    question: 'What happens if the law changes after I order?',
-    answer:
-      'We cancel the affected item, tell you why, and cite the rule we are relying on. If you have already paid you are refunded in full for that item, including its share of shipping. We never quietly substitute a different product.',
-  },
-
-  // ── Products and testing ─────────────────────────────────────────────────
-  {
-    category: 'Products and testing',
-    question: 'What do your lab tests actually cover?',
-    answer:
-      'Every panel covers potency, heavy metals (lead, arsenic, cadmium, mercury), pesticides, mycotoxins, residual solvents and microbials — not potency alone. Every batch is tested before it is offered for sale, and the botanical line by accredited third-party laboratories. A report showing only active content is telling you the least useful part.',
-  },
-  {
-    category: 'Products and testing',
-    question: 'How do I get the lab report for what I received?',
-    answer:
-      'Ask us for it. Certificates are not posted publicly: a certified copy is issued to verified, licensed buyers on request. Send us the batch code printed on your package and we will send the report covering that exact batch — not a representative sample and not a typical result, the one in your hand.',
-  },
-  {
-    category: 'Products and testing',
+    category: 'Batches and bulk',
     question: 'Do you offer bulk or wholesale pricing?',
-    answer: `Yes. As a distributor we sell disposables in volume to retailers and resellers, and quote larger quantities of everything else. Disposables are otherwise priced by the unit, and botanical materials by the pound in 1/4, 1/3, 1/2 and 1 lb. For volume pricing or a standing supply arrangement, use the bulk order page or contact ${COMPANY_EMAIL_TOKEN}.`,
+    answer: `Yes. Root bark is priced by the pound in 1/4, 1/3, 1/2 and 1 lb sizes, and larger quantities for dye studios, soap makers, schools and resellers are quoted by a person. Use the bulk order page or email ${COMPANY_EMAIL_TOKEN} with the cut and the quantity you need.`,
   },
 ]
 
 export const FAQ_CATEGORIES = [
-  'Disposables',
+  'Root bark',
+  'Dyeing with root bark',
   'Ordering and payment',
   'Shipping',
-  'Legality',
-  'Products and testing',
+  'Batches and bulk',
 ] as const

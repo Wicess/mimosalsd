@@ -12,8 +12,8 @@ import { PageHeader } from '@/components/layout/page-header'
 import { groupPostsIntoSections } from '@/lib/content/sections'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Guides & Blogs',
-  description: 'Cited writing on botanical dyeing, Amanita muscaria, certificates of analysis and what ships where. Every claim is sourced and every review is dated.',
+  title: 'Natural Dyeing Guides, Mimosa Hostilis and Root Bark',
+  description: 'How to dye wool, silk, cotton and leather with Mimosa hostilis and sassafras root bark: how much bark per pound, mordants, iron, pH and soap color.',
   path: '/blog',
 })
 

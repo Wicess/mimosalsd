@@ -7,7 +7,7 @@ import { formatCents } from '@/lib/utils'
 import { url } from '@/lib/seo/routes'
 import { authoredProduct } from '@/lib/catalog/authored'
 import { InlineAction } from '@/components/admin/forms'
-import { deletePostedProduct } from '@/app/actions/admin-posted-products'
+import { deletePostedProduct, togglePostedProductActive } from '@/app/actions/admin-posted-products'
 import { setProductVisibility } from '@/app/actions/admin-products'
 import { RewriteAllButton } from '@/components/admin/rewrite-all'
 import { claudeWriterConfigured } from '@/lib/catalog/autowrite'
@@ -76,6 +76,14 @@ function ProductActions({ p }: { p: MergedProduct }) {
           )
         )
       ) : (
+        <>
+        <InlineAction
+          action={togglePostedProductActive}
+          label={p.isActive ? 'Hide' : 'Show'}
+          fields={{ slug: p.slug, isActive: p.isActive ? 'false' : 'true' }}
+          variant={p.isActive ? 'danger' : 'secondary'}
+          {...(p.isActive ? { confirm: `Hide "${p.name}"? It leaves the shop and its page returns 404 within a minute. Show puts it back.` } : {})}
+        />
         <InlineAction
           action={deletePostedProduct}
           label="Delete"
@@ -83,6 +91,7 @@ function ProductActions({ p }: { p: MergedProduct }) {
           variant="danger"
           confirm={`Delete "${p.name}" for good? Its page and written copy are removed. Past orders keep their line. This cannot be undone.`}
         />
+        </>
       )}
     </>
   )

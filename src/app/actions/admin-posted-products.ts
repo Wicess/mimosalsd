@@ -592,6 +592,15 @@ export async function updatePostedProduct(
 
 // ── Take down / put back ───────────────────────────────────────────────────
 
+/**
+ * The same take-down / put-back, for a one-click button in the products list
+ * (owner, 2026-09-28: "so I can toggle on and off"). Same guard, same audit entry,
+ * same cache refresh — it only drops the form-state plumbing.
+ */
+export async function togglePostedProductActive(formData: FormData): Promise<void> {
+  await setPostedProductActive({}, formData)
+}
+
 export async function setPostedProductActive(
   _previous: PostedProductState,
   formData: FormData,

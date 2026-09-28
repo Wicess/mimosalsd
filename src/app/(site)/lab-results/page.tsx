@@ -9,8 +9,8 @@ import { collectionPage, jsonLdScript } from '@/lib/seo/structured-data'
 import { pageMetadata } from '@/lib/seo/meta'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Lab Results — Certificates of Analysis on Request',
-  description: 'The laboratory report for your batch, issued to verified, licensed buyers on request: potency, heavy metals, pesticides, mycotoxins, solvents and microbials.',
+  title: 'Batch Reports for Root Bark, on Request',
+  description: 'How to ask for the report that covers the batch of root bark you received: send the batch code printed on your package and we reply with what we hold.',
   path: '/lab-results',
 })
 

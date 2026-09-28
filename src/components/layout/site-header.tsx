@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import Image from 'next/image'
 import { catalog } from '@/lib/catalog/repository'
+import { NAV_CATEGORY_SLUGS } from '@/lib/catalog/catalog.data'
 import { BRAND } from '@/lib/brand'
 import { url } from '@/lib/seo/routes'
 import { ShineRule } from '@/components/ui/shine-rule'
@@ -39,6 +40,7 @@ export function SiteHeader() {
     */
     ...catalog
       .listCategories()
+      .filter((c) => NAV_CATEGORY_SLUGS.includes(c.slug))
       .map((c) => ({ label: c.navLabel ?? c.name, href: url.category(c.slug) })),
     { label: 'Where we ship', href: url.legalityHub() },
     { label: 'Lab results', href: url.labResults() },

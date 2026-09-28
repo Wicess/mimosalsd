@@ -55,30 +55,26 @@ const UNIVERSAL = [
   'Do you ship to my state?',
   'Why can I not pay on your website?',
   'How old do I have to be to order?',
-  'What do your lab tests actually cover?',
 ] as const
 
 /** The question that only this product line raises. */
 const BY_LINE: Record<ProductLine, readonly string[]> = {
   MIMOSA_HOSTILIS: [
-    'What is Mimosa Hostilis root bark used for?',
-    'How do I get the lab report for what I received?',
+    'What is Mimosa hostilis root bark used for?',
+    'Should I buy powder, shredded or whole root bark?',
+    'How much Mimosa hostilis do I need to dye a pound of wool?',
     'Do you offer bulk or wholesale pricing?',
   ],
   AMANITA: [
     'Is Amanita muscaria the same as psilocybin mushrooms?',
     'Is Amanita muscaria legal in the United States?',
-    'How do I get the lab report for what I received?',
   ],
-  VAPE: [
-    'Why did my order arrive in two separate shipments?',
-    'Will my order arrive discreetly?',
-  ],
+  VAPE: ['Will my order arrive discreetly?'],
 }
 
 /** A category that follows a line's rules without being its product asks its own questions. */
 const BY_CATEGORY: Record<string, readonly string[]> = {
-  others: ['Why did my order arrive in two separate shipments?', 'Will my order arrive discreetly?'],
+  others: ['Will my order arrive discreetly?'],
 }
 
 function select(productLine?: ProductLine, categorySlug?: string): readonly FaqItem[] {
@@ -87,7 +83,7 @@ function select(productLine?: ProductLine, categorySlug?: string): readonly FaqI
     ? [...own, ...UNIVERSAL]
     : productLine
     ? [...BY_LINE[productLine], ...UNIVERSAL]
-    : [...UNIVERSAL, 'Is Amanita muscaria legal in the United States?', 'How much is delivery?']
+    : [...UNIVERSAL, 'What is Mimosa hostilis root bark used for?', 'How much is delivery?']
 
   /*
     Ordered by the WANTED list, not by the order they happen to sit in `faq.ts`.
@@ -117,7 +113,7 @@ export async function ProductFaq({
   const own: FaqItem[] = productQuestions.map((q) => ({
     question: q.question,
     answer: q.answer.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'),
-    category: 'Products and testing',
+    category: 'Root bark',
   }))
   const shared = await withCompanyEmail(select(productLine, categorySlug))
   const items = [...own, ...shared.filter((item) => !own.some((o) => o.question === item.question))]

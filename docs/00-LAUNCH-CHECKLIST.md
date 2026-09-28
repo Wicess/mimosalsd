@@ -81,9 +81,9 @@ dark theme without a halo. Every slot is generated from that one file and from t
 | File | What it is |
 |---|---|
 | `public/brand/logo.png` | The wordmark, 900×251, transparent |
-| `public/brand/mark.png`, `app-icon-512`, `app-icon-192`, `icon-192`, `src/app/icon.png` | The round badge: dark disc, citron hairline, the `M` |
-| `public/brand/app-icon-maskable-512.png`, `src/app/apple-icon.png` | Dark plate to the edges, art inside the 80% safe zone |
-| `public/brand/notification-badge-96.png` | Solid white `M` on transparency — Android draws it as a silhouette |
+| `public/brand/mark-v2.png`, `app-icon-v2-512`, `app-icon-v2-192`, `src/app/icon.png` | The round badge: dark disc, citron hairline, `Mi` with the mushroom i |
+| `public/brand/app-icon-maskable-v2-192.png`, `-512.png`, `src/app/apple-icon.png` | Dark plate to the edges, art inside the 80% safe zone |
+| `public/brand/notification-badge-v2-96.png` | Solid white `Mi` on transparency — Android draws it as a silhouette |
 | `public/brand/logo-email.png` | Wordmark on a dark plate; most email clients drop transparency |
 | `assets/logo-badge.png` | The share card's circle, pre-masked |
 | `src/app/favicon.ico` | 16/32/48 from the badge |

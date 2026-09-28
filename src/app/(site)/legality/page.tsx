@@ -1,8 +1,8 @@
 import { ensureLiveStateRules } from '@/lib/compliance/live-state-rules'
 import type { Metadata } from 'next'
 import { pageMetadata } from '@/lib/seo/meta'
-import { getAllStateLegality, LINE_LABEL, LINE_SHORT } from '@/lib/legality/state-pages'
-import { PRODUCT_LINES, type ProductLine, type RuleStatus } from '@/lib/compliance/types'
+import { getAllStateLegality, LINE_LABEL, LINE_SHORT, STATE_PAGE_LINES } from '@/lib/legality/state-pages'
+import type { ProductLine, RuleStatus } from '@/lib/compliance/types'
 import { AlertIcon, CheckIcon, CrossIcon } from '@/components/ui/icon'
 import { FdaDisclaimer } from '@/components/compliance/fda-disclaimer'
 import { absoluteUrl, url } from '@/lib/seo/routes'
@@ -74,7 +74,7 @@ export default async function LegalityHubPage() {
     the same paragraph — a legality claim the data no longer supported, published. Copy
     that cannot be computed cannot be trusted to stay true, so none of it is.
   */
-  const coverage: readonly Coverage[] = PRODUCT_LINES.map((line) => {
+  const coverage: readonly Coverage[] = STATE_PAGE_LINES.map((line) => {
     const counts: Record<RuleStatus, number> = { ALLOWED: 0, RESTRICTED: 0, BLOCKED: 0 }
     const blockedNames: string[] = []
     for (const state of states) {
@@ -115,7 +115,7 @@ export default async function LegalityHubPage() {
           align="center"
           className="mb-10"
           title="Where we ship"
-          summary="We ship within the United States only. What we can send depends on the product line and on where you live, and every position below carries the date a person last reviewed it."
+          summary="Mimosa hostilis and sassafras root bark ship from California to every state below, with tracking. Pick your state for delivery, local water and storage advice, and where its dyers meet."
         />
 
         {/*
@@ -233,7 +233,7 @@ export default async function LegalityHubPage() {
                 >
                   State
                 </th>
-                {PRODUCT_LINES.map((line) => (
+                {STATE_PAGE_LINES.map((line) => (
                   <th
                     key={line}
                     scope="col"
@@ -284,12 +284,11 @@ export default async function LegalityHubPage() {
         <section className="mx-auto max-w-4xl">
           <h2 className="font-display text-xl text-foreground">How we keep this current</h2>
           <p className="mt-2 max-w-[70ch] text-sm leading-relaxed text-foreground-muted">
-            Each state page carries the statute we rely on and the date the position was
-            last reviewed. Where legislation is pending we say so rather than waiting for
-            it to pass. A page without a reviewed statute is not published — we would
-            rather show nothing than a legality claim we cannot stand behind. The cart
-            reads this same record at checkout, so nothing on this page can promise you
-            something checkout then refuses.
+            Each state page is built from the same shipping record the cart reads at
+            checkout, so what a page says ships to your state is what the cart offers.
+            The dyeing advice on each page comes from sourced facts about that state,
+            its water, its climate and its fibre community, with a link to the source
+            under each one, and the date of our last review is shown below.
           </p>
           {lastReviewed && (
             <p className="mt-4 text-sm text-foreground-subtle">

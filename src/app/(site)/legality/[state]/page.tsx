@@ -1,22 +1,9 @@
-/*
- * compliance-allow: psilocybin -- searchers conflate Amanita muscaria with psilocybin
- * constantly, and correcting that is one of the most useful things this page does.
- * The rule exists to stop us implying our products ARE psilocybin; this section says
- * the exact opposite, and naming the substance is unavoidable when drawing the
- * distinction.
- */
 import { ensureLiveStateRules } from '@/lib/compliance/live-state-rules'
 import type { Metadata } from 'next'
 import { AnswerFirst } from '@/components/content/answer-first'
 import { notFound } from 'next/navigation'
 import { JURISDICTIONS, getJurisdictionBySlug } from '@/lib/compliance/jurisdictions'
-import {
-  LINE_LABEL,
-  NEIGHBOURS,
-  neighbourContext,
-  getStateLegality,
-} from '@/lib/legality/state-pages'
-import { FEDERAL_HEMP_BAN } from '@/lib/legality/state-profiles'
+import { LINE_LABEL, NEIGHBOURS, getStateLegality } from '@/lib/legality/state-pages'
 import { listMergedProducts } from '@/lib/catalog/merged'
 import { listPrice, type Product } from '@/lib/catalog/types'
 import type { UsJurisdictionCode } from '@/lib/compliance/types'
@@ -110,10 +97,16 @@ async function StateBody({ slug }: { slug: string }) {
       question: `Do you ship to ${jurisdiction.name}?`,
       answer: `${shipping.summary} ${shipping.detail}`,
     },
+    ...legality.cities.questions,
     ...legality.verdicts.map((v) => ({
       question: `Can I buy ${LINE_LABEL[v.productLine]} in ${jurisdiction.name}?`,
       answer: `${v.headline}. ${v.detail}`,
     })),
+    {
+      question: `How long does delivery to ${jurisdiction.name} take?`,
+      answer: legality.dyeing.paragraphs.find((p) => p.key === 'delivery')?.text ?? shipping.detail,
+    },
+    ...(legality.dyeing.waterFaq ? [legality.dyeing.waterFaq] : []),
   ]
 
   const jsonLd = [
@@ -147,7 +140,6 @@ async function StateBody({ slug }: { slug: string }) {
   ]
 
   const neighbours = NEIGHBOURS[jurisdiction.code] ?? []
-  const borders = neighbourContext(jurisdiction.code)
 
   return (
     <>
@@ -229,6 +221,13 @@ async function StateBody({ slug }: { slug: string }) {
           </p>
         </section>
       )}
+
+      <section className="mt-8" aria-labelledby="delivery-cities">
+        <h2 id="delivery-cities" className="font-display text-2xl text-foreground">
+          Delivery across {jurisdiction.name}
+        </h2>
+        <p className="mt-3 leading-relaxed text-pretty text-foreground-muted">{legality.cities.delivery}</p>
+      </section>
 
       {shipping.isServed && (
         <section className="mt-8" aria-labelledby="delivery-terms">
@@ -374,103 +373,66 @@ async function StateBody({ slug }: { slug: string }) {
         </p>
       </section>
 
-      <section className="mt-12">
-        <h2 className="font-display text-2xl text-foreground">
-          Regulatory context in {jurisdiction.name}
+      {/*
+        DYEING WITH ROOT BARK IN THIS STATE (2026-09-28).
+
+        This replaced the regulatory context of the withdrawn lines — hemp postures,
+        psilocybin, the federal hemp amendment — with what changes a dyer's results
+        here: tap-water hardness, climate for storage, whether sassafras grows wild,
+        and where the state's own fibre community meets. Every paragraph is built from
+        a sourced fact in state-dyeing.data.ts, and a fact that could not be verified
+        leaves its paragraph out rather than being filled with generic text.
+      */}
+      <section className="mt-12" aria-labelledby="dyeing-here">
+        <h2 id="dyeing-here" className="font-display text-2xl text-foreground">
+          Dyeing with root bark in {jurisdiction.name}
         </h2>
+        {legality.dyeing.paragraphs.map((p) => (
+          <div key={p.key}>
+            <h3 className="mt-5 font-medium text-foreground">{p.heading}</h3>
+            <p className="mt-2 leading-relaxed text-pretty text-foreground-muted">{p.text}</p>
+            {p.sourceUrl && (
+              <p className="mt-1 text-xs text-foreground-subtle">
+                <a href={p.sourceUrl} rel="noopener nofollow" className="inline-flex min-h-11 items-center underline underline-offset-4">
+                  Source
+                </a>
+              </p>
+            )}
+          </div>
+        ))}
 
-        <h3 className="mt-5 font-medium text-foreground">
-          Where {jurisdiction.name} stands on intoxicating hemp products
-        </h3>
-        <p className="mt-2 leading-relaxed text-foreground-muted">
-          {legality.profile.hempNote}
-        </p>
-
-        <h3 className="mt-5 font-medium text-foreground">
-          Psilocybin is a different substance
-        </h3>
-        <p className="mt-2 leading-relaxed text-foreground-muted">
-          {legality.profile.psilocybinNote}
-        </p>
-
-        {/*
-          HOW THIS STATE COMPARES TO THE ONES AROUND IT.
-
-          "Is it the same next door?" is the question a state page reliably
-          produces — usually from someone deciding which address to have an order
-          sent to — and the answer used to be a rail of links they had to open one
-          at a time.
-
-          It is also the only paragraph here whose CONTENT differs because the
-          country differs rather than because a template was handed a different
-          noun, which is the whole argument for these pages existing as separate
-          URLs. Everything in it is computed from the border map and the published
-          hemp posture of each neighbour; nothing is asserted.
-        */}
-        {borders && (
+        {legality.dyeing.events.length > 0 && (
           <>
             <h3 className="mt-5 font-medium text-foreground">
-              How {jurisdiction.name} compares to the states around it
+              Where dyers and spinners meet in {jurisdiction.name}
             </h3>
-            <p className="mt-2 leading-relaxed text-pretty text-foreground-muted">
-              {borders.sentence}
-            </p>
+            <ul className="mt-2 space-y-1 leading-relaxed text-foreground-muted">
+              {legality.dyeing.events.map((e) => (
+                <li key={e.name}>
+                  <a href={e.url} rel="noopener nofollow" className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">
+                    {e.name}
+                  </a>
+                  {', '}
+                  {e.place}
+                  {e.month ? `, usually in ${e.month}` : ''}
+                </li>
+              ))}
+            </ul>
           </>
         )}
 
-        {/*
-          Hand-written substance for this state, when there is any.
-
-          Rendered only when the profile carries it, and nothing is generated to
-          fill the gap: a state with no checked sourcing shows no section rather
-          than a paragraph of padding that says what the thirteen shared defaults
-          already said.
-        */}
-        {legality.profile.notes?.length ? (
-          <>
-            <h3 className="mt-5 font-medium text-foreground">
-              Specific to {jurisdiction.name}
-            </h3>
-            {legality.profile.notes.map((note) => (
-              <p
-                key={note}
-                className="mt-2 leading-relaxed text-pretty text-foreground-muted"
-              >
-                {note}
-              </p>
-            ))}
-          </>
-        ) : null}
-      </section>
-
-      {/*
-        The federal hemp amendment is on every state page because it reshapes what a
-        reader will find for sale nationally after 12 November 2026 — and because
-        stating plainly that it does NOT reach these products is more useful, and more
-        defensible, than staying silent and letting them assume either way.
-      */}
-      <section className="mt-12 rounded-lg border border-border bg-surface-sunken p-5">
-        <h2 className="font-display text-xl text-foreground">
-          What changes nationally on 12 November 2026
-        </h2>
-        <p className="mt-2 leading-relaxed text-foreground-muted">
-          {FEDERAL_HEMP_BAN.summary}
-        </p>
-        <p className="mt-3 leading-relaxed text-foreground">
-          {FEDERAL_HEMP_BAN.appliesToUs}
-        </p>
-        <p className="mt-3 text-xs text-foreground-subtle">
-          {FEDERAL_HEMP_BAN.statute} · signed{' '}
-          {new Date(FEDERAL_HEMP_BAN.signedAt).toLocaleDateString('en-US', {
-            year: 'numeric', month: 'long', day: 'numeric',
-          })}
-          {' · '}
-          <a href={FEDERAL_HEMP_BAN.sourceUrl} rel="noopener nofollow" className="inline-flex min-h-11 items-center underline underline-offset-4">
-            analysis
+        <p className="mt-5 leading-relaxed text-foreground-muted">
+          New to dyeing with bark? Start with{' '}
+          <a href={url.blogPost('weighing-bark-against-fibre')} className="text-primary underline underline-offset-4">
+            how much bark per pound of fibre
+          </a>{' '}
+          and{' '}
+          <a href={url.blogPost('keeping-a-bark-bath-purple')} className="text-primary underline underline-offset-4">
+            keeping a bark bath purple instead of brown
           </a>
+          .
         </p>
       </section>
-
 
       <section className="mt-12">
         <h2 className="font-display text-2xl text-foreground">
@@ -517,9 +479,9 @@ async function StateBody({ slug }: { slug: string }) {
       <div className="min-w-0 xl:col-start-1">
       <div className="mt-12 rounded-lg border border-border bg-surface-sunken p-4">
         <p className="text-xs leading-relaxed text-foreground-muted">
-          This page summarises our own shipping policy and the statutes we relied on to
-          set it. It is not legal advice. Laws change; we review these positions and
-          publish the date of the last review above.
+          This page summarises our own shipping policy and general dyeing guidance for
+          {jurisdiction.name}. It is not legal advice. We review our shipping positions
+          and publish the date of the last review above.
         </p>
       </div>
 

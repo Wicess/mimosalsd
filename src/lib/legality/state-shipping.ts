@@ -1,3 +1,4 @@
+import { STATE_CITIES } from './state-cities'
 import type { ProductLine, UsJurisdictionCode } from '@/lib/compliance/types'
 import { effectiveMinAge } from '@/lib/compliance/shipping'
 import { LINE_SHORT, type LineVerdict, type StateLegality } from './state-pages'
@@ -103,7 +104,7 @@ export function getStateShipping(legality: StateLegality): StateShipping {
   const summary = !available.length
     ? `We cannot lawfully ship any of our product lines to ${legality.name}.`
     : refused.length === 0
-      ? `We ship all three of our product lines to ${legality.name}, to adults ${minAge} and over.`
+      ? `We ship root bark to ${legality.name} from California, to adults ${minAge} and over.`
       : `We ship ${listOf(names)} to ${legality.name}. ${listOf(refused.map((v) => LINE_SHORT[v.productLine]))} cannot be sent here.`
 
   const detail = buildDetail(legality, available, refused, channels, minAge)
@@ -137,7 +138,11 @@ function buildDetail(
   }
 
   parts.push(
-    `Orders to ${state} ship from our United States fulfilment centre. We do not hold stock in ${state} and we are not a marketplace reseller — the batch you receive is one we bought, tested and packed, and the lab report for it is published against the code printed on the package.`,
+    /*
+      It said the lab report for every batch "is published against the code printed on
+      the package". Reports are not published; they are sent on request. 2026-09-28.
+    */
+    `Orders to ${state} ship from our California branch. We do not hold stock in ${state} and we are not a marketplace reseller: the bark you receive is weighed and sealed by us, and the report for its batch is available on request against the code printed on the package.`,
   )
 
   const parcel = channels.find((c) => c.key === 'PARCEL')
@@ -149,7 +154,7 @@ function buildDetail(
         known, rather than published against a state and left to drift out of step
         with checkout.
       */
-      `${listOf(parcel.carries)} travel together as a standard parcel, and shipping is confirmed with your order.`,
+      `${listOf(parcel.carries)} ${parcel.carries.length === 1 ? 'travels' : 'travel together'} as a standard parcel with tracking, and shipping is confirmed with your order.`,
     )
   }
 
@@ -166,7 +171,7 @@ function buildDetail(
 
   if (refused.length > 0) {
     parts.push(
-      `${listOf(refused.map((v) => LINE_SHORT[v.productLine]))} cannot be sent to ${state}. The cart refuses those items against the address you enter, so you find out before you commit rather than at a refund. The statute behind each refusal is cited below.`,
+      `${listOf(refused.map((v) => LINE_SHORT[v.productLine]))} cannot be sent to ${state}. The cart refuses those items against the address you enter, so you find out before you commit rather than at a refund. The position for each is set out below.`,
     )
   }
 
@@ -201,7 +206,8 @@ function listOf(items: readonly string[]): string {
  * ─────────────────────────────────────────────────────────────────────────────
  */
 const TITLE_LIMIT = 60
-const SNIPPET_LIMIT = 160
+/** What a state description aims for: comfortably inside the snippet, not at its edge. */
+const DESCRIPTION_TARGET = 145
 
 function fit(preferred: string, fallback: string): string {
   return preferred.length <= TITLE_LIMIT ? preferred : fallback
@@ -231,8 +237,23 @@ export function stateSearchMeta(
 
   const title = fit(`Buy Mimosa Hostilis Root Bark in ${name}, ${year} Pricing`, `Buy Mimosa Hostilis Root Bark in ${name}`)
   const price = barkFromPoundCents ? `, from ${dollars(barkFromPoundCents)} dollars a pound` : ''
-  const full = `Where to buy Mimosa hostilis root bark in ${name}? Order online, shipped to your door. Powder, shredded or stripped roots${price}.`
+  /*
+    The cities: "buy mimosa hostilis root bark in Houston" is a real search, and the
+    one page that can honestly answer it for Houston is the Texas page.
+  */
+  const cities = (STATE_CITIES[shipping.code] ?? []).slice(0, 2)
+  /*
+    Owner, 2026-09-28: the two-city version read too long. One city, and a target of
+    about 140 characters, well inside what results pages show.
+  */
+  const city = cities[0]
+  const cityVariants =
+    shipping.code === 'DC' || !city
+      ? []
+      : [`Buy Mimosa hostilis root bark in ${name}, delivered to ${city} and statewide. Powder, shredded or whole${price}.`]
+  const full = `Where to buy Mimosa hostilis root bark in ${name}? Order online, shipped from California. Powder, shredded or whole cuts${price}.`
   // A long state name must not push the price off the end of the snippet.
-  const short = `Buy Mimosa hostilis root bark in ${name} online, shipped to your door. Powder, shredded or stripped roots${price}.`
-  return { title, description: full.length <= SNIPPET_LIMIT ? full : short }
+  const short = `Buy Mimosa hostilis root bark in ${name} online, shipped from California. Powder, shredded or whole${price}.`
+  const description = [...cityVariants, full, short].find((d) => d.length <= DESCRIPTION_TARGET) ?? short
+  return { title, description }
 }

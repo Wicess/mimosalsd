@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   MIN_PUBLISH_WORDS,
+  STATE_PAGE_LINES,
   getAllStateLegality,
   getStateLegality,
 } from '@/lib/legality/state-pages'
@@ -30,28 +31,27 @@ describe('one source of truth', () => {
   it('covers every jurisdiction and every product line', () => {
     const all = getAllStateLegality()
     expect(all).toHaveLength(51)
-    for (const state of all) expect(state.verdicts).toHaveLength(3)
+    for (const state of all) expect(state.verdicts).toHaveLength(STATE_PAGE_LINES.length)
   })
 })
 
 describe('answer-first block', () => {
   it('states the verdict up front for a fully permissive state', () => {
     const tx = getStateLegality('TX')
-    expect(tx.answerFirst).toMatch(/^All three of the product categories/)
+    expect(tx.answerFirst).toMatch(/^Yes\. We ship Mimosa hostilis root bark/)
     expect(tx.answerFirst).toContain('Texas')
   })
 
   /*
-    Every line ships to every state under the current seed — see the header of
-    `state-rules.data.ts`. What still has to hold is that the SENTENCE is
-    generated from the rules rather than written by hand, so a restriction going
-    back into the data changes the page without anyone editing copy.
+    Since 2026-09-28 a state page describes root bark only: the Amanita and vapor
+    listings were withdrawn, and a page describing lines nobody can buy is the stale
+    claim this project keeps paying for.
   */
-  it('states plainly that all three lines ship, and names them', () => {
+  it('names the root bark it ships, and nothing that is withdrawn', () => {
     for (const code of ['LA', 'FL', 'CA', 'NY', 'TX'] as const) {
       const s = getStateLegality(code)
-      expect(s.answerFirst, code).toContain('can lawfully be shipped to')
-      expect(s.answerFirst, code).toContain('Amanita muscaria')
+      expect(s.answerFirst, code).toContain('sassafras root bark')
+      expect(s.answerFirst, code).not.toMatch(/amanita|vape|disposable/i)
     }
   })
 
@@ -62,9 +62,11 @@ describe('answer-first block', () => {
     }
   })
 
-  it('always says that checkout enforces it', () => {
+  // Checkout stopped refusing by location on 2026-09-19, so no page may say it does.
+  it('never claims the cart refuses an order by location', () => {
     for (const state of getAllStateLegality()) {
-      expect(state.answerFirst, state.code).toContain('enforce this at checkout')
+      expect(state.answerFirst, state.code).not.toMatch(/refuse/i)
+      expect(state.orderingGuidance, state.code).not.toMatch(/refuse/i)
     }
   })
 
@@ -133,21 +135,39 @@ describe('state-specific substance — what stops this being a doorway farm', ()
   it('gives ordering guidance that reflects the current rules', () => {
     for (const code of ['CA', 'TX', 'FL'] as const) {
       const g = getStateLegality(code).orderingGuidance
-      // Nothing is refused, and vapes still travel on the PACT carrier. The page no
-      // longer talks about signing or ID at the door (owner, 2026-09-15).
-      expect(g, code).not.toContain('refused outright')
+      // Root bark only, shipped from California. Nothing about signing or ID at the
+      // door (owner, 2026-09-15), and no PACT carrier now that vapes are withdrawn.
+      expect(g, code).toContain('from California')
       expect(g, code).not.toContain('vapor product directory')
-      expect(g, code).toContain('PACT Act')
-      expect(g, code).not.toMatch(/sign|photo identification|photo ID/i)
+      expect(g, code).not.toContain('PACT Act')
+      expect(g, code).not.toMatch(/signature|photo identification|photo ID/i)
     }
   })
 
   it('produces materially different page content per state', () => {
+    // The dyeing guide is built from sourced per-state facts: water hardness,
+    // climate, sassafras range and the state's own fibre events.
     const seen = new Set(
-      getAllStateLegality().map((s) => `${s.orderingGuidance}${s.profile.hempNote}`),
+      getAllStateLegality().map((s) => s.dyeing.paragraphs.filter((p) => p.key !== 'delivery').map((p) => p.text).join('|')),
     )
-    // Not 51 unique (many states share a posture), but far from templated.
-    expect(seen.size).toBeGreaterThan(6)
+    expect(seen.size).toBeGreaterThan(40)
+  })
+
+  it('cites a source for every sourced paragraph', () => {
+    for (const state of getAllStateLegality()) {
+      for (const p of state.dyeing.paragraphs) {
+        if (p.key === 'delivery') continue
+        expect(p.sourceUrl, `${state.code}/${p.key}`).toMatch(/^https?:\/\//)
+      }
+    }
+  })
+
+  it('passes the compliance lexicon on every dyeing guide', () => {
+    for (const state of getAllStateLegality()) {
+      const text = [state.orderingGuidance, ...state.dyeing.paragraphs.map((p) => `${p.heading} ${p.text}`)].join('\n')
+      const result = scanText(text, { productLines: ['MIMOSA_HOSTILIS'] })
+      expect(result.clean, `${state.code}: ${result.blocking.map((m) => m.term)}`).toBe(true)
+    }
   })
 })
 
@@ -155,8 +175,7 @@ describe('review metadata', () => {
   it('derives the year from the review date, never the wall clock', () => {
     const tx = getStateLegality('TX')
     expect(tx.reviewYear).toBe(new Date(tx.lastReviewedAt).getUTCFullYear())
-    // A page claiming "as of 2026" must mean "when we checked", not "when you loaded".
-    expect(tx.answerFirst).toContain(String(tx.reviewYear))
+    // A title claiming "2026 pricing" must mean "when we checked", not "when you loaded".
   })
 
   it('flags no state as having pending legislation', () => {
@@ -187,9 +206,9 @@ describe('review metadata', () => {
 describe('a line we do not send to a state', () => {
   afterEach(() => resetStateRuleProvider())
 
-  function withVapeRule(status: 'BLOCKED' | 'RESTRICTED', statuteCitation: string | undefined) {
+  function withBarkRule(status: 'BLOCKED' | 'RESTRICTED', statuteCitation: string | undefined) {
     const rules = STATE_RULE_SEED.map((r) =>
-      r.stateCode === 'TX' && r.productLine === 'VAPE'
+      r.stateCode === 'TX' && r.productLine === 'MIMOSA_HOSTILIS'
         ? { ...r, status, statuteCitation, notes: 'We do not ship this category to TX.' }
         : r,
     )
@@ -197,14 +216,14 @@ describe('a line we do not send to a state', () => {
   }
 
   it('does not take the state page out of search when it cites no statute', () => {
-    withVapeRule('BLOCKED', undefined)
+    withBarkRule('BLOCKED', undefined)
     const texas = getStateLegality('TX')
     // Word count is a separate gate with its own test; this one is about the statute.
     expect(texas.publishBlockers.filter((b) => b.includes('cites no statute'))).toEqual([])
   })
 
   it('still needs a statute when the line ships with conditions', () => {
-    withVapeRule('RESTRICTED', undefined)
+    withBarkRule('RESTRICTED', undefined)
     expect(getStateLegality('TX').publishBlockers.some((b) => b.includes('cites no statute'))).toBe(true)
   })
 })

@@ -55,9 +55,9 @@ import { listMergedProducts } from '@/lib/catalog/merged'
  * ─────────────────────────────────────────────────────────────────────────────
  */
 export const metadata: Metadata = pageMetadata({
-  title: 'What Ships to You — Check Your State',
+  title: 'Root Bark Shipping to Your State, From California',
   description:
-    'Find out exactly what we can send to your address. Every product, every US state and the District of Columbia, with the legal position for your state and what delivery costs.',
+    'Check delivery to your address: Mimosa hostilis and sassafras root bark ship from California to every US state and DC, with tracking. What delivery costs, and when it is free.',
   path: '/shop-near-me',
 })
 

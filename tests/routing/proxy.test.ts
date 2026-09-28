@@ -23,8 +23,8 @@ describe('existing resources resolve', () => {
     '/lab-results/AM-2026-0388',
     '/legality/louisiana',
     '/legality/texas',
-    '/blog/what-is-muscimol',
-    '/guides/amanita-muscaria-explained',
+    '/blog/natural-dyeing-with-mimosa-hostilis',
+    '/guides/what-is-mimosa-hostilis-root-bark',
   ])('%s exists', (path) => {
     expect(routeExists(path)).toBe(true)
   })

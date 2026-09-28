@@ -93,7 +93,7 @@ export default function Image() {
             somebody pastes a link. It now names only what it can stand behind.
           */}
           <div style={{ display: 'flex', fontSize: 25, color: MUTED, marginTop: 24 }}>
-            Mimosa hostilis root bark · Sassafras · Disposables
+            Mimosa hostilis root bark · Powder · Shredded · Whole
           </div>
 
           <div
@@ -113,7 +113,7 @@ export default function Image() {
               decided per line and per address from `state_rules` at checkout, so the
               card says that rather than naming a number that goes stale silently.
             */}
-            <div style={{ display: 'flex', color: ACCENT }}>Availability checked at checkout</div>
+            <div style={{ display: 'flex', color: ACCENT }}>Ships from California</div>
             {/*
               Satori counts an interpolation next to adjacent text as two children
               and then requires an explicit `display`. Kept as one interpolated

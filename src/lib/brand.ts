@@ -20,7 +20,7 @@ export const BRAND = {
   */
   tagline: 'Botanical raw material. Sold by the pound. Shipped inside the United States.',
   description:
-    'Mimosa hostilis and sassafras root bark sold as raw material for natural dyeing, soap and craft, in powder, shredded and stripped cuts. Orders are placed as a request rather than paid on the site: the order is checked against the address it is going to, then payment instructions follow. United States only.',
+    'Mimosa hostilis and sassafras root bark sold as raw material for natural dyeing, soap and craft, in powder, shredded and whole cuts. Orders are placed as a request rather than paid on the site: the order is checked against the address it is going to, then payment instructions follow. United States only.',
 
   /**
    * The registered domain. Display and mailto links only — canonical URLs come from
@@ -84,34 +84,35 @@ export const BRAND = {
   freeShippingThresholdCents: 10_000,
 
   /**
-   * PENDING — the client's own founder, if they want one published.
+   * The owner, as the client supplied him (2026-09-28): Dr Kevin Turner, CEO, a PhD in
+   * business and chemical engineering specialising in fumes, more than 30 years in the
+   * industry, more than ten businesses.
    *
-   * Every field is empty on purpose, and the sections that use it omit themselves
-   * rather than show a stranger. A person, a photograph or a credential carried over
-   * from another company would be a misrepresentation on a business selling
-   * age-restricted goods, not a design detail.
+   * `statement` is written in the third person on purpose. It is set in display type
+   * under "About the proprietor", and a first-person sentence there reads as a quote —
+   * one he never gave. Swap in his own words when he supplies some.
    */
   proprietor: {
-    // SAMPLE DATA: stand-ins so the founder section renders. Replaced with the
-    // client's own before launch, or emptied so the section omits itself.
-    name: 'Sample Name' as string,
-    postNominal: '' as string,
-    role: 'Founder' as string,
-    title: 'sample one-line description of the founder' as string,
+    name: 'Kevin Turner' as string,
+    postNominal: 'PhD' as string,
+    role: 'Owner & CEO' as string,
+    title: 'chemical engineer, with a PhD in business and chemical engineering specialising in fumes' as string,
     statement:
-      'Sample copy: one sentence from the founder about what this business does differently, replaced before launch.' as string,
-    portrait: '/team/founder.jpg' as string,
+      'Dr Turner has spent more than thirty years in this industry and built more than ten businesses. MIMOSALSD is the one he runs today.' as string,
+    portrait: '/team/founder-kevin-turner.jpg' as string,
     signature: '' as string,
   },
 
   /**
-   * PENDING — the client's own trading history. Zero means the site says nothing
-   * about how long it has traded or how many customers it has served, which is the
-   * only honest default for a business opening its doors.
+   * The client's own trading history (2026-09-28): in business since 2010, 70,000
+   * customers across the United States.
+   *
+   * The founding year, not a count of years: a count goes stale every January, a year
+   * does not. `trackRecord()` and Organization schema both read it.
    */
   track: {
-    yearsInBusiness: 0,
-    customers: 0,
+    foundedYear: 2010,
+    customers: 70_000,
   },
 
   /** Developer credit rendered in the footer. */
@@ -133,13 +134,13 @@ export function proprietorFullName(): string {
 
 /**
  * The track record as one sentence, for every surface that states it, so the
- * homepage, /about and llms.txt cannot drift apart: "in business for more than 10
- * years, with more than 10,000 customers across the United States".
+ * homepage, /about and llms.txt cannot drift apart: "in business since 2010, with
+ * 70,000 customers across the United States".
  */
 export function trackRecord(): string {
-  const { yearsInBusiness, customers } = BRAND.track
-  // Nothing to say until the client supplies real figures: a new business claiming
-  // years and customers it has not had is the plainest kind of false statement.
-  if (yearsInBusiness <= 0 || customers <= 0) return ''
-  return `in business for more than ${yearsInBusiness} years, with more than ${customers.toLocaleString('en-US')} customers across the United States`
+  const { foundedYear, customers } = BRAND.track
+  // Nothing to say without real figures: a business claiming years and customers it
+  // has not had is the plainest kind of false statement.
+  if (foundedYear <= 0 || customers <= 0) return ''
+  return `in business since ${foundedYear}, with ${customers.toLocaleString('en-US')} customers across the United States`
 }

@@ -21,9 +21,9 @@ import { PageSection } from '@/components/layout/page-section'
   at 186 characters, that search results cut off at "verified legal status in."
 */
 export const metadata: Metadata = pageMetadata({
-  title: 'Shop Disposable Vapes and Botanical Root Bark',
+  title: 'Shop Mimosa Hostilis and Sassafras Root Bark',
   description:
-    'Disposable vapes and 510 cartridges, plus Mimosa hostilis and sassafras root bark sold as raw material for dyeing and craft. Adults 21 and over, US only.',
+    'Shop Mimosa hostilis root bark in powder, shredded and whole cuts, and sassafras root bark, sold by the pound for natural dyeing and craft. US shipping from California.',
   path: '/shop',
 })
 
@@ -49,7 +49,7 @@ export default async function ShopPage({
             collectionPage({
               name: 'Shop',
               description:
-                'Every product we sell, lab tested by batch, with certificates issued to verified buyers on request.',
+                'Mimosa hostilis and sassafras root bark, sold by the pound for natural dyeing and craft.',
               path: url.shop(),
               items: listed.map((p) => ({ name: p.name, path: url.product(p.slug) })),
             }),
@@ -73,7 +73,7 @@ export default async function ShopPage({
           className="mb-10"
           align="center"
           title="Shop"
-          summary="Every batch lab-tested, with the certificate issued on request against its batch number."
+          summary="Mimosa hostilis root bark in three cuts, and sassafras root bark, sold by the pound and shipped from California."
         />
 
         {/* Per-visitor and per-query — streamed in. */}

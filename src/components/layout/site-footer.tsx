@@ -5,6 +5,7 @@ import { BRAND } from '@/lib/brand'
 import { PaymentMark } from '@/components/commerce/payment-mark'
 import { FDA_DISCLAIMER } from '@/lib/compliance/disclaimers'
 import { url } from '@/lib/seo/routes'
+import { PostalAddress } from '@/components/layout/postal-address'
 
 /**
  * Copyright year as a constant, not `new Date()`.
@@ -22,9 +23,6 @@ const COLUMNS = [
     links: [
       [url.shop(), 'All products'],
       [url.category('mimosa-hostilis'), 'Mimosa Hostilis'],
-      [url.category('amanita'), 'Amanita muscaria'],
-      [url.category('disposable-vapes'), 'Disposable vapes'],
-      [url.category('others'), 'Others'],
       [url.bulk(), 'Bulk purchase'],
     ],
   },
@@ -103,6 +101,7 @@ export function SiteFooter() {
           <p className="max-w-[46ch] text-sm leading-relaxed text-pretty text-foreground-muted max-md:text-xs">
             {BRAND.tagline}
           </p>
+          <PostalAddress className="max-w-[46ch] text-sm leading-relaxed text-foreground-muted max-md:text-xs" />
         </div>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-5 md:gap-8 lg:grid-cols-4">

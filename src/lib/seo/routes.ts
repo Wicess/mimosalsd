@@ -39,8 +39,8 @@ export interface RouteDefinition {
 export const ROUTES = {
   home: { id: 'home', pattern: '/', primaryIntent: 'brand + category entry', indexPolicy: 'INDEX', inSitemap: true, priority: 1.0, changeFrequency: 'daily' },
   shop: { id: 'shop', pattern: '/shop', primaryIntent: 'buy legal psychedelics and botanicals online', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'daily' },
-  category: { id: 'category', pattern: '/shop/[category]', primaryIntent: 'buy [product line] online', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'daily' },
-  product: { id: 'product', pattern: '/product/[slug]', primaryIntent: 'buy [specific product]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.8, changeFrequency: 'weekly' },
+  category: { id: 'category', pattern: '/shop/[category]', primaryIntent: 'buy [product line] online', indexPolicy: 'INDEX', inSitemap: true, priority: 0.95, changeFrequency: 'daily' },
+  product: { id: 'product', pattern: '/product/[slug]', primaryIntent: 'buy [specific product]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'weekly' },
 
   locationsHub: { id: 'locations-hub', pattern: '/locations', primaryIntent: 'store locations and pickup points', indexPolicy: 'INDEX', inSitemap: true, priority: 0.7, changeFrequency: 'monthly' },
   location: { id: 'location', pattern: '/locations/[city]', primaryIntent: '[product] in [city]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.7, changeFrequency: 'monthly' },
@@ -51,17 +51,17 @@ export const ROUTES = {
   legalityState: { id: 'legality-state', pattern: '/legality/[state]', primaryIntent: 'is [product] legal in [state]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'weekly' },
 
 
-  labResults: { id: 'lab-results', pattern: '/lab-results', primaryIntent: 'certificate of analysis lookup', indexPolicy: 'INDEX', inSitemap: true, priority: 0.8, changeFrequency: 'weekly' },
+  labResults: { id: 'lab-results', pattern: '/lab-results', primaryIntent: 'certificate of analysis lookup', indexPolicy: 'INDEX', inSitemap: true, priority: 0.3, changeFrequency: 'weekly' },
   labBatch: { id: 'lab-batch', pattern: '/lab-results/[batch]', primaryIntent: 'COA for batch [code]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.5, changeFrequency: 'yearly' },
 
-  blog: { id: 'blog', pattern: '/blog', primaryIntent: 'educational content hub', indexPolicy: 'INDEX', inSitemap: true, priority: 0.7, changeFrequency: 'daily' },
+  blog: { id: 'blog', pattern: '/blog', primaryIntent: 'educational content hub', indexPolicy: 'INDEX', inSitemap: true, priority: 0.6, changeFrequency: 'daily' },
   blogPost: { id: 'blog-post', pattern: '/blog/[slug]', primaryIntent: 'per-article informational query', indexPolicy: 'INDEX', inSitemap: true, priority: 0.7, changeFrequency: 'monthly' },
-  guide: { id: 'guide', pattern: '/guides/[slug]', primaryIntent: 'comprehensive pillar query', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'monthly' },
+  guide: { id: 'guide', pattern: '/guides/[slug]', primaryIntent: 'comprehensive pillar query', indexPolicy: 'INDEX', inSitemap: true, priority: 0.8, changeFrequency: 'monthly' },
 
   about: { id: 'about', pattern: '/about', primaryIntent: 'who is [brand]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.5, changeFrequency: 'yearly' },
   faq: { id: 'faq', pattern: '/faq', primaryIntent: 'common purchase questions', indexPolicy: 'INDEX', inSitemap: true, priority: 0.6, changeFrequency: 'monthly' },
   contact: { id: 'contact', pattern: '/contact', primaryIntent: 'contact the seller', indexPolicy: 'INDEX', inSitemap: true, priority: 0.4, changeFrequency: 'yearly' },
-  bulk: { id: 'bulk', pattern: '/bulk', primaryIntent: 'wholesale / bulk purchase', indexPolicy: 'INDEX', inSitemap: true, priority: 0.7, changeFrequency: 'monthly' },
+  bulk: { id: 'bulk', pattern: '/bulk', primaryIntent: 'wholesale / bulk purchase', indexPolicy: 'INDEX', inSitemap: true, priority: 0.8, changeFrequency: 'monthly' },
 
   shippingPolicy: { id: 'shipping-policy', pattern: '/policies/shipping', primaryIntent: 'shipping and delivery terms', indexPolicy: 'INDEX', inSitemap: true, priority: 0.5, changeFrequency: 'monthly' },
   returnsPolicy: { id: 'returns-policy', pattern: '/policies/returns', primaryIntent: 'returns and refunds', indexPolicy: 'INDEX', inSitemap: true, priority: 0.4, changeFrequency: 'yearly' },

@@ -101,10 +101,10 @@ self.addEventListener('fetch', (event) => {
   )
 })
 
-const APP_ICON = '/brand/app-icon-192.png'
+const APP_ICON = '/brand/app-icon-v2-192.png'
 // Android draws this white-on-transparent in the status bar, the way it draws every
 // messaging app's small icon. Other platforms ignore it.
-const STATUS_BAR_BADGE = '/brand/notification-badge-96.png'
+const STATUS_BAR_BADGE = '/brand/notification-badge-v2-96.png'
 
 /** A same-site path to open, never another site. Kept pure, and tested. */
 function notificationTarget(data) {

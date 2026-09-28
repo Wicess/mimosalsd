@@ -21,17 +21,35 @@ import { POLICIES } from '../../src/lib/content/policies'
 import { publishedLocations } from '../../src/lib/locations/locations'
 
 /** The groups URL.md is written in, in the order it writes them. */
+/*
+  In order of indexing priority (2026-09-28): what a buyer lands on first, then the
+  products, then the per-state pages that answer "where can I buy it in <state or
+  city>", then the dyeing content that feeds them, then the supporting pages.
+*/
 export const GROUPS = [
   'Core pages',
   'Categories',
   'Products',
+  'State legality',
   'Guides',
   'Articles',
-  'State legality',
-  'Lab batches',
-  'Locations',
   'Policies',
+  'Locations',
+  'Lab batches',
 ] as const
+
+/** The sitemap priority each group is submitted at, for the URL.md headings. */
+export const GROUP_PRIORITY: Record<(typeof GROUPS)[number], string> = {
+  'Core pages': '1.0 to 0.4',
+  Categories: '0.95',
+  Products: '0.9',
+  'State legality': '0.9',
+  Guides: '0.8',
+  Articles: '0.7',
+  Policies: '0.5 to 0.3',
+  Locations: '0.7',
+  'Lab batches': '0.5',
+}
 
 export type Group = (typeof GROUPS)[number]
 
@@ -60,6 +78,9 @@ export async function collectUrls(client?: PrismaClient): Promise<SiteUrl[]> {
       if (!route.inSitemap || route.pattern.includes('[')) continue
       // Policies carry their own reviewed date and are grouped with each other.
       if (route.pattern.startsWith('/policies/')) continue
+      // The locations hub is noindex until a real location is published (rule 12),
+      // and the sitemap leaves it out for the same reason.
+      if (route.id === 'locations-hub' && publishedLocations().length === 0) continue
       add(route.pattern, 'Core pages')
     }
 
@@ -129,7 +150,10 @@ export async function collectUrls(client?: PrismaClient): Promise<SiteUrl[]> {
 export function byGroup(urls: readonly SiteUrl[]): Map<Group, SiteUrl[]> {
   const map = new Map<Group, SiteUrl[]>()
   for (const group of GROUPS) {
-    const entries = urls.filter((u) => u.group === group).sort((a, b) => a.path.localeCompare(b.path))
+    const priority = (path: string) => Object.values(ROUTES).find((r) => r.pattern === path)?.priority ?? 0
+    const entries = urls
+      .filter((u) => u.group === group)
+      .sort((a, b) => (group === 'Core pages' ? priority(b.path) - priority(a.path) : 0) || a.path.localeCompare(b.path))
     if (entries.length > 0) map.set(group, entries)
   }
   return map

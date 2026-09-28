@@ -77,9 +77,19 @@ const nextConfig: NextConfig = {
    * once the link rot is "probably over" is removed on a guess.
    */
   async redirects() {
+    /*
+      Products whose slug changed (2026-09-28): two typos, and two names that did not
+      match their photographs. Each old address goes straight to the same product, not
+      to a category, so a bookmark or a link lands where it meant to.
+    */
+    const renamed: Record<string, string> = {
+      'powdered-mimosa-hostils-root': 'mimosa-hostilis-root-bark-powder',
+      'mimosa-roots-stripped': 'shredded-mimosa-hostilis-root-bark',
+      'mimosa-treee-bark': 'whole-mimosa-hostilis-root-bark',
+      'mhrb-powder': 'mimosa-hostilis-root-bark-powder',
+      'mhrb-shredded': 'shredded-mimosa-hostilis-root-bark',
+    }
     const gone: Record<string, string> = {
-      'mhrb-powder': 'mimosa-hostilis',
-      'mhrb-shredded': 'mimosa-hostilis',
       'amanita-caps-whole-dried': 'amanita',
       'amanita-powder': 'amanita',
       'amanita-gummies-mixed-berry': 'amanita',
@@ -90,11 +100,54 @@ const nextConfig: NextConfig = {
       'disposable-vape-berry': 'disposable-vapes',
       'disposable-vape-citrus': 'disposable-vapes',
     }
-    return Object.entries(gone).map(([slug, category]) => ({
-      source: `/product/${slug}`,
-      destination: `/shop/${category}`,
-      permanent: true,
-    }))
+    /*
+      Articles unpublished 2026-09-28: parent-build text on the withdrawn lines, or a
+      testing claim nobody has confirmed. Each goes to the page that now answers the
+      same question, rather than to a 404.
+    */
+    const retired: Record<string, string> = {
+      '/blog/what-is-muscimol': '/blog',
+      '/blog/is-amanita-muscaria-legal-in-the-united-states': '/blog',
+      '/guides/amanita-muscaria-explained': '/blog',
+      '/blog/what-the-pact-act-means-for-buyers': '/policies/shipping',
+      '/blog/shipping-restrictions-explained': '/policies/shipping',
+      '/blog/how-we-batch-test-every-product': '/lab-results',
+      // The cannabinoid and device articles, withdrawn with those product lines.
+      '/blog/terpenes-and-why-flavour-varies': '/blog',
+      '/blog/the-minor-cannabinoids-cbd-cbg-and-cbn': '/blog',
+      '/blog/full-spectrum-broad-spectrum-and-isolate-what-they-mean': '/blog',
+      '/blog/what-indica-sativa-and-hybrid-actually-tell-you': '/blog',
+      '/blog/live-resin-distillate-rosin-and-diamonds': '/blog',
+      '/blog/thca-and-what-heat-does-to-it': '/blog',
+      '/blog/how-a-total-thc-number-is-worked-out': '/blog',
+      '/blog/what-solventless-actually-means': '/blog',
+      '/blog/what-happens-in-heat-light-and-air': '/blog',
+      '/blog/why-potency-belongs-on-a-certificate': '/blog',
+      '/blog/spotting-counterfeit-hardware': '/blog',
+      '/blog/how-cannabinoid-figures-are-measured': '/blog',
+      '/blog/the-510-thread-explained': '/blog',
+      '/blog/disposable-or-cartridge-what-the-difference-is': '/blog',
+      '/blog/what-a-coil-does-and-why-material-matters': '/blog',
+      '/blog/what-a-blinking-light-usually-means': '/blog',
+      '/blog/charging-a-rechargeable-device-safely': '/blog',
+      '/blog/storing-a-device-heat-light-and-which-way-up': '/blog',
+      '/blog/disposing-of-hardware-and-lithium-batteries': '/blog',
+      '/blog/what-a-dual-chamber-device-is': '/blog',
+      '/blog/why-a-cartridge-clogs': '/blog',
+    }
+    return [
+      ...Object.entries(retired).map(([source, destination]) => ({ source, destination, permanent: true })),
+      ...Object.entries(renamed).map(([from, to]) => ({
+        source: `/product/${from}`,
+        destination: `/product/${to}`,
+        permanent: true,
+      })),
+      ...Object.entries(gone).map(([slug, category]) => ({
+        source: `/product/${slug}`,
+        destination: `/shop/${category}`,
+        permanent: true,
+      })),
+    ]
   },
   async headers() {
     /**

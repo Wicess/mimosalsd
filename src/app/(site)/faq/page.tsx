@@ -11,8 +11,8 @@ import { PageHeader } from '@/components/layout/page-header'
 import { PageSection } from '@/components/layout/page-section'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Frequently Asked Questions',
-  description: 'Straight answers on how ordering and payment work, what ships to your state, why vapor products travel separately, and what our lab panels actually cover.',
+  title: 'Mimosa Hostilis Root Bark FAQ, Ordering and Shipping',
+  description: 'Answers on buying Mimosa hostilis root bark: which cut to choose, how ordering and payment work, where we ship from, and what the bark is sold for.',
   path: url.faq(),
 })
 

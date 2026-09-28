@@ -81,9 +81,9 @@ const inter = Inter({
   the top of every search about the material, so the title is that phrase, then the
   line the business is built around. Google appends the site name itself.
 */
-const SITE_TITLE = 'Mimosa Hostilis Root Bark for Sale and Disposable Vapes'
+const SITE_TITLE = 'Mimosa Hostilis Root Bark for Sale, for Natural Dyeing'
 const SITE_DESCRIPTION = clampDescription(
-  `Mimosa hostilis root bark for sale in the USA, powdered, shredded or stripped, as raw material for natural dyeing and craft. Disposable vapes too, ${BRAND.minimumAge} and over.`,
+  `Mimosa hostilis root bark for natural dyeing and soap making, powder, shredded and whole, sold by the pound. Trading since ${BRAND.track.foundedYear}, shipped from California.`,
 )
 
 export const metadata: Metadata = {

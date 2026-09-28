@@ -4,7 +4,7 @@
  *
  *   npm run urls                 rewrite URL.md from the current data
  *   npm run urls -- --check      also request each URL and report anything not 200
- *   npm run urls -- --base https://www.mimosalsd.com   check against another host
+ *   npm run urls -- --base https://mimosalsd.com   check against another host
  *   npm run urls -- --dry        print the summary, write nothing
  *
  * The file exists because Google has no IndexNow equivalent: new pages go in by hand
@@ -27,7 +27,7 @@ function baseUrl(args: string[]): string {
   const i = args.indexOf('--base')
   const explicit = i >= 0 ? args[i + 1] : undefined
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL
-  const base = explicit ?? (fromEnv && !fromEnv.includes('localhost') ? fromEnv : `https://www.${BRAND.domain}`)
+  const base = explicit ?? (fromEnv && !fromEnv.includes('localhost') ? fromEnv : `https://${BRAND.domain}`)
   return base.replace(/\/$/, '')
 }
 

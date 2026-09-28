@@ -34,7 +34,7 @@ Development** unless noted. The values are in `.env`; the names must match exact
 |---|---|---|
 | `DATABASE_URL` | Neon **pooled** connection | Used by the app at runtime and during the build |
 | `DIRECT_URL` | Neon **direct** connection | Migrations and backups only |
-| `NEXT_PUBLIC_SITE_URL` | `https://www.mimosalsd.com` | Builds every canonical, sitemap entry and share link. Must match the host that actually serves the site, including the `www` decision |
+| `NEXT_PUBLIC_SITE_URL` | `https://mimosalsd.com` | Builds every canonical, sitemap entry and share link. Must match the host that actually serves the site: the bare domain, no `www` (changed 2026-09-28) |
 | `ADMIN_SESSION_SECRET` | Signs the admin cookie and the visit collector token | Already generated; 40+ random characters |
 | `ADMIN_PASSWORD_HASH` | The admin login | Already generated from the chosen password. Regenerate with `npm run admin:hash` |
 | `R2_ACCOUNT_ID` | Cloudflare account | |
@@ -64,14 +64,14 @@ Development** unless noted. The values are in `.env`; the names must match exact
 ## 3. Add the domain
 
 1. Vercel → Settings → **Domains** → add `mimosalsd.com` **and** `www.mimosalsd.com`.
-2. Set the redirect so **apex → www** (`mimosalsd.com` redirects to `www.mimosalsd.com`).
-   The canonical tags, the sitemap and `URL.md` are all written for `www`, so the two must
+2. Set the redirect so **www → apex** (`www.mimosalsd.com` redirects to `mimosalsd.com`).
+   The canonical tags, the sitemap and `URL.md` are all written for the bare domain, so the two must
    agree. If you would rather serve the apex, change `NEXT_PUBLIC_SITE_URL` to
    `https://mimosalsd.com`, reverse the redirect, and regenerate `URL.md`.
 3. At the registrar, point DNS at the records Vercel shows — usually an `A` record on the
    apex and a `CNAME` on `www`.
-4. Wait for the certificate to issue, then confirm `https://mimosalsd.com` lands on
-   `https://www.mimosalsd.com` with a **301**, not a 307 or a chain.
+4. Wait for the certificate to issue, then confirm `https://www.mimosalsd.com` lands on
+   `https://mimosalsd.com` with a **301 or 308**, not a chain.
 
 ---
 
@@ -80,7 +80,7 @@ Development** unless noted. The values are in `.env`; the names must match exact
 | URL | What it should show |
 |---|---|
 | `/` | Home page, no console errors, images loading from the R2 host |
-| `/robots.txt` | AI crawlers named and allowed; sitemap line pointing at `www` |
+| `/robots.txt` | AI crawlers named and allowed; sitemap line pointing at the bare domain |
 | `/sitemap.xml` | 187 URLs; spot-check that a `/blog/...` article is present |
 | `/indexnow-key.txt` | The key, as plain text |
 | `/llms.txt` | Business summary and key links |
@@ -165,7 +165,7 @@ single outcome this project cannot afford, and it is much harder to undo than to
 
 When the copy is this company's own:
 
-1. **Search Console** — add `https://www.mimosalsd.com` as a property, verify by DNS,
+1. **Search Console** — add `https://mimosalsd.com` as a property, verify by DNS,
    submit `/sitemap.xml`.
 2. **Bing Webmaster Tools** — add the property, verify, submit `/sitemap.xml`.
 3. **IndexNow** — `npm run indexnow -- --all` once, after launch. Then leave it alone:

@@ -18,8 +18,17 @@ import { absoluteUrl, url } from '@/lib/seo/routes'
 import { breadcrumbList, jsonLdScript } from '@/lib/seo/structured-data'
 import { pageMetadata } from '@/lib/seo/meta'
 
+/*
+  Every published article, not only the authored ones (2026-09-28). The database
+  articles were left to render on first request, so their <title> and description
+  streamed into the body instead of <head>, and each first visit waited on a render.
+  Prerendering them all puts the metadata in <head> for every client and serves
+  every article from the CDN. The list is read at build; a piece published later
+  still renders on demand and is cached from then on.
+*/
 export async function generateStaticParams() {
-  return publishedPosts().map((p) => ({ slug: p.slug }))
+  const all = await listAllPosts().catch(() => publishedPosts())
+  return all.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image, { getImageProps } from 'next/image'
+import { preload } from 'react-dom'
 import { listAllPosts } from '@/lib/content/merged-content'
 import { LegalityChecker } from '@/components/marketing/legality-checker'
 import { ProductCard } from '@/components/commerce/product-card'
@@ -156,6 +157,19 @@ const BLANK_PIXEL =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
 export default async function Home() {
+  /*
+    The phone hero's photograph is the largest paint on a phone, and it sits inside
+    a <picture> deep in the body, so the browser found it late (about 1.2s after the
+    first byte on a mobile trace). A preload in <head>, scoped to phone widths so a
+    desktop never fetches it, starts it with the stylesheet.
+  */
+  preload(STAGE.src, {
+    as: 'image',
+    fetchPriority: 'high',
+    media: '(width < 64rem)',
+    ...(STAGE.srcSet ? { imageSrcSet: STAGE.srcSet } : {}),
+    ...(STAGE.sizes ? { imageSizes: STAGE.sizes } : {}),
+  })
   const bark = (await listMergedProducts({ categorySlug: 'mimosa-hostilis', sort: 'featured' })).slice(0, 8)
   const allPosts = await listAllPosts()
   const articles = STARTER_ARTICLES.flatMap((slug) => allPosts.filter((p) => p.slug === slug))
@@ -264,7 +278,7 @@ export default async function Home() {
               alt={BRAND.name}
               width={1180}
               height={329}
-              priority
+              loading="eager"
               sizes="(max-width: 640px) 240px, 260px"
               /*
                 Centred on phones, left-aligned from `lg`.

@@ -72,7 +72,8 @@ export function ProductGallery({
             alt={i === active ? (alts?.[i] ?? alt) : ''}
             aria-hidden={i !== active}
             fill
-            priority={i === 0}
+            preload={i === 0}
+            fetchPriority={i === 0 ? 'high' : 'auto'}
             sizes="(max-width: 1023px) 100vw, (max-width: 1279px) 40vw, 520px"
             className={cn(
               'object-cover transition-opacity duration-300 ease-[var(--ease-standard)] motion-reduce:transition-none',

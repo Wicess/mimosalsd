@@ -93,7 +93,7 @@ export function SiteHeader() {
             alt={BRAND.name}
             width={1180}
             height={329}
-            priority
+            loading="eager"
             sizes="112px"
             className="h-8 w-auto sm:h-9"
           />

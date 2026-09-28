@@ -200,7 +200,8 @@ async function PostBody({ params }: { params: Promise<{ slug: string }> }) {
           src={hero.src}
           alt={hero.alt}
           fill
-          priority
+          preload
+          fetchPriority="high"
           sizes="(max-width: 768px) 100vw, 896px"
           className="object-cover"
         />

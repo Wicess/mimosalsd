@@ -516,9 +516,15 @@ p {
    8px, not 24px. The point is to draw the eye left-to-right across four claims,
    not to make the reader watch furniture arrive.
    ───────────────────────────────────────────────────────────────────────────── */
+/*
+  Motion only, no fade (2026-09-28). Starting from opacity 0 kept every item
+  invisible until its turn, and a browser does not count an invisible element as
+  painted: the page scored a 5 to 7 second Speed Index on mobile while its content
+  had long arrived. The slide still draws the eye; the content is readable from
+  the first frame.
+*/
 @keyframes rise {
   from {
-    opacity: 0;
     transform: translateY(8px);
   }
 }
@@ -1010,9 +1016,9 @@ p {
    opacity, waits its turn, then snaps to transparent to begin — a visible flash on
    each element except the first.
    ───────────────────────────────────────────────────────────────────────────── */
+/* Motion only, for the same reason as `rise`: the headline is readable from the first frame. */
 @keyframes hero-in {
   from {
-    opacity: 0;
     transform: translateY(16px);
   }
 }

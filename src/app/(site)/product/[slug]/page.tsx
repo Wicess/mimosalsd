@@ -57,6 +57,11 @@ export async function generateMetadata({
       title: product.seo?.metaTitle ?? product.name,
       description: product.seo?.metaDescription ?? product.shortDescription,
       path: url.product(slug),
+      // The product's own card, not the site card: its photo, name and price per pound.
+      image: {
+        url: absoluteUrl(`${url.product(slug)}/share-image`),
+        alt: `${product.name}: product photo, name and price per pound`,
+      },
     }),
     ...(product.seo?.keywords.length ? { keywords: [...product.seo.keywords] } : {}),
   }

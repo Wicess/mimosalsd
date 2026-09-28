@@ -92,7 +92,8 @@ export function ProductCard({
   return (
     <article
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-2xl bg-surface',
+        'group relative flex flex-col overflow-hidden bg-surface',
+        compact ? 'rounded-xl' : 'rounded-2xl',
         // Borderless, like the reference: the colour panel defines the card. A ring
         // rather than a border so it sits inside the radius and never doubles up
         // against the panel's own edge.
@@ -149,7 +150,7 @@ export function ProductCard({
           photo. `--product-field` is semantic: moss-100 in light, moss-900 in dark,
           so the panel never sits as a pale mint slab on a dark page.
         */}
-        <div className="relative m-2 overflow-hidden rounded-xl bg-product-field">
+        <div className={cn('relative overflow-hidden rounded-xl bg-product-field', compact ? 'm-1.5' : 'm-2')}>
           {/*
             Fixed aspect ratio reserves the box before the image loads. Our CLS budget
             for the whole page is 0.1; a grid of unreserved images blows it alone. The
@@ -158,7 +159,8 @@ export function ProductCard({
           {/* Even inset all round. It was `mb-0` so the band could close the panel. */}
           <div
             className={cn(
-              'relative m-2 overflow-hidden rounded-lg',
+              'relative overflow-hidden rounded-lg',
+              compact ? 'm-1.5' : 'm-2',
               // 3:2 rather than 4:3 — the same photograph, roughly 40px less card.
               compact ? 'aspect-[3/2]' : 'aspect-[4/3]',
             )}
@@ -184,7 +186,7 @@ export function ProductCard({
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col px-3 pb-3 md:px-4 md:pb-4">
+        <div className={cn('flex flex-1 flex-col px-3 pb-3', !compact && 'md:px-4 md:pb-4')}>
           {/*
             Name left, size range right — the reference puts its call to action here,
             but this card carries a real button below, and two competing actions on
@@ -195,7 +197,7 @@ export function ProductCard({
             to match. The full name is on the product page, one click away.
           */}
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="truncate font-product text-sm leading-snug font-medium text-foreground md:text-base">
+            <h3 className={cn('truncate font-product text-sm leading-snug font-medium text-foreground', !compact && 'md:text-base')}>
               {product.name}
             </h3>
             {product.rating && (
@@ -254,8 +256,8 @@ export function ProductCard({
             `mt-auto` pins it to the bottom, so the price line is level across every
             card in a row whatever else each one carries.
           */}
-          <div className="mt-auto flex items-baseline gap-2 pt-3">
-            <span className="tabular font-product text-base font-semibold text-foreground md:text-lg">
+          <div className={cn('mt-auto flex items-baseline gap-2', compact ? 'pt-2' : 'pt-3')}>
+            <span className={cn('tabular font-product text-base font-semibold text-foreground', !compact && 'md:text-lg')}>
               {formatCents(shown ? shown.priceCents : price.cents)}
             </span>
             <span className="text-sm text-foreground-subtle">{shown ? shown.label : 'each'}</span>

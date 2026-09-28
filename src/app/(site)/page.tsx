@@ -156,7 +156,7 @@ export default async function Home() {
   // A mix: one from each category in turn, so the row shows the whole shop rather than its largest aisle.
   const featured = mixByCategory(await listMergedProducts({ sort: 'featured' }), 5)
   // The disposables band's own row: the business leads with them (owner, 2026-09-15).
-  const disposables = (await listMergedProducts({ categorySlug: 'disposable-vapes', sort: 'featured' })).slice(0, 4)
+  const disposables = (await listMergedProducts({ categorySlug: 'disposable-vapes', sort: 'featured' })).slice(0, 8)
   const guides = publishedGuides().slice(0, 3)
   const posts = publishedPosts().slice(0, 2)
 
@@ -523,9 +523,25 @@ export default async function Home() {
             <div className="lg:col-span-7">
               {disposables.length > 0 ? (
                 <>
-                  <div className="stagger grid grid-cols-2 gap-3 sm:gap-5">
-                    {disposables.map((p) => (
-                      <ProductCard key={p.slug} product={p} compact />
+                  {/*
+                    The column count climbs with the width, and the number of cards
+                    climbs with it, so the products stay level with the reading column
+                    beside them instead of running a third of a screen past it.
+
+                    Four cards in two columns, six in three, eight in four — every
+                    configuration is two complete rows. Cards beyond the current row
+                    count are hidden rather than sliced away, because the slice would
+                    have to know the viewport and a ragged final row is what makes a
+                    product grid look unfinished.
+                  */}
+                  <div className="stagger grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
+                    {disposables.map((p, i) => (
+                      <ProductCard
+                        key={p.slug}
+                        product={p}
+                        compact
+                        className={i >= 6 ? 'hidden 2xl:flex' : i >= 4 ? 'hidden xl:flex' : ''}
+                      />
                     ))}
                   </div>
                   <a

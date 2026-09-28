@@ -123,7 +123,7 @@ describe('the proxy counts only pages it actually serves', () => {
   })
 
   it('does not count a 404', async () => {
-    expect((await run('/legality/atlantis')).status).toBe(404)
+    expect((await run('/where-we-ship/atlantis')).status).toBe(404)
     expect(bufferedCount()).toBe(0)
     expect(stored).toHaveLength(0)
   })

@@ -220,6 +220,7 @@ export function getStateLegality(stateCode: UsJurisdictionCode): StateLegality {
     orderingGuidance,
     cities.delivery,
     ...dyeing.paragraphs.map((p) => `${p.heading} ${p.text}`),
+    ...dyeing.heritage.map((h) => h.text),
     ...dyeing.events.map((e) => `${e.name}, ${e.place}${e.month ? `, usually in ${e.month}` : ''}`),
   ].join(' ')
   const wordCount = countWords(substantiveText)

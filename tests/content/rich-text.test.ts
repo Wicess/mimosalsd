@@ -16,7 +16,7 @@ describe('link targets an article body may render', () => {
     '/guides/what-is-mimosa-hostilis-root-bark',
     '/policies/shipping',
     '/lab-results',
-    '/legality/texas',
+    '/where-we-ship/texas',
     '/faq',
     '/bulk',
     '/contact',

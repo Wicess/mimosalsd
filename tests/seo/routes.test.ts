@@ -64,9 +64,9 @@ describe('url builders', () => {
     expect(url.product('mhrb-powder')).toBe('/product/mhrb-powder')
     expect(url.locationsHub()).toBe('/locations')
     expect(url.location('austin-tx')).toBe('/locations/austin-tx')
-    expect(url.legalityHub()).toBe('/legality')
+    expect(url.legalityHub()).toBe('/where-we-ship')
     expect(url.shopNearMe()).toBe('/shop-near-me')
-    expect(url.legalityState('louisiana')).toBe('/legality/louisiana')
+    expect(url.legalityState('louisiana')).toBe('/where-we-ship/louisiana')
     expect(url.labResults()).toBe('/lab-results')
     expect(url.blog()).toBe('/blog')
     expect(url.blogPost('what-is-muscimol')).toBe('/blog/what-is-muscimol')
@@ -107,7 +107,7 @@ describe('absoluteUrl', () => {
 
   it('resolves against the configured site origin', () => {
     vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://example.com')
-    expect(absoluteUrl('/legality/texas')).toBe('https://example.com/legality/texas')
+    expect(absoluteUrl('/where-we-ship/texas')).toBe('https://example.com/where-we-ship/texas')
   })
 
   it('falls back to localhost when unset', () => {
@@ -119,7 +119,7 @@ describe('absoluteUrl', () => {
 describe('index policy', () => {
   it('indexes a clean canonical path', () => {
     expect(indexPolicyFor('/shop/amanita')).toBe('INDEX')
-    expect(indexPolicyFor('/legality/louisiana')).toBe('INDEX')
+    expect(indexPolicyFor('/where-we-ship/louisiana')).toBe('INDEX')
   })
 
   it('keeps faceted URLs crawlable but out of the index', () => {

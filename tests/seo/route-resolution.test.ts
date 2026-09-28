@@ -126,7 +126,7 @@ describe('every declared route has a page behind it', () => {
 describe('the resolver itself', () => {
   it('matches a concrete path served by a dynamic segment', () => {
     expect(resolvesToPage('/policies/shipping')).toBe(true)
-    expect(resolvesToPage('/legality/texas')).toBe(true)
+    expect(resolvesToPage('/where-we-ship/texas')).toBe(true)
   })
 
   it('sees through route groups, which contribute no URL segment', () => {

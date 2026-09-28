@@ -21,7 +21,7 @@ const FIXED: Record<string, string> = {
   '/account/chat': 'Profile · Chat',
   '/account/orders': 'Profile · Orders',
   '/account/subscription': 'Profile · Subscription',
-  '/legality': 'Legality by state',
+  '/where-we-ship': 'Where we ship',
   '/lab-results': 'Lab results',
   '/locations': 'Locations',
   '/shop-near-me': 'Shop near me',

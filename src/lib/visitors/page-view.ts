@@ -95,7 +95,7 @@ export const PAGE_ROOTS: ReadonlySet<string> = new Set([
   'guides',
   'lab-results',
   'legal-disclaimer',
-  'legality',
+  'where-we-ship',
   'locations',
   'offline',
   'order',

@@ -113,7 +113,7 @@ async function Overview() {
             ['/admin/messages', 'Messages'],
             ['/admin/visitors', 'Visitors'],
             ['/lab-results', 'Lab results (public)'],
-            ['/legality', 'Legality hub (public)'],
+            ['/where-we-ship', 'Where we ship (public)'],
           ].map(([href, label]) => (
             <a
               key={href}

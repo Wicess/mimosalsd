@@ -36,14 +36,14 @@ describe('submission guards', () => {
 
   it('refuses to submit when no key is configured', async () => {
     vi.stubEnv('INDEXNOW_KEY', '')
-    const result = await submitUrl('/legality/texas')
+    const result = await submitUrl('/where-we-ship/texas')
     expect(result.ok).toBe(false)
     if (!result.ok) expect(result.reason).toMatch(/not set/i)
   })
 
   it('refuses a malformed key rather than letting Bing 422 it', async () => {
     vi.stubEnv('INDEXNOW_KEY', 'not-a-hex-key')
-    const result = await submitUrl('/legality/texas')
+    const result = await submitUrl('/where-we-ship/texas')
     expect(result.ok).toBe(false)
     if (!result.ok) expect(result.reason).toMatch(/hex/i)
   })
@@ -58,7 +58,7 @@ describe('submission guards', () => {
     const fetchSpy = vi.fn()
     vi.stubGlobal('fetch', fetchSpy)
 
-    const result = await submitUrl('/legality/texas')
+    const result = await submitUrl('/where-we-ship/texas')
     expect(result.ok).toBe(false)
     expect(fetchSpy, 'must not reach the network').not.toHaveBeenCalled()
   })
@@ -107,7 +107,7 @@ describe('a successful submission', () => {
       return new Response(null, { status: 200 })
     })
 
-    const result = await submitUrl('/legality/texas')
+    const result = await submitUrl('/where-we-ship/texas')
 
     expect(result.ok).toBe(true)
     expect(sent.endpoint).toBe('https://api.indexnow.org/IndexNow')
@@ -116,7 +116,7 @@ describe('a successful submission', () => {
     expect(body.key).toBe('b'.repeat(32))
     // The key file must be where Bing will look for it, or the submission 403s.
     expect(body.keyLocation).toBe('https://example.com/indexnow-key.txt')
-    expect(body.urlList).toEqual(['https://example.com/legality/texas'])
+    expect(body.urlList).toEqual(['https://example.com/where-we-ship/texas'])
   })
 
   it('translates Bing status codes into something actionable', async () => {

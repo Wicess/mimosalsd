@@ -136,6 +136,12 @@ const nextConfig: NextConfig = {
       '/blog/why-a-cartridge-clogs': '/blog',
     }
     return [
+      /*
+        The state pages moved from /legality to /where-we-ship (owner, 2026-09-28):
+        they are about where we deliver and what a buyer there can order, not law.
+      */
+      { source: '/legality', destination: '/where-we-ship', permanent: true },
+      { source: '/legality/:state', destination: '/where-we-ship/:state', permanent: true },
       ...Object.entries(retired).map(([source, destination]) => ({ source, destination, permanent: true })),
       ...Object.entries(renamed).map(([from, to]) => ({
         source: `/product/${from}`,

@@ -161,7 +161,7 @@ export function routeExists(pathname: string): boolean {
     const slug = segment(pathname, 1)
     // Only PUBLISHED locations resolve. An unpublished one is not a real place yet.
     exists = Boolean(slug && publishedLocations().some((l) => l.slug === slug))
-  } else if (pathname.startsWith('/legality/')) {
+  } else if (pathname.startsWith('/where-we-ship/')) {
     const slug = segment(pathname, 1)
     exists = Boolean(slug && getJurisdictionBySlug(slug))
   } else if (pathname.startsWith('/product/')) {

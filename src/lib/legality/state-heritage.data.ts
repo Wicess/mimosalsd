@@ -1,0 +1,621 @@
+import type { UsJurisdictionCode } from '@/lib/compliance/types'
+
+/**
+ * Each state's fiber, textile and natural-dye heritage: sourced facts for the
+ * per-state delivery pages (owner, 2026-09-28: "do intense research on each location").
+ *
+ * Copied from scripts/content/state-heritage-2026-09-28.json. Every fact was checked
+ * against the text of its source page; figures the sources disagreed on were left
+ * out rather than averaged. Minnesota's bloodroot fact was dropped: its source warns
+ * the root is toxic to handle, and a dye page should not send readers to it unwarned.
+ */
+export interface HeritageFact {
+  readonly text: string
+  readonly sourceUrl: string
+  readonly sourceName: string
+}
+
+export const STATE_HERITAGE: Partial<Record<UsJurisdictionCode, readonly HeritageFact[]>> = {
+  "AK": [
+    {
+      "text": "Chilkat weaving, unique to Northwest Coast cultures, is one of the most complex weaving techniques in the world. Traditionally woven from mountain goat wool and yellow cedar bark, a single robe can take a skilled weaver a year or longer.",
+      "sourceUrl": "https://sealaskaheritage.org/multi-year-weaving-apprenticeship-to-culminate-in-intensive-dancing-of-the-robes-at-shi/",
+      "sourceName": "Sealaska Heritage Institute"
+    },
+    {
+      "text": "Qiviut is the soft, downy underwool of the muskox, shed every spring over about two weeks. At the University of Alaska Fairbanks Large Animal Research Station it is combed from farmed muskoxen and offered as yarn, including silk and merino blends.",
+      "sourceUrl": "https://www.uaf.edu/lars/qiviut.php",
+      "sourceName": "University of Alaska Fairbanks, Large Animal Research Station"
+    }
+  ],
+  "AL": [
+    {
+      "text": "Quiltmaking in Gee's Bend, in Alabama's rural Black Belt, dates back to the nineteenth century. Many Gee's Bend quilts are improvisational, known locally as \"my way\" quilts, and reusing old materials remains central to the tradition.",
+      "sourceUrl": "https://www.soulsgrowndeep.org/gees-bend-quiltmakers",
+      "sourceName": "Souls Grown Deep Foundation"
+    },
+    {
+      "text": "The Freedom Quilting Bee, a quilting cooperative of African American women, was organized on March 26, 1966, in Rehoboth, Wilcox County. Its quilts were bought by Bloomingdale's and Saks Fifth Avenue, and it filled sewing contracts for Sears.",
+      "sourceUrl": "https://encyclopediaofalabama.org/article/freedom-quilting-bee/",
+      "sourceName": "Encyclopedia of Alabama"
+    }
+  ],
+  "AR": [
+    {
+      "text": "At Ozark Folk Center State Park in Mountain View, more than 20 working artisans demonstrate, create and sell handmade work, with crafts including weaving, quilting and yarn spinning alongside a Heritage Herb Garden.",
+      "sourceUrl": "https://www.arkansas.com/state-parks/explore/parks/ozark-folk-center-state-park",
+      "sourceName": "Arkansas State Parks"
+    },
+    {
+      "text": "The Ozark Arts and Crafts Fair, better known as the War Eagle Fair, began in 1954 and grew out of an exhibition hosted by a local handweavers guild. It takes place on historic War Eagle Mills Farm east of Rogers.",
+      "sourceUrl": "https://encyclopediaofarkansas.net/entries/ozark-arts-and-crafts-fair-2123/",
+      "sourceName": "Encyclopedia of Arkansas"
+    }
+  ],
+  "AZ": [
+    {
+      "text": "Hubbell Trading Post in Ganado, trading since 1878, is the oldest operating trading post on the Navajo Nation. Its Sheep, Wool and Weaving workshops, begun in 2000, cover Navajo-Churro sheep plus hands-on dyeing, spinning and weaving.",
+      "sourceUrl": "https://www.nps.gov/hutr/planyourvisit/sheep-is-life.htm",
+      "sourceName": "National Park Service, Hubbell Trading Post National Historic Site"
+    },
+    {
+      "text": "The Heard Museum holds historic and contemporary Diné (Navajo) and Pueblo textiles. Regional Navajo weaving styles represented in its collection include Two Grey Hills, Ganado, Crystal, Chinle, Teec Nos Pos, Wide Ruins and Burntwater.",
+      "sourceUrl": "https://heard.org/collection/textiles/",
+      "sourceName": "Heard Museum"
+    }
+  ],
+  "CA": [
+    {
+      "text": "The Fibershed Learning Center, founded in 2020 outside Point Reyes Station on the 1,350-acre Black Mountain Ranch, includes a one-third-acre dye garden and a natural dye pavilion, and hosts workshops on natural dyes and fibers.",
+      "sourceUrl": "https://fibershed.org/programs/education-advocacy/learningcenter/",
+      "sourceName": "Fibershed"
+    },
+    {
+      "text": "Pomo baskets in the Santa Rosa Junior College Multicultural Museum collection combine willow foundations with patterns in dyed bulrush and sedge grass root, using techniques such as three-rod coiling and lattice twining.",
+      "sourceUrl": "https://museum.santarosa.edu/california",
+      "sourceName": "Santa Rosa Junior College Multicultural Museum"
+    }
+  ],
+  "CO": [
+    {
+      "text": "San Luis Valley weaver Eppie Archuleta, a 1985 National Heritage Fellow, wove Hispanic designs including Rio Grande, Chimayó and Vallero Star. She gathered plants for her dyes, mostly in New Mexico, saying those plants have better colors.",
+      "sourceUrl": "https://www.arts.gov/honors/heritage/eppie-archuleta",
+      "sourceName": "National Endowment for the Arts"
+    },
+    {
+      "text": "The Avenir Museum of Design and Merchandising at Colorado State University in Fort Collins holds over 20,000 artifacts, including Central Asian ikat, over 300 Japanese kimono, Pre-Columbian Peruvian textiles and more than 1,500 pieces of historic lace.",
+      "sourceUrl": "https://www.chhs.colostate.edu/avenir/avenir-collection/",
+      "sourceName": "Colorado State University, Avenir Museum of Design and Merchandising"
+    }
+  ],
+  "CT": [
+    {
+      "text": "Cheney Brothers of Manchester was the first America-based silk-producing company. Its 175-acre mill village is now a National Historic Landmark, and its 1914 dye house has been converted into 57 affordable housing units.",
+      "sourceUrl": "https://www.nps.gov/articles/cheney-mill-dye-house-ct.htm",
+      "sourceName": "National Park Service"
+    },
+    {
+      "text": "By 1800, three quarters of Mansfield residents raised silkworms at home. The Hanks Silk Mill, built there in 1810 by Horace and Rodney Hanks, is described by the local historical society as the first in America to use water power.",
+      "sourceUrl": "https://mansfieldct-history.org/history-of-silk-production/",
+      "sourceName": "Mansfield Historical Society"
+    }
+  ],
+  "DC": [
+    {
+      "text": "George Hewitt Myers founded the Textile Museum in Washington in 1925 with 275 rugs and sixty textiles. Since 2015 its collections have been shown at the George Washington University Museum and the Textile Museum.",
+      "sourceUrl": "https://www.doaks.org/resources/cultural-philanthropy/textile-museum",
+      "sourceName": "Dumbarton Oaks"
+    }
+  ],
+  "DE": [
+    {
+      "text": "The visitor center at Hagley Museum and Library in Delaware was built in 1814 as a cotton spinning mill, part of the early industrial history of the Brandywine the museum interprets.",
+      "sourceUrl": "https://www.hagley.org/visitor-center",
+      "sourceName": "Hagley Museum and Library"
+    },
+    {
+      "text": "The Delaware Quilt Documentation Project, a collaboration of the University of Delaware and the state Division of Historical and Cultural Affairs, records quilts in Delaware made before World War II and the quiltmakers who created them.",
+      "sourceUrl": "https://sites.udel.edu/mayhew-class/delaware-quilt-documentation-project-2/all-quilt-harvest-days/wc1-winterthur-museum-collection/",
+      "sourceName": "University of Delaware"
+    }
+  ],
+  "FL": [
+    {
+      "text": "Seminole patchwork emerged around the 1910s, after sewing machines made sewing easier, and was first documented in photographs around World War I. By the 1940s more colors were introduced, and the tradition is still passed down within families.",
+      "sourceUrl": "https://floridaseminoletourism.com/seminole-patchwork/",
+      "sourceName": "Florida Seminole Tourism"
+    },
+    {
+      "text": "In the 1760s and 1770s, indigo, which produced a blue dye, was the main crop raised in British East Florida for export. It required intensive labor to grow and process.",
+      "sourceUrl": "https://www.museumoffloridahistory.com/explore/exhibits/permanent-exhibits/la-florida/forever-changed-phase-2/the-british-period-a-shifting-economy-1763-1783/",
+      "sourceName": "Museum of Florida History"
+    }
+  ],
+  "GA": [
+    {
+      "text": "Georgia's textile industry grew from early mills such as the Georgia Factory, opened in Athens in 1829. By 1900 the U.S. Census counted ninety-eight textile mills operating in the state.",
+      "sourceUrl": "https://www.georgiaencyclopedia.org/articles/business-economy/textile-industry/",
+      "sourceName": "New Georgia Encyclopedia"
+    },
+    {
+      "text": "Catherine Evans (later Catherine Evans Whitener) revived hand tufting near Dalton in the 1890s. Dalton became known as the tufted bedspread capital of the world, and by the early 1960s the carpet capital of the world.",
+      "sourceUrl": "https://www.georgiaencyclopedia.org/articles/arts-culture/chenille-bedspreads/",
+      "sourceName": "New Georgia Encyclopedia"
+    }
+  ],
+  "HI": [
+    {
+      "text": "Kapa, Hawaiian barkcloth, is made from the stripped bark of cultivated paper mulberry. Early Hawaiians elevated the Polynesian craft by adding fermentation, watermarks and bold natural pigments, and native plants are still used to dye it.",
+      "sourceUrl": "https://www.nps.gov/articles/000/home-kapa-beating.htm",
+      "sourceName": "U.S. National Park Service"
+    },
+    {
+      "text": "Hawaiian dye plants include ʻōlena, whose younger roots give pale yellow and older roots a golden yellow-orange, and the endemic maʻo, whose leaves were used for light green or red-brown dye and flowers for yellow.",
+      "sourceUrl": "https://www.manoaheritagecenter.org/2020/05/kaaipu-kakou-9/",
+      "sourceName": "Mānoa Heritage Center"
+    }
+  ],
+  "IA": [
+    {
+      "text": "The Amana Woolen Mill in the Amana Colonies describes itself as Iowa's only remaining textile mill. It still produces woven throws and blankets in the original weaving building where the business began.",
+      "sourceUrl": "https://www.amanawoolenmill.com/",
+      "sourceName": "Amana Woolen Mill"
+    },
+    {
+      "text": "Iowa held 161,000 sheep and lambs on January 1, 2026, and its 130,000 shorn sheep produced 696,000 pounds of wool in 2025, according to the USDA's annual Sheep and Goats report.",
+      "sourceUrl": "https://esmis.nal.usda.gov/sites/default/release-files/795751/shep0126.pdf",
+      "sourceName": "USDA National Agricultural Statistics Service, Sheep and Goats (January 30, 2026)"
+    }
+  ],
+  "ID": [
+    {
+      "text": "Nez Perce (Nimiipuu) twined root bags were made to store roots gathered through the season. Earlier bags used dogbane twining as part of the design, overlaid with cornhusk false embroidery for contrast.",
+      "sourceUrl": "https://artsandculture.google.com/story/nez-perce-tribe-wetxuuw%C3%ADitin-collection-nez-perce-national-historical-park/2wXRLEbuWdClPg?hl=en",
+      "sourceName": "Nez Perce National Historical Park (Google Arts & Culture)"
+    },
+    {
+      "text": "The Trailing of the Sheep Festival in Idaho's Wood River Valley celebrates the history and cultures of sheepherding in Idaho and the West. Its Wool Fest offers classes in felting, spinning and knitting.",
+      "sourceUrl": "https://trailingofthesheep.org/",
+      "sourceName": "Trailing of the Sheep Festival"
+    }
+  ],
+  "IL": [
+    {
+      "text": "Bishop Hill, founded in 1846 by Swedish immigrants, produced linen as a colony. At the height of its linen production in 1850, it created 28,322 yards of linen and 3,237 yards of mats.",
+      "sourceUrl": "https://www.bishophillil.gov/post/history-of-bishop-hill-illinois",
+      "sourceName": "Village of Bishop Hill"
+    },
+    {
+      "text": "Black walnut is a native tree prevalent throughout central Illinois, and University of Illinois Extension notes that its hulls contain a powerful dye, forming a green to dark brown or black coating.",
+      "sourceUrl": "https://extension.illinois.edu/blogs/garden-scoop/2018-08-23-black-walnut",
+      "sourceName": "University of Illinois Extension"
+    }
+  ],
+  "IN": [
+    {
+      "text": "In 2024 the Indiana State Museum's exhibition Woven Together showed more than 30 Jacquard coverlets by Indiana weavers, drawn from the collection of John Simmermaker of Pulaski County.",
+      "sourceUrl": "https://www.indianamuseum.org/experiences/woven-together/",
+      "sourceName": "Indiana State Museum and Historic Sites"
+    },
+    {
+      "text": "The Jacquard loom was first recorded in Indiana in 1838. Before then, Indiana coverlets were made in overshot weave, overwhelmingly by women weaving at home, often combining designs with natural dyes.",
+      "sourceUrl": "https://www.in.gov/history/files/IHBDonohoHoosierHandspun.pdf",
+      "sourceName": "Indiana Historical Bureau (Kathleen Donoho, Ball State University honors thesis)"
+    }
+  ],
+  "KS": [
+    {
+      "text": "Kansas State University's Historic Costume and Textile Museum in Justin Hall holds over 15,000 items, including American quilts, Chinese textiles and clothing and textiles from Midwesterners. The collection began at the start of the 20th century.",
+      "sourceUrl": "https://www.hhs.k-state.edu/hctm/about/",
+      "sourceName": "Kansas State University, Historic Costume and Textile Museum"
+    },
+    {
+      "text": "Early Great Plains settlers planted osage orange as hedgerows. The Osage people used its wood for dye and bows, and osage orange wood extractives are still used in dye making, according to the U.S. Forest Service.",
+      "sourceUrl": "https://research.fs.usda.gov/feis/species-reviews/macpom",
+      "sourceName": "U.S. Forest Service, Fire Effects Information System"
+    }
+  ],
+  "KY": [
+    {
+      "text": "Fireside Industries at Berea College is a craft-weaving program begun in 1893. It is still active today as the weaving unit of Berea College Student Craft.",
+      "sourceUrl": "https://ljacatc.berea.edu/pawtucket/index.php/Detail/entities/2031",
+      "sourceName": "Berea College, Hutchins Library Special Collections and Archives"
+    },
+    {
+      "text": "Overshot coverlets, called coverlids or kivers in rural Appalachia, were classically woven with indigo-dyed wool over natural linen. Coverlet making persisted longer in rural Appalachia than in many other regions.",
+      "sourceUrl": "https://libraryguides.berea.edu/LJACcoverlets",
+      "sourceName": "Berea College Hutchins Library"
+    }
+  ],
+  "LA": [
+    {
+      "text": "Acadians in Louisiana have worked with brown cotton, or coton jaune, since the mid-eighteenth century, weaving blankets, sheets and cloth for clothing. By the late eighteenth century it was an essential crop along the Acadian coast.",
+      "sourceUrl": "https://64parishes.org/acadian-brown-cotton",
+      "sourceName": "64 Parishes (Louisiana Endowment for the Humanities)"
+    },
+    {
+      "text": "In French colonial Louisiana, the primary cash crops included tobacco and indigo, and some large plantation owners along the Mississippi River replaced tobacco with the more profitable indigo.",
+      "sourceUrl": "https://64parishes.org/entry/french-colonial-louisiana",
+      "sourceName": "64 Parishes (Louisiana Endowment for the Humanities)"
+    }
+  ],
+  "MA": [
+    {
+      "text": "Cotton cloth was always the major product of Lowell's water-powered mills. The Merrimack Company specialized in calico prints and pioneered cloth printing technology, recruiting skilled printers from England in its early years.",
+      "sourceUrl": "https://www.nps.gov/articles/lowell-handbook-products-of-the-mills.htm",
+      "sourceName": "National Park Service, Lowell National Historical Park"
+    },
+    {
+      "text": "Old Sturbridge Village, a living museum of 1830s rural New England, holds Wool Days, where visitors learn how the region's farmers used wool from their sheep and the natural dyes such as madder root and logwood used in the 19th century.",
+      "sourceUrl": "https://www.osv.org/event/wool-days/",
+      "sourceName": "Old Sturbridge Village"
+    }
+  ],
+  "MD": [
+    {
+      "text": "Baltimore Album Quilts are a group of more than 400 album quilts made near Baltimore, Maryland, from about 1842 through 1858, with appliquéd blocks built largely of floral motifs in printed calicoes and imported chintzes.",
+      "sourceUrl": "https://www.internationalquiltmuseum.org/about/quilt-month/baltimore-album-quilt-0",
+      "sourceName": "International Quilt Museum, University of Nebraska-Lincoln"
+    },
+    {
+      "text": "False blue indigo (Baptisia australis) is native to Maryland, where it is now rare in Piedmont and Mountain region woodlands, streambanks and floodplains. Native Americans used the plant to make a blue dye.",
+      "sourceUrl": "https://extension.umd.edu/resource/false-blue-indigo",
+      "sourceName": "University of Maryland Extension"
+    }
+  ],
+  "ME": [
+    {
+      "text": "Haystack Mountain School of Crafts, founded in 1950 and based in Deer Isle, offers one- and two-week summer sessions that include fiber alongside blacksmithing, ceramics, glass, graphics, metals and wood.",
+      "sourceUrl": "https://www.haystack-mtn.org/",
+      "sourceName": "Haystack Mountain School of Crafts"
+    },
+    {
+      "text": "The Maine Museum of Innovation, Learning and Labor in Lewiston, founded in 1996 as Museum L-A, holds a Jacquard loom, original bedspreads and industrial silkscreens from the Bates Manufacturing Company among over 10,000 artifacts.",
+      "sourceUrl": "https://mainemill.org/about/about-us/",
+      "sourceName": "Maine MILL (Maine Museum of Innovation, Learning and Labor)"
+    }
+  ],
+  "MI": [
+    {
+      "text": "In 2024 the Ziibiwing Center in Mount Pleasant, run by the Saginaw Chippewa Indian Tribe of Michigan, premiered a traveling exhibition of more than 90 works of Anishinaabe porcupine quill art, including pieces from the MSU Museum.",
+      "sourceUrl": "https://msutoday.msu.edu/news/2024/11/indigenous-quill-art-exhibition-premieres-at-ziibiwing-center",
+      "sourceName": "MSU Today, Michigan State University"
+    },
+    {
+      "text": "Kelly Church of Hopkins, Michigan, an Ottawa/Pottawatomi basket maker descended from the Gun Lake and Grand Traverse Bands, was named a 2018 NEA National Heritage Fellow for carrying on the Anishinabe black ash basket tradition.",
+      "sourceUrl": "https://www.arts.gov/honors/heritage/kelly-church",
+      "sourceName": "National Endowment for the Arts"
+    }
+  ],
+  "MN": [
+    {
+      "text": "Faribault Mill has made wool and cotton goods along the Cannon River in Faribault, Minnesota, since 1865. In its mill building, built in 1892, century-old machines still run beside modern equipment.",
+      "sourceUrl": "https://www.faribaultmill.com/pages/our-story",
+      "sourceName": "Faribault Mill"
+    }
+  ],
+  "MO": [
+    {
+      "text": "Black walnut grows statewide in Missouri, is the state's official tree nut and its most valuable tree. In the past, dyes were extracted from its bark and green fruits.",
+      "sourceUrl": "https://mdc.mo.gov/discover-nature/field-guide/black-walnut",
+      "sourceName": "Missouri Department of Conservation"
+    },
+    {
+      "text": "For Missouri's 2021 bicentennial, a Missouri Bicentennial Quilt was created representing all 114 of the state's counties and the City of St. Louis, and it traveled across the state as a showcase of Missouri culture.",
+      "sourceUrl": "https://shsmo.org/on-demand/missouri-2021-presents/patchwork-of-quilts",
+      "sourceName": "State Historical Society of Missouri"
+    }
+  ],
+  "MS": [
+    {
+      "text": "The Crossroads Quilters, a group of women, most of them African American, show and sell handmade quilts through Mississippi Cultural Crossroads in Port Gibson, celebrating the traditional quilting heritage of their community.",
+      "sourceUrl": "https://www.msculturalcrossroads.org/Crossroads_Quilters.html",
+      "sourceName": "Mississippi Cultural Crossroads"
+    },
+    {
+      "text": "Mississippi quilter Hystercine Rankin, born in 1929, learned to quilt from her grandmother at age twelve and received a National Heritage Fellowship in 1997, capping a 56-year journey as a quilter.",
+      "sourceUrl": "https://mississippifolklife.org/exhibits/hystercine-rankin",
+      "sourceName": "Mississippi Folklife"
+    }
+  ],
+  "MT": [
+    {
+      "text": "Montana's 150,000 shorn sheep produced 1.26 million pounds of wool in 2025, averaging 8.4 pounds per fleece, and the state held 180,000 sheep and lambs on January 1, 2026, according to USDA figures.",
+      "sourceUrl": "https://esmis.nal.usda.gov/sites/default/release-files/795751/shep0126.pdf",
+      "sourceName": "USDA National Agricultural Statistics Service, Sheep and Goats (January 30, 2026)"
+    },
+    {
+      "text": "Montana State University Extension notes that native big sagebrush gives a muted green dye, goldenrod flowers a vibrant gold, chokecherry and serviceberry berries purple, and tannin-rich alder bark brown to black.",
+      "sourceUrl": "https://www.montana.edu/extension/lila_extn/spring_summer_2025/rainbowgarden.html",
+      "sourceName": "Montana State University Extension"
+    }
+  ],
+  "NC": [
+    {
+      "text": "Lucy Morgan started the Penland Weavers in 1923, providing local women with looms and materials and marketing their handwoven goods. Penland School of Craft grew from a 1929 weaving class and still runs a textiles studio.",
+      "sourceUrl": "https://penland.org/about/history/",
+      "sourceName": "Penland School of Craft, History"
+    },
+    {
+      "text": "After studying folk schools in Denmark and elsewhere, Olive Dame Campbell and Marguerite Butler started the John C. Campbell Folk School in Brasstown, which began its work in 1925. It still offers classes in spinning, weaving and dyeing.",
+      "sourceUrl": "https://www.folkschool.org/folk-school-experience/our-history/",
+      "sourceName": "John C. Campbell Folk School, Our History"
+    }
+  ],
+  "ND": [
+    {
+      "text": "The North Dakota Heritage Center & State Museum in Bismarck displays quillwork and beadwork of the Mandan, Hidatsa and Arikara traditions in its Innovation Gallery: Early Peoples.",
+      "sourceUrl": "https://statemuseum.nd.gov/index.php/exhibits/innovation-gallery/cities",
+      "sourceName": "North Dakota Heritage Center & State Museum"
+    },
+    {
+      "text": "The North Dakota Council on the Arts' FY26 Folk and Traditional Arts Apprenticeships funded master artists teaching Scandinavian and Finnish weaving, cinch weaving, Ojibwe/Cree basket weaving, Sioux buffalo hide tanning and needle felting.",
+      "sourceUrl": "https://www.arts.nd.gov/sites/www/files/documents/grants/FY26%20AP%20Awards.pdf",
+      "sourceName": "North Dakota Council on the Arts, FY26 Apprenticeship Awards"
+    }
+  ],
+  "NE": [
+    {
+      "text": "The International Quilt Museum, on the University of Nebraska-Lincoln's East Campus, holds the world's largest publicly held quilt collection, dating from the 1600s to the present and representing 69 countries.",
+      "sourceUrl": "https://www.internationalquiltmuseum.org/about",
+      "sourceName": "International Quilt Museum"
+    },
+    {
+      "text": "The museum began as the International Quilt Study Center, established at the University of Nebraska-Lincoln in June 1997 after native Nebraskans Ardis and Robert James donated nearly 1,000 quilts to the university.",
+      "sourceUrl": "https://www.internationalquiltmuseum.org/about/history",
+      "sourceName": "International Quilt Museum"
+    }
+  ],
+  "NH": [
+    {
+      "text": "Wool has been processed in Harrisville since 1794, when the first mill was built on the Nubanusit River to card fleeces. The village became a National Historic Landmark in 1977, and Harrisville Designs still makes 100% wool yarns there.",
+      "sourceUrl": "https://harrisville.com/pages/our-story",
+      "sourceName": "Harrisville Designs"
+    },
+    {
+      "text": "Over 100 years, Manchester's Amoskeag Manufacturing Company grew into the largest textile manufacturer in the world. The Millyard Museum tells its story in Mill No. 3 of the historic Amoskeag Millyard.",
+      "sourceUrl": "https://manchesterhistoric.org/millyard-museum-2/",
+      "sourceName": "Manchester Historic Association, Millyard Museum"
+    }
+  ],
+  "NJ": [
+    {
+      "text": "In the late 19th and early 20th centuries, Paterson's mills produced silk fabrics in such quantities that the city was known as \"Silk City.\" In its dye houses, workers dipped skeins of silk thread and pieces of fabric into large vats.",
+      "sourceUrl": "https://www.nps.gov/articles/paterson-new-jersey-america-s-silk-city-teaching-with-historic-places.htm",
+      "sourceName": "National Park Service, Teaching with Historic Places: Paterson, New Jersey: America's Silk City"
+    },
+    {
+      "text": "The American Labor Museum is housed in the Botto House National Landmark, the 1908 home of Italian immigrant silk mill worker Pietro Botto and his wife Maria, a meeting place for over 20,000 silk workers during the 1913 Paterson Silk Strike.",
+      "sourceUrl": "https://www.american-labor-museum.org/about",
+      "sourceName": "American Labor Museum / Botto House National Landmark"
+    }
+  ],
+  "NM": [
+    {
+      "text": "By the 13th century, Native people grew cotton in what is now New Mexico and wove it into textiles on vertical looms, akin to the free-standing upright looms still used by Diné (Navajo) weavers.",
+      "sourceUrl": "https://www.nps.gov/articles/000/new-mexico-fiber-arts-traditions.htm",
+      "sourceName": "National Park Service, New Mexico Fiber Arts Traditions"
+    },
+    {
+      "text": "Woolen textiles became an important New Mexico industry, traded to Alta California on the Old Spanish Trail. Rio Grande blankets, serapes and rugs, woven on horizontal floor looms introduced by the Spanish, were among the most popular trade items.",
+      "sourceUrl": "https://www.nps.gov/articles/000/new-mexico-fiber-arts-traditions.htm",
+      "sourceName": "National Park Service, New Mexico Fiber Arts Traditions"
+    }
+  ],
+  "NV": [
+    {
+      "text": "Washoe weaver Louisa Keyser (Datsolalee), born near Carson City in the mid-19th century, coiled tightly woven willow baskets and pioneered the degikup style. The Nevada State Museum displays ten of her nineteen known works.",
+      "sourceUrl": "https://www.carsonnvmuseum.org/nevada-state-museum-to-debut-washoe-tribe-basketry-exhibit-in-may-2025/",
+      "sourceName": "Nevada State Museum, Carson City"
+    },
+    {
+      "text": "Rabbitbrush, a shrub featured among northern Nevada's fall colors, was used by Great Basin Indians, who made a dye from its flowers, according to a University of Nevada Cooperative Extension educator.",
+      "sourceUrl": "https://www.carsonnow.org/10/09/2022/northern-nevada-backyards-and-gardens-rabbitbrush-among-nevada-s-fall-gold",
+      "sourceName": "Carson Now (column by JoAnne Skelly, University of Nevada Cooperative Extension)"
+    }
+  ],
+  "NY": [
+    {
+      "text": "The New York State Sheep & Wool Festival has gathered fiber enthusiasts, shepherds and artisans at the Dutchess County Fairgrounds in Rhinebeck each October for almost 50 years, with hundreds of vendors, workshops and fleece competitions.",
+      "sourceUrl": "https://sheepandwool.com/",
+      "sourceName": "New York State Sheep & Wool Festival"
+    },
+    {
+      "text": "Cornell University's Fashion + Textile Collection in Ithaca holds over 9,000 items, including fashion from the 18th century to the present, Coptic textiles, European textiles from the Renaissance on, and a lace collection.",
+      "sourceUrl": "https://human.cornell.edu/hcd/about/facilities/fashion-textile-collection",
+      "sourceName": "Cornell University College of Human Ecology, Department of Human Centered Design"
+    }
+  ],
+  "OH": [
+    {
+      "text": "The Kent State University Museum opened in 1985 in Rockwell Hall, built on a gift from Shannon Rodgers and Jerry Silverman that included 4,000 costumes and accessories and a 5,000-volume reference library.",
+      "sourceUrl": "https://www.kent.edu/museum/history-museum",
+      "sourceName": "Kent State University Museum, History of the Museum"
+    },
+    {
+      "text": "An Ohio University Kennedy Museum of Art guide lists Southeast Ohio plants for dyeing, including Ohio goldenrod for yellows, wild bergamot and black locust for pinks and reds, and black walnut shells and sumac berries for browns and black.",
+      "sourceUrl": "https://www.ohio.edu/sites/default/files/sites/museum-complex/files/VegetalDyes.pdf",
+      "sourceName": "Ohio University Museum Complex, Vegetal Dyes activity guide"
+    }
+  ],
+  "OK": [
+    {
+      "text": "Osage-orange is native to the Red River drainage of Oklahoma, Texas and Arkansas. The USDA Forest Service notes its heartwood, bark and roots contain extractives of value in dyemaking.",
+      "sourceUrl": "https://research.fs.usda.gov/silvics/osage-orange",
+      "sourceName": "USDA Forest Service, Silvics of North America: Osage-Orange"
+    },
+    {
+      "text": "The Osage Nation Museum in Pawhuska, with Osage Nation partners, launched a project in 2017 documenting historical and contemporary Osage ribbon work through interviews with ribbon workers, artists and scholars, plus demonstrations and tutorials.",
+      "sourceUrl": "https://www.osagenation-nsn.gov/news-events/news/collaboration-planned-osage-ribbon-work-project",
+      "sourceName": "Osage Nation, Collaboration planned for Osage Ribbon Work Project"
+    }
+  ],
+  "OR": [
+    {
+      "text": "Pendleton Woolen Mills traces its roots to weaver Thomas Kay, who came from Yorkshire, England, to Oregon in 1863. The company still spins yarn and weaves fabric at its mill in Pendleton, Oregon.",
+      "sourceUrl": "https://www.pendleton-usa.com/about-us.html",
+      "sourceName": "Pendleton Woolen Mills, About Us"
+    },
+    {
+      "text": "In Salem, the Willamette Heritage Center preserves the 1895-1896 Thomas Kay Woolen Mill, once a leading Oregon textile factory, with two floors of exhibits on wool, waterpower and the mid-Willamette Valley's industrial history.",
+      "sourceUrl": "https://www.willametteheritage.org/",
+      "sourceName": "Willamette Heritage Center"
+    }
+  ],
+  "PA": [
+    {
+      "text": "Philadelphia University, now part of Thomas Jefferson University, was founded in 1884 as the Philadelphia Textile School to educate America's textile workers and managers.",
+      "sourceUrl": "https://www.jefferson.edu/about/traditions-history.html",
+      "sourceName": "Thomas Jefferson University, Traditions & History"
+    },
+    {
+      "text": "Landis Valley Village & Farm Museum in Lancaster County, the state's museum of Pennsylvania German history and lifeways since 1925, teaches wool hand-carding and drop-spindle spinning in its From Fleece to Fabric classes.",
+      "sourceUrl": "https://www.landisvalleymuseum.org/event/classes-2026-fall-institute-from-fleece-to-fabric",
+      "sourceName": "Landis Valley Village & Farm Museum"
+    }
+  ],
+  "RI": [
+    {
+      "text": "Slater Mill in Pawtucket, built in 1793 by the firm of Almy, Brown and Slater, was the first successful water-powered cotton spinning mill in the United States and the first property on the National Register of Historic Places.",
+      "sourceUrl": "https://www.nps.gov/blrv/learn/historyculture/slaterMill.htm",
+      "sourceName": "National Park Service, Blackstone River Valley National Historical Park"
+    },
+    {
+      "text": "Rhode Island School of Design's Textiles department in Providence trains weavers on multiharness handlooms, computer-interfaced looms and an electronic jacquard loom, alongside hand-operated and electronic knitting machines.",
+      "sourceUrl": "https://www.risd.edu/academics/textiles",
+      "sourceName": "Rhode Island School of Design, Textiles"
+    }
+  ],
+  "SC": [
+    {
+      "text": "Indigo, a plant that yields a blue dye, was grown commercially in South Carolina from 1747 to 1800 and ranked second only to rice in export value. Eliza Lucas Pinckney's experiments in the 1740s helped establish the crop.",
+      "sourceUrl": "https://www.scencyclopedia.org/sce/entries/indigo/",
+      "sourceName": "South Carolina Encyclopedia"
+    },
+    {
+      "text": "The Graniteville Manufacturing Company, the state's most important antebellum cotton mill, began operating in 1849 in present-day Aiken County. By 1900 South Carolina was second only to Massachusetts as a cotton-textile-producing state.",
+      "sourceUrl": "https://www.scencyclopedia.org/sce/entries/textile-industry/",
+      "sourceName": "South Carolina Encyclopedia"
+    }
+  ],
+  "SD": [
+    {
+      "text": "Lakota star quilts are usually dominated by a single eight-sided star pieced from small diamond-shaped patches. The star pattern derives from early buffalo robe designs, and the quilts are valued gifts at memorials, naming ceremonies and marriages.",
+      "sourceUrl": "https://aktalakota.stjo.org/lakota-star-quilt/",
+      "sourceName": "Aktá Lakota Museum & Cultural Center"
+    },
+    {
+      "text": "Plains quillworkers traditionally dyed porcupine quills by boiling them with local plants: buffalo berry for red, wild sunflower or coneflower petals for yellow, wild grape for purplish black, and black walnut for brown.",
+      "sourceUrl": "https://www.doi.gov/iacb/treasures-iacb-lakota-vest-ca-1880",
+      "sourceName": "U.S. Department of the Interior, Indian Arts and Crafts Board"
+    }
+  ],
+  "TN": [
+    {
+      "text": "The Pi Beta Phi Settlement School in Gatlinburg introduced weaving to its students, and from the mid-1920s their handcrafts were marketed nationally as Arrowcraft. Its manual arts program later grew into the Arrowmont School of Arts and Crafts.",
+      "sourceUrl": "https://tennesseeencyclopedia.net/entries/pi-beta-phi-settlement-school/",
+      "sourceName": "Tennessee Encyclopedia"
+    },
+    {
+      "text": "Rutherford County weaver Mary Ann Sanders Dill wove her overshot coverlet \"Nine Snowballs and Table\" in 1855, using natural cotton with red and blue wool. Local dyes came from native trees, barks, roots and flowers.",
+      "sourceUrl": "https://rutherfordtnhistory.org/harbers-history-rutherford-coverlets-preserved-in-time/",
+      "sourceName": "Rutherford County Tennessee Historical Society"
+    }
+  ],
+  "TX": [
+    {
+      "text": "Texas had 700,000 sheep and lambs on January 1, 2026, the largest sheep inventory of any state in the USDA's annual Sheep and Goats report.",
+      "sourceUrl": "https://esmis.nal.usda.gov/sites/default/release-files/795751/shep0126.pdf",
+      "sourceName": "USDA National Agricultural Statistics Service, Sheep and Goats (January 30, 2026)"
+    },
+    {
+      "text": "As much as 97 percent of the mohair grown in the United States comes from Texas, and most Texas mohair originates on the Edwards Plateau, where wool and mohair production is a major part of the regional economy.",
+      "sourceUrl": "https://www.tshaonline.org/handbook/entries/goat-ranching",
+      "sourceName": "Handbook of Texas, Texas State Historical Association"
+    }
+  ],
+  "UT": [
+    {
+      "text": "Utah's first mulberry trees for silkworms were imported from France in 1855. By 1880 every Relief Society in the territory had a silk project, and sericulture in Utah ended in 1905, apart from hobbyists.",
+      "sourceUrl": "https://eom.byu.edu/index.php/Silk_Culture",
+      "sourceName": "Encyclopedia of Mormonism, Brigham Young University"
+    },
+    {
+      "text": "The Provo Woolen Mills, built between 1870 and 1872, began operating in 1872 and produced its first cloth in 1873. After a 1918 fire it was partially rebuilt and continued operating until 1932.",
+      "sourceUrl": "https://www.provolibrary.gov/historicalplacesprovowoolenmills",
+      "sourceName": "Provo City Library"
+    }
+  ],
+  "VA": [
+    {
+      "text": "Dan River Mills in Danville opened in 1882 as the Riverside Cotton Mills. Even before a later merger, Riverside was the largest textile mill in the South; the historic firm was dissolved in 2006.",
+      "sourceUrl": "https://encyclopediavirginia.org/entries/dan-river-mills/",
+      "sourceName": "Encyclopedia Virginia, Virginia Humanities"
+    },
+    {
+      "text": "In eighteenth-century Virginia, some large plantations made homespun cloth on site using the skilled labor of enslaved people. Some enslaved people added color to their plain clothing by dyeing textiles with indigo.",
+      "sourceUrl": "https://encyclopediavirginia.org/entries/slave-clothing-and-adornment-in-virginia/",
+      "sourceName": "Encyclopedia Virginia, Virginia Humanities"
+    }
+  ],
+  "VT": [
+    {
+      "text": "In 1811 William Jarvis brought around 400 Merino sheep from Spain to his farm in Weathersfield, starting a Vermont sheep boom that lasted about 40 years. Their long, soft fleece was made into wool clothes and blankets.",
+      "sourceUrl": "https://vermonthistoryexplorer.org/sheep-in-vermont",
+      "sourceName": "Vermont History Explorer, Vermont Historical Society"
+    },
+    {
+      "text": "Green Mountain Spinnery in Putney, founded in 1981, spins yarn on vintage machinery in a converted gas station, buying wool and mohair directly from growers and focusing on New England fiber. It is a Certified Organic wool mill.",
+      "sourceUrl": "https://www.spinnery.com/about-us/",
+      "sourceName": "Green Mountain Spinnery"
+    }
+  ],
+  "WA": [
+    {
+      "text": "During the 18th and 19th centuries, Coast Salish women wove with the wool of mountain sheep and with dog wool sheared from small \"woolly\" dogs.",
+      "sourceUrl": "https://www.burkemuseum.org/collections-and-research/heritage/artscultures/coast-salish-art/coast-salish-weaving-tools",
+      "sourceName": "Burke Museum, University of Washington"
+    },
+    {
+      "text": "The Burke Museum's 2025–26 exhibition Woven in Wool traced the Coast Salish weaving cycle: gathering mountain goat wool, cattail and cottonwood fluff, then dyeing yarn with mushrooms, acorns or berries before weaving.",
+      "sourceUrl": "https://www.burkemuseum.org/exhibits/woven-wool-resilience-coast-salish-weaving",
+      "sourceName": "Burke Museum, University of Washington"
+    }
+  ],
+  "WI": [
+    {
+      "text": "Great Lakes Native peoples wove storage bags of basswood and other bast-fiber string, nettle fiber and buffalo wool. For basswood bags, the inner bark was boiled, pulled into strands and dyed, creating vertical bands of color.",
+      "sourceUrl": "https://www.mpm.edu/educators/wirp/great-lakes-traditional-culture/material-culture",
+      "sourceName": "Milwaukee Public Museum"
+    },
+    {
+      "text": "The Wisconsin Museum of Quilts & Fiber Arts, housed in a repurposed barn in Cedarburg, exhibits traditional and contemporary fiber art, preserves quilts and teaches time-honored crafts to beginners and experienced fiber artists.",
+      "sourceUrl": "https://www.wiquiltmuseum.com/about",
+      "sourceName": "Wisconsin Museum of Quilts & Fiber Arts"
+    }
+  ],
+  "WV": [
+    {
+      "text": "West Virginia coverlets are known for their patterned overshot weave and were woven from notation called drafts. Even after power looms arrived in the 1830s, much of the fabric West Virginians used was still made at home.",
+      "sourceUrl": "https://www.wvencyclopedia.org/entries/908",
+      "sourceName": "e-WV: The West Virginia Encyclopedia"
+    },
+    {
+      "text": "Often the same West Virginia household raised the sheep and spun, dyed and wove the wool. Home dyers used pokeberry for a soft red, walnut hulls and bark for browns, marigolds for yellows, and ragweed for green.",
+      "sourceUrl": "https://www.wvencyclopedia.org/entries/908",
+      "sourceName": "e-WV: The West Virginia Encyclopedia"
+    }
+  ],
+  "WY": [
+    {
+      "text": "Wyoming's flocks produced 2.02 million pounds of shorn wool in 2025, second only to California, and its fleeces averaged 8.8 pounds, among the heaviest of any state, according to USDA figures.",
+      "sourceUrl": "https://esmis.nal.usda.gov/sites/default/release-files/795751/shep0126.pdf",
+      "sourceName": "USDA National Agricultural Statistics Service, Sheep and Goats (January 30, 2026)"
+    },
+    {
+      "text": "Mountain Meadow Wool in Buffalo, founded in 2007, scours, spins and custom-dyes fine Merino, Rambouillet and Targhee wools from Wyoming ranches, processing over 60,000 pounds of wool a year.",
+      "sourceUrl": "https://mountainmeadowwool.com/pages/about",
+      "sourceName": "Mountain Meadow Wool"
+    }
+  ]
+}

@@ -11,10 +11,9 @@ import { ProductCard } from '@/components/commerce/product-card'
 import { FdaDisclaimer } from '@/components/compliance/fda-disclaimer'
 import { PageSection } from '@/components/layout/page-section'
 import { Badge } from '@/components/ui/badge'
-import { AlertIcon, CheckIcon, CrossIcon, InfoIcon, TruckIcon } from '@/components/ui/icon'
+import { InfoIcon, TruckIcon } from '@/components/ui/icon'
 import { BRAND } from '@/lib/brand'
 import { absoluteUrl, url } from '@/lib/seo/routes'
-import { effectiveMinAge } from '@/lib/compliance/shipping'
 import { getStateShipping, stateSearchMeta } from '@/lib/legality/state-shipping'
 import { jsonLdScript, organizationRef } from '@/lib/seo/structured-data'
 import { pageMetadata } from '@/lib/seo/meta'
@@ -68,12 +67,6 @@ export async function generateMetadata({
       ? { index: true, follow: true }
       : { index: false, follow: true },
   }
-}
-
-function VerdictIcon({ status }: { status: string }) {
-  if (status === 'BLOCKED') return <CrossIcon className="size-5" />
-  if (status === 'RESTRICTED') return <AlertIcon className="size-5" />
-  return <CheckIcon className="size-5" />
 }
 
 async function StateBody({ slug }: { slug: string }) {
@@ -268,7 +261,7 @@ async function StateBody({ slug }: { slug: string }) {
 
       <p className="mt-4 flex flex-wrap items-center gap-3 text-sm text-foreground-muted">
         <span>
-          Last reviewed{' '}
+          Updated{' '}
           <time dateTime={legality.lastReviewedAt}>
             {new Date(legality.lastReviewedAt).toLocaleDateString('en-US', {
               year: 'numeric', month: 'long', day: 'numeric',
@@ -298,72 +291,11 @@ async function StateBody({ slug }: { slug: string }) {
         </div>
       )}
 
-      <section className="mt-10">
-        <h2 className="font-display text-2xl text-foreground">
-          What we can ship to {jurisdiction.name}
-        </h2>
-        <div className="mt-4 space-y-4">
-          {legality.verdicts.map((v) => {
-            /*
-              BLOCKED is neutral, not red — see the note in state-availability.tsx.
-              A state saying no is a fact this page exists to report, not a fault, and
-              a wall of red on a page someone opened to get an answer reads as though
-              the site is broken. The verdict, the reason and the statute all still
-              publish; only the alarm colour is gone.
-            */
-            const tone =
-              v.rule.status === 'BLOCKED'
-                ? 'border border-border bg-surface-sunken text-foreground'
-                : v.rule.status === 'RESTRICTED'
-                  ? 'bg-warning-bg text-warning-fg'
-                  : 'bg-success-bg text-success-fg'
-            return (
-              <article key={v.productLine} className={`rounded-lg p-4 ${tone}`}>
-                <div className="flex gap-3">
-                  <VerdictIcon status={v.rule.status} />
-                  <div className="min-w-0">
-                    <h3 className="font-semibold">
-                      {LINE_LABEL[v.productLine]} — {v.headline}
-                    </h3>
-                    <p className="mt-1 text-sm leading-relaxed opacity-90">{v.detail}</p>
-
-                    {v.rule.statuteCitation && (
-                      <p className="mt-2 text-sm">
-                        <span className="font-medium">Authority:</span>{' '}
-                        {v.rule.statuteUrl ? (
-                          <a
-                            href={v.rule.statuteUrl}
-                            className="inline-flex min-h-11 items-center underline underline-offset-4"
-                            rel="noopener"
-                          >
-                            {v.rule.statuteCitation}
-                          </a>
-                        ) : (
-                          v.rule.statuteCitation
-                        )}
-                      </p>
-                    )}
-
-                    <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs opacity-90">
-                      <div className="flex gap-1">
-                        <dt>Minimum age:</dt>
-                        <dd className="tabular font-medium">{effectiveMinAge(v.rule.minAge)}</dd>
-                      </div>
-                      {v.rule.requiresProductDirectory && (
-                        <div className="flex gap-1">
-                          <dt>Restriction:</dt>
-                          <dd className="font-medium">State product directory applies</dd>
-                        </div>
-                      )}
-                    </dl>
-                  </div>
-                </div>
-              </article>
-            )
-          })}
-        </div>
-      </section>
-
+      {/*
+        The per-line verdict cards ("Available in Texas", minimum age) lived here. These
+        pages are about delivery and buying, not law (owner, 2026-09-28), and the product
+        grid above already shows exactly what can be ordered to this state.
+      */}
       <section className="mt-12">
         <h2 className="font-display text-2xl text-foreground">
           Ordering from {jurisdiction.name}
@@ -400,6 +332,22 @@ async function StateBody({ slug }: { slug: string }) {
             )}
           </div>
         ))}
+
+        {legality.dyeing.heritage.length > 0 && (
+          <>
+            <h3 className="mt-5 font-medium text-foreground">
+              Fiber and dye heritage in {jurisdiction.name}
+            </h3>
+            {legality.dyeing.heritage.map((h) => (
+              <p key={h.text} className="mt-2 leading-relaxed text-pretty text-foreground-muted">
+                {h.text}{' '}
+                <a href={h.sourceUrl} rel="noopener nofollow" className="text-xs text-foreground-subtle underline underline-offset-4">
+                  {h.sourceName}
+                </a>
+              </p>
+            ))}
+          </>
+        )}
 
         {legality.dyeing.events.length > 0 && (
           <>

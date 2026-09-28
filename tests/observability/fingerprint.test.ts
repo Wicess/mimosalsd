@@ -84,7 +84,7 @@ describe('fingerprintOf', () => {
 
   it('separates the same error on different routes', () => {
     expect(fingerprintOf({ ...base, routePath: '/product/[slug]' })).not.toBe(
-      fingerprintOf({ ...base, routePath: '/legality/[state]' }),
+      fingerprintOf({ ...base, routePath: '/where-we-ship/[state]' }),
     )
   })
 

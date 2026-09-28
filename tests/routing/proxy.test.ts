@@ -21,8 +21,8 @@ describe('existing resources resolve', () => {
     '/shop/mimosa-hostilis',
     '/lab-results/am-2026-0388',
     '/lab-results/AM-2026-0388',
-    '/legality/louisiana',
-    '/legality/texas',
+    '/where-we-ship/louisiana',
+    '/where-we-ship/texas',
     '/blog/natural-dyeing-with-mimosa-hostilis',
     '/guides/what-is-mimosa-hostilis-root-bark',
   ])('%s exists', (path) => {
@@ -50,7 +50,7 @@ describe('missing resources are refused', () => {
   it.each([
     '/product/nonexistent',
     '/shop/fake-category',
-    '/legality/atlantis',
+    '/where-we-ship/atlantis',
     '/blog/no-such-post',
     '/guides/no-such-guide',
     '/locations/atlantis',
@@ -66,7 +66,7 @@ describe('missing resources are refused', () => {
 })
 
 describe('unmatched paths are left alone', () => {
-  it.each(['/', '/shop', '/cart', '/checkout', '/about', '/legality', '/blog'])(
+  it.each(['/', '/shop', '/cart', '/checkout', '/about', '/where-we-ship', '/blog'])(
     '%s passes through',
     (path) => {
       expect(routeExists(path)).toBe(true)

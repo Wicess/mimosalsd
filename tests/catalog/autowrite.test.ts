@@ -8,7 +8,7 @@ const links: WriteInput['links'] = {
   related: [{ label: 'Mimosa Hostilis Root Bark, Shredded', path: '/product/mhrb-shredded' }],
   guides: [{ label: 'What is Mimosa hostilis root bark?', path: '/guides/what-is-mimosa-hostilis-root-bark' }],
   labResults: '/lab-results',
-  legality: '/legality',
+  legality: '/where-we-ship',
   shipping: '/policies/shipping',
   faq: '/faq',
 }

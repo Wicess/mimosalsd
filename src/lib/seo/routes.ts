@@ -47,8 +47,8 @@ export const ROUTES = {
 
   shopNearMe: { id: 'shop-near-me', pattern: '/shop-near-me', primaryIntent: 'what ships to my location (utility, not a keyword page)', indexPolicy: 'INDEX', inSitemap: true, priority: 0.6, changeFrequency: 'monthly' },
 
-  legalityHub: { id: 'legality-hub', pattern: '/legality', primaryIntent: 'is [product] legal in the united states', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'weekly' },
-  legalityState: { id: 'legality-state', pattern: '/legality/[state]', primaryIntent: 'is [product] legal in [state]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'weekly' },
+  legalityHub: { id: 'legality-hub', pattern: '/where-we-ship', primaryIntent: 'where to buy [product] in the united states', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'weekly' },
+  legalityState: { id: 'legality-state', pattern: '/where-we-ship/[state]', primaryIntent: 'buy [product] in [state or city]', indexPolicy: 'INDEX', inSitemap: true, priority: 0.9, changeFrequency: 'weekly' },
 
 
   labResults: { id: 'lab-results', pattern: '/lab-results', primaryIntent: 'certificate of analysis lookup', indexPolicy: 'INDEX', inSitemap: true, priority: 0.3, changeFrequency: 'weekly' },
@@ -90,9 +90,9 @@ export const url = {
   product: (slug: string) => `/product/${slug}`,
   locationsHub: () => '/locations',
   location: (citySlug: string) => `/locations/${citySlug}`,
-  legalityHub: () => '/legality',
+  legalityHub: () => '/where-we-ship',
   shopNearMe: () => '/shop-near-me',
-  legalityState: (stateSlug: string) => `/legality/${stateSlug}`,
+  legalityState: (stateSlug: string) => `/where-we-ship/${stateSlug}`,
   labResults: () => '/lab-results',
   labBatch: (batchCode: string) => `/lab-results/${batchCode.toLowerCase()}`,
   blog: () => '/blog',

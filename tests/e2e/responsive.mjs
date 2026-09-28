@@ -14,7 +14,7 @@ const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:3000'
 const WIDTHS = [320, 375, 414, 768, 1024, 1280, 1440, 1920, 2560]
 const ROUTES = [
   '/', '/shop', '/shop/amanita', '/product/amanita-gummies-mixed-berry',
-  '/legality', '/legality/texas', '/lab-results', '/blog', '/faq',
+  '/where-we-ship', '/where-we-ship/texas', '/lab-results', '/blog', '/faq',
   '/about', '/bulk', '/contact', '/locations', '/shop-near-me', '/cart', '/checkout',
 ]
 

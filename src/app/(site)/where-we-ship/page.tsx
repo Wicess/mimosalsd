@@ -15,7 +15,7 @@ export const metadata: Metadata = pageMetadata({
   // buy mimosa roots in california"), not to the page's own purpose.
   title: 'Where to Buy Mimosa Hostilis Root Bark in the USA, by State',
   description: 'Where to buy Mimosa hostilis root bark online in the US, state by state. Pick your state for delivery terms, current per-pound pricing and the rules we follow.',
-  path: '/legality',
+  path: '/where-we-ship',
 })
 
 /**

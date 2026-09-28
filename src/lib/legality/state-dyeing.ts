@@ -1,5 +1,6 @@
 import type { UsJurisdictionCode } from '@/lib/compliance/types'
 import { STATE_DYEING_FACTS, type StateDyeingFacts } from './state-dyeing.data'
+import { STATE_HERITAGE, type HeritageFact } from './state-heritage.data'
 
 /**
  * Dyeing with root bark, state by state.
@@ -34,6 +35,8 @@ export interface FiberEvent {
 export interface StateDyeingGuide {
   readonly paragraphs: readonly DyeingParagraph[]
   readonly events: readonly FiberEvent[]
+  /** The state's own fiber, textile and dye heritage, each fact with its source. */
+  readonly heritage: readonly HeritageFact[]
   /** One answer for the page's FAQ, when the water fact is known. */
   readonly waterFaq?: { readonly question: string; readonly answer: string }
 }
@@ -152,5 +155,5 @@ export function buildDyeingGuide(
     })
   }
 
-  return { paragraphs, events: facts?.fiberEvents ?? [], ...(waterFaq ? { waterFaq } : {}) }
+  return { paragraphs, events: facts?.fiberEvents ?? [], heritage: STATE_HERITAGE[code] ?? [], ...(waterFaq ? { waterFaq } : {}) }
 }

@@ -13,6 +13,7 @@ import { CoaBadge } from '@/components/compliance/coa-badge'
 import { Badge } from '@/components/ui/badge'
 import { ChevronRightIcon } from '@/components/ui/icon'
 import { absoluteUrl, url } from '@/lib/seo/routes'
+import { JURISDICTIONS } from '@/lib/compliance/jurisdictions'
 import {
   breadcrumbList,
   jsonLdScript,
@@ -407,6 +408,29 @@ export default async function ProductPage({
         */}
         <ProductStory product={product} />
         <ProductSpecs product={product} className="mt-14" />
+        {/*
+          Every state page, one click from every product (owner, 2026-09-28: "interlink
+          all pages"). The state pages link back to the products, so a buyer who lands on
+          either can reach the other, and so can a crawler.
+        */}
+        <nav aria-labelledby="ships-to" className="mt-14">
+          <h2 id="ships-to" className="font-display text-2xl text-foreground">
+            Delivered to every state from California
+          </h2>
+          <p className="mt-2 max-w-prose text-sm text-foreground-muted">
+            Pick your state for delivery to your city, local water and storage advice, and
+            where its dyers meet.
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            {JURISDICTIONS.map((j) => (
+              <li key={j.code}>
+                <a href={url.legalityState(j.slug)} className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">
+                  {j.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </PageSection>
 
       {/*

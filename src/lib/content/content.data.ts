@@ -131,6 +131,8 @@ export const GUIDES: readonly Guide[] = [
       'natural-dyeing-with-mimosa-hostilis',
     ],
     recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'shredded-mimosa-hostilis-root-bark', 'whole-mimosa-hostilis-root-bark'],
+    // The site's own bark photograph (2026-09-28): the sample fallback files do not exist in storage.
+    heroImageKey: 'media/7a5f77fc5187e4717ac3854bf185d9a5.jpg',
     isPublished: true,
   },
   {
@@ -177,6 +179,8 @@ export const GUIDES: readonly Guide[] = [
       'a-glossary-of-certificate-terms',
     ],
     recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'sassafras-root-bark'],
+    // The site's own bark photograph (2026-09-28): the sample fallback files do not exist in storage.
+    heroImageKey: 'media/7ead9637654a35b0f657cca5774b0298.jpg',
     isPublished: true,
   },
   {
@@ -232,6 +236,8 @@ export const GUIDES: readonly Guide[] = [
     updatedAt: '2026-09-28',
     clusterSlugs: ['the-three-cuts-of-mimosa-root-bark', 'buying-by-the-pound-and-what-it-saves'],
     recommendedProductSlugs: ['mimosa-hostilis-root-bark-powder', 'shredded-mimosa-hostilis-root-bark', 'whole-mimosa-hostilis-root-bark'],
+    // The site's own bark photograph (2026-09-28): the sample fallback files do not exist in storage.
+    heroImageKey: 'media/13e51ff90939ef04b0db2d7956e35fc9.jpg',
     isPublished: true,
   },
 ]

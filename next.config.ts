@@ -14,6 +14,18 @@ const nextConfig: NextConfig = {
    */
   cacheComponents: true,
   /**
+   * Crawlers that get the page with its <title> and meta description in <head>.
+   *
+   * Next 16 streams metadata to everything outside this list, which puts the title
+   * and description some 65KB down the body. Next's own list (copied verbatim below,
+   * because setting this REPLACES it) leaves out Googlebot, on the grounds that
+   * Google runs JavaScript and hoists them, and every AI crawler, which does not.
+   * Answer engines are a primary channel for this site (CLAUDE.md rule 10), so they
+   * are added, with Googlebot and Google's inspection tool. 2026-09-28.
+   */
+  htmlLimitedBots:
+    /[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight|Googlebot|GPTBot|OAI-SearchBot|ChatGPT-User|ClaudeBot|Claude-SearchBot|Claude-User|anthropic-ai|PerplexityBot|Perplexity-User|CCBot|Amazonbot|meta-externalagent|DuckAssistBot|YouBot/i,
+  /**
    * The CDN host, made available to the browser bundle as well as the server.
    *
    * `R2_PUBLIC_HOST` is a plain server variable, so a `'use client'` module

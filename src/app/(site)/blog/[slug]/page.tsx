@@ -229,7 +229,8 @@ async function PostBody({ params }: { params: Promise<{ slug: string }> }) {
       <div className="mt-8 space-y-5">
         {post.body.map((block, i) => (
           <div key={i} className="space-y-5">
-            {i === imageBefore ? (
+            {/* The inline figure is a stock sample: only for a piece with no photograph of its own. */}
+            {!uploadedHero && i === imageBefore ? (
               <figure className="my-8">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-surface-sunken md:aspect-[16/9]">
                   <Image
@@ -243,7 +244,7 @@ async function PostBody({ params }: { params: Promise<{ slug: string }> }) {
               </figure>
             ) : null}
             <BodyBlock block={block} />
-            {i === post.body.length - 1 && imageBefore === post.body.length ? (
+            {!uploadedHero && i === post.body.length - 1 && imageBefore === post.body.length ? (
               <figure className="my-8">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-surface-sunken md:aspect-[16/9]">
                   <Image src={imageSrc(images.inline)} alt={images.inline.alt} fill sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />

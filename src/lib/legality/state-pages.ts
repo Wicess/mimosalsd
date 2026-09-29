@@ -142,7 +142,7 @@ function buildAnswerFirst(
   if (blocked.length === verdicts.length) {
     return `We do not currently ship root bark to ${state}. The position we hold is set out below, with the date it was last reviewed.`
   }
-  return `Yes. We ship Mimosa hostilis root bark, in powder, shredded and whole cuts, and sassafras root bark to ${state}, from California, with tracking. Every cut is sold by the pound, from a quarter pound to a full pound, and no payment is taken until a person has checked the order.`
+  return `Yes. We ship Mimosa hostilis root bark, in powder, shredded and whole cuts, and sassafras root bark to ${state}, from California, with tracking. Every cut is sold by the pound, from a quarter pound to a full pound, and a person checks every order before payment details are sent to your order chat.`
 }
 
 function listOf(items: readonly string[]): string {
@@ -168,7 +168,7 @@ function buildOrderingGuidance(
   const blocked = verdicts.filter((v) => v.rule.status === 'BLOCKED')
 
   parts.push(
-    `Ordering from ${state} takes three steps. Choose a cut and a size and send an order request with your ${state} delivery address; nothing is charged. A person checks the stock and the address and emails you payment details for the method you chose. Once the payment arrives, the bark is weighed, packed in a nitrogen-flushed, smell-proof bag and shipped from California, and the tracking number follows.`,
+    `Ordering from ${state} takes three steps. Choose a cut and a size and place your order with your ${state} delivery address. A person checks the stock and the address and sends payment details for the method you chose in your order chat and by email. Once the payment arrives, the bark is weighed, packed in a nitrogen-flushed, smell-proof bag and shipped from California, and the tracking number follows.`,
   )
 
   if (blocked.length > 0) {

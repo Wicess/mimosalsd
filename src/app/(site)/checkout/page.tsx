@@ -203,7 +203,7 @@ export default function CheckoutPage() {
       <div className="mx-auto w-full max-w-6xl">
         <h1 className="font-display text-4xl text-foreground">Checkout</h1>
         <p className="mt-2 text-foreground-muted">
-          Eight fields, no card details, and no payment taken on this site.
+          Eight fields and no card details. A person confirms your order, then sends payment details in your order chat.
         </p>
       </div>
       <div className="mt-8">

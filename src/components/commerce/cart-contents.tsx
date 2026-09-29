@@ -212,8 +212,8 @@ export async function CartContents() {
           )}
 
           <p className="mt-3 text-xs leading-relaxed text-foreground-subtle">
-            No payment is taken on this site. You choose how you would like to pay, we check
-            the stock and that we can ship to your address, and we contact you with instructions.
+            Choose how you would like to pay. A person checks the stock and your address, then
+            sends payment details in your order chat and by email.
           </p>
         </div>
 

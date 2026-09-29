@@ -63,7 +63,7 @@ export const CATEGORIES: readonly Category[] = [
         {
           question: 'How is an order placed and shipped?',
           answer:
-            'Choose a cut and a size, from a quarter pound to a full pound, and send an order request; no payment is taken on the site. We confirm it and send payment instructions, then the bark ships from California with tracking. We ship to US addresses only, and parcel orders from 100 dollars ship free.',
+            'Choose a cut and a size, from a quarter pound to a full pound, and place your order. A person confirms it and sends payment details in your order chat, then the bark ships from California with tracking. We ship to US addresses only, and parcel orders from 100 dollars ship free.',
         },
       ],
       facts: [

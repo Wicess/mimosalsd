@@ -120,7 +120,7 @@ export function orderReceivedEmail(order: Order): EmailMessage {
       '',
       `We have your order request and we are checking two things: that we can lawfully ship every item to ${jurisdictionName(order.stateCode)}, and that we have the stock.`,
       '',
-      'No payment has been taken. You will receive instructions once the order is verified.',
+      'A person is checking your order now. Payment details will follow in your order chat and by email.',
       '',
       `Order ${order.orderNumber}`,
       orderSummary(order),
@@ -134,14 +134,14 @@ export function orderReceivedEmail(order: Order): EmailMessage {
     ].join('\n'),
     html: emailShell({
       title: `Order ${order.orderNumber} received`,
-      preheader: 'We have your request. No payment has been taken.',
+      preheader: 'We have your order. Payment details follow once a person has checked it.',
       body: [
         emailHeading(`Hi ${order.firstName}, we have your order`),
         emailParagraph(
           `We are checking two things: that we can lawfully ship every item to ${jurisdictionName(order.stateCode)}, and that we have the stock.`,
         ),
         emailParagraph(
-          'No payment has been taken. You will receive instructions once the order is verified.',
+          'A person is checking your order now. Payment details will follow in your order chat and by email.',
         ),
         orderSummaryHtml(order),
         emailParagraph(
@@ -292,7 +292,7 @@ export function abandonedCartEmail(email: string, firstName?: string): EmailMess
       '',
       'You left something in your cart. It is still there if you want it.',
       '',
-      'A reminder of how ordering works here: no payment is taken on the site. You submit the order, we verify it, and we send instructions for the method you chose.',
+      'A reminder of how ordering works here: you place the order, a person confirms it, and payment details arrive in your order chat and by email for the method you chose.',
       '',
       `Your cart: ${absoluteUrl(url.cart())}`,
       '',
@@ -302,12 +302,12 @@ export function abandonedCartEmail(email: string, firstName?: string): EmailMess
     ].join('\n'),
     html: emailShell({
       title: 'Your cart is still here',
-      preheader: 'No payment is taken on the site — you submit, we verify, then we send instructions.',
+      preheader: 'You order, a person confirms it, then payment details arrive in your order chat.',
       body: [
         emailHeading(firstName ? `Hi ${firstName}, your cart is still here` : 'Your cart is still here'),
         emailParagraph('You left something in it. It is still there if you want it.'),
         emailParagraph(
-          'A reminder of how ordering works here: no payment is taken on the site. You submit the order, we verify it, and we send instructions for the method you chose.',
+          'A reminder of how ordering works here: you place the order, a person confirms it, and payment details arrive in your order chat and by email for the method you chose.',
         ),
         emailButton('Open your cart', absoluteUrl(url.cart())),
         emailParagraph(

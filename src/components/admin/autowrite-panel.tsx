@@ -14,7 +14,7 @@ export function AutowritePanel({ slug, written, claudeReady }: { slug: string; w
   const who = written.writer === 'claude' ? 'Claude' : written.writer === 'template' ? 'the built-in writer' : null
 
   return (
-    <section className="mb-6 rounded-lg border border-border bg-surface p-4 sm:p-5">
+    <section className="mb-6 rounded-lg border border-border bg-surface p-3.5 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="font-display text-lg text-foreground">Written automatically</h2>

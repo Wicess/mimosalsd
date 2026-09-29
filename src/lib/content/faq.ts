@@ -93,9 +93,9 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
 
   {
     category: 'Ordering and payment',
-    question: 'Why can I not pay on your website?',
+    question: 'When do I pay for my order?',
     answer:
-      'Because we deliberately do not process payments here. You submit an order request and choose how you would prefer to pay; we check that the stock is available and that we can ship to your address, then send you instructions for that method. It means there is no card form on this site, no payment processor behind it, and no card details stored anywhere in our systems — so there is nothing here for anyone to steal.',
+      'After a person has confirmed it. You place your order and choose a payment method; we check the stock and the address it is going to, then send payment details in your order chat on this site and by email. Your order is confirmed once payment arrives. We never ask for card details.',
   },
   {
     category: 'Ordering and payment',

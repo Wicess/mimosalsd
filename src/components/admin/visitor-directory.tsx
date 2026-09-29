@@ -170,7 +170,7 @@ function VisitorId({ row }: { row: DirectoryRow }) {
     <Link
       href={row.href}
       prefetch={false}
-      className="inline-flex items-center gap-2 font-mono text-xs font-semibold whitespace-nowrap text-foreground hover:text-primary"
+      className="inline-flex min-h-11 items-center gap-2 font-mono text-xs font-semibold whitespace-nowrap text-foreground hover:text-primary"
       aria-label={`Open visitor ending ${row.shortId}`}
     >
       <span className="grid size-6 shrink-0 place-items-center rounded-full! bg-primary-muted text-[10px] text-primary" aria-hidden>

@@ -257,8 +257,8 @@ export function BulkQuoteForm({
       </div>
 
       <p className="mt-3 text-xs leading-relaxed text-foreground-subtle">
-        We use what you send here to price your enquiry and nothing else. No payment
-        is taken on this site at any stage.
+        We use what you send here to price your enquiry and nothing else. A person
+        replies with your quote, and payment is arranged once you accept it.
       </p>
     </form>
   )

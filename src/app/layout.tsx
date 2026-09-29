@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Newsreader, Space_Grotesk } from 'next/font/google'
+import { Fraunces, Geist, Space_Grotesk } from 'next/font/google'
 import { BRAND } from '@/lib/brand'
 import { absoluteUrl } from '@/lib/seo/routes'
 import { clampDescription } from '@/lib/seo/meta'
@@ -14,33 +14,17 @@ import './globals.css'
  * Self-hosted via next/font — no render-blocking request to a third-party origin,
  * and no layout shift, because the fallback metrics are matched automatically.
  *
- * Newsreader is drawn for long-form reading. The legality pages and pillar guides
- * ARE long-form reading, and they are where most organic traffic lands, so the
- * display face is chosen for the content that matters rather than for the hero.
- *
- * NORMAL ONLY — no italic face.
- *
- * Nothing on this site renders italic Newsreader; the only `italic` matches in the
- * codebase are `not-italic` utilities on <address> elements, which exist to CANCEL
- * the browser default. Next emits a `Link: rel=preload` header for every declared
- * face regardless of use, so the italic subset was being fetched at high priority on
- * every page — 63.5 KB, competing with the LCP for bandwidth, for nothing.
- *
- * With it gone, fonts no longer outweigh the entire JavaScript bundle. If italic
- * copy is ever genuinely needed, add the style back here rather than faux-slanting.
+ * THE DISPLAY FACE: Fraunces (owner, 2026-09-29: "use nicer font types"). A variable
+ * editorial serif with real 400/500/600 weights, so headings that ask for medium get
+ * a drawn medium rather than a faux-bold. It replaced Newsreader, which read as a
+ * book face at heading sizes. Normal style only: nothing on the site sets headings
+ * in italic, and every declared face is preloaded whether or not it is used.
  */
-const newsreader = Newsreader({
+const fraunces = Fraunces({
   subsets: ['latin'],
-  /*
-    400, 500, 600 — and deliberately not 700.
-
-    Rendered-weight census across all sixteen public routes: 400 on 231 elements,
-    500 on 85, 600 on 3, and 700 on none. A weight nothing asks for is a file the
-    browser may still fetch and always has to account for.
-  */
   weight: ['400', '500', '600'],
   style: ['normal'],
-  variable: '--font-newsreader',
+  variable: '--font-display-face',
   display: 'swap',
 })
 
@@ -62,9 +46,13 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 })
 
-const inter = Inter({
+/*
+ * THE TEXT FACE: Geist (2026-09-29), replacing Inter. A precise modern grotesk with
+ * tighter, more deliberate letterforms at body and label sizes.
+ */
+const geist = Geist({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-text-face',
   display: 'swap',
 })
 
@@ -212,7 +200,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       data-theme="dark"
       style={{ colorScheme: 'dark' }}
-      className={`${newsreader.variable} ${inter.variable} ${spaceGrotesk.variable}`}
+      className={`${fraunces.variable} ${geist.variable} ${spaceGrotesk.variable}`}
       suppressHydrationWarning
     >
       <head>

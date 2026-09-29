@@ -82,7 +82,7 @@ function Section({
 }) {
   return (
     // `scroll-mt-28` clears the phone's admin bar and the jump chips above it.
-    <section id={anchorFor(title)} className="scroll-mt-28 rounded-lg border border-border bg-surface p-4 sm:p-5">
+    <section id={anchorFor(title)} className="scroll-mt-28 rounded-lg border border-border bg-surface p-3.5 md:p-5">
       <h2 className="font-display text-lg text-foreground">{title}</h2>
       {hint ? <p className="mt-1 text-xs text-foreground-muted">{hint}</p> : null}
       <div className="mt-4 space-y-4">{children}</div>

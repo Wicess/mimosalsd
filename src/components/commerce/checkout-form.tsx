@@ -299,8 +299,8 @@ export function CheckoutForm({
       <fieldset>
         <legend className="font-display text-xl text-foreground">3. Payment</legend>
         <p className="mt-1 text-sm text-foreground-muted">
-          No payment is taken here. Choose how you would like to pay and we will send
-          instructions once we have checked the stock and that we can ship to your address.
+          Choose how you would like to pay. Once a person has checked the stock and your
+          address, payment details arrive in your order chat and by email.
         </p>
 
         {/*

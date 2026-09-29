@@ -29,115 +29,84 @@ export function Proprietor({ linkToAbout = true }: { linkToAbout?: boolean } = {
   if (!statement) return null
   const fullName = proprietorFullName()
 
+  const credentials: readonly (readonly [string, string])[] = [
+    [BRAND.proprietor.postNominal || 'PhD', 'Business and chemical engineering'],
+    ['30+', 'Years in the industry'],
+    ['10+', 'Businesses built'],
+    ...(BRAND.track.foundedYear > 0 ? ([[String(BRAND.track.foundedYear), 'Trading since']] as const) : []),
+    ...(BRAND.track.customers > 0 ? ([[BRAND.track.customers.toLocaleString('en-US'), 'Customers across the US']] as const) : []),
+  ]
+
+  /*
+    Redesigned 2026-09-29 (owner: "give each section a unique design"). The portrait
+    sits in an offset frame; the statement is set large in the display serif as lead
+    text, not a quotation, because he did not say it; and the facts the owner supplied
+    sit beneath as a row of figures.
+  */
   return (
-    <section
-      aria-labelledby="proprietor-heading"
-      className="border-y border-border bg-surface"
-    >
-      <div className="shell grid gap-10 py-14 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-center lg:gap-16 lg:py-20">
-        <div>
-          {/*
-            Reserved 4:5 box. It holds its shape whether or not a portrait exists, so
-            configuring one later cannot shift the section.
-          */}
+    <section aria-labelledby="proprietor-heading" className="relative overflow-hidden border-y border-border bg-surface">
+      <div className="shell grid gap-12 py-16 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:items-center lg:gap-20 lg:py-24">
+        <div className="relative mx-auto w-full max-w-sm lg:mx-0">
+          <span aria-hidden className="absolute -right-3 -bottom-3 left-3 top-3 rounded-2xl border border-accent/40" />
           <figure className="relative m-0 aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-data">
             {portrait ? (
               <Image
                 src={portrait}
                 alt={name ? `${name}, ${role} of ${BRAND.name}` : `${role} of ${BRAND.name}`}
                 fill
-                sizes="(max-width: 1023px) 100vw, 26rem"
+                sizes="(max-width: 1023px) 24rem, 24rem"
                 className="object-cover"
               />
             ) : (
               PROPRIETOR_SAMPLE && (
                 <>
-                  <Image
-                    src={imageSrc(PROPRIETOR_SAMPLE)}
-                    alt={PROPRIETOR_SAMPLE.alt}
-                    fill
-                    sizes="(max-width: 1023px) 100vw, 26rem"
-                    className="object-cover"
-                  />
-                  {/*
-                    Says what is actually pictured and what is not.
-
-                    The plate used to be an empty grey box reading "Photograph not
-                    published yet", which was honest and looked broken. This is
-                    the same admission over a photograph that earns its place —
-                    and it names the absence rather than letting a reader assume
-                    the material shot IS the proprietor.
-                  */}
+                  <Image src={imageSrc(PROPRIETOR_SAMPLE)} alt={PROPRIETOR_SAMPLE.alt} fill sizes="24rem" className="object-cover" />
                   {IS_PLACEHOLDER && (
                     <figcaption className="absolute inset-x-0 bottom-0 bg-stone-950/75 px-4 py-3 text-xs leading-snug text-white">
-                      <strong className="font-medium">Sample image.</strong> A
-                      photograph of the {role.toLowerCase()} is not published yet —
-                      this is the material the business is built on.
+                      <strong className="font-medium">Sample image.</strong> A photograph of the {role.toLowerCase()} is not published yet.
                     </figcaption>
                   )}
                 </>
               )
             )}
           </figure>
-
-          {/*
-            Overlaps the portrait's lower edge, the way a signed print does. Only ever
-            a real configured mark — never generated.
-          */}
           {signature && (
             <div className="relative -mt-6 ml-6 h-20 w-56">
-              <Image
-                src={signature}
-                alt={name ? `Signature of ${name}` : 'Signature'}
-                fill
-                sizes="14rem"
-                className="object-contain object-left"
-              />
+              <Image src={signature} alt={name ? `Signature of ${name}` : 'Signature'} fill sizes="14rem" className="object-contain object-left" />
             </div>
           )}
         </div>
 
         <div>
-          <h2
-            id="proprietor-heading"
-            className="text-xs font-medium tracking-[0.2em] text-foreground-subtle uppercase"
-          >
-            About the proprietor
+          <h2 id="proprietor-heading" className="text-sm font-medium text-accent-fg">
+            {name ? `${role}, ${fullName}` : 'About the proprietor'}
           </h2>
-
-          {/*
-            Body sans at display size, not the editorial serif: it is a person
-            speaking, and the weight is what carries it.
-
-            Steps up at `md`, not `sm`. This project sets `--breakpoint-sm` to 375px,
-            so `sm:` is true on every phone — `sm:text-3xl` put display type on a
-            375px screen and ran this statement to twenty lines.
-          */}
-          <p className="mt-5 max-w-[34ch] font-sans text-lg leading-[1.3] font-bold tracking-[-0.01em] text-balance text-foreground md:text-2xl md:leading-[1.25]">
+          <p className="mt-5 max-w-[26ch] font-display text-3xl leading-[1.15] font-medium tracking-[-0.02em] text-balance text-foreground md:text-[2.6rem]">
             {statement}
           </p>
-
-          {name && (
-            <div className="mt-6 text-sm">
-              <p className="text-foreground-muted">
-                <span className="font-medium text-foreground">{fullName}</span>
-                <span aria-hidden> · </span>
-                {role}, {BRAND.legalName}
-              </p>
-              {title && (
-                <p className="mt-1 text-foreground-subtle">
-                  {title.charAt(0).toUpperCase() + title.slice(1)}
-                </p>
-              )}
-            </div>
+          {title && (
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-foreground-muted">
+              {title.charAt(0).toUpperCase() + title.slice(1)}.
+            </p>
           )}
+
+          <dl className="mt-9 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-border pt-7 sm:grid-cols-3 xl:grid-cols-5">
+            {credentials.map(([figure, label]) => (
+              <div key={label}>
+                <dt className="sr-only">{label}</dt>
+                <dd className="font-display text-3xl font-medium tracking-[-0.02em] text-foreground">{figure}</dd>
+                <dd className="mt-1 text-[13px] leading-snug text-foreground-muted">{label}</dd>
+              </div>
+            ))}
+          </dl>
 
           {linkToAbout && (
             <a
               href={url.about()}
-              className="mt-8 inline-block min-h-11 border-b border-border-strong pt-2 text-sm text-foreground transition-colors hover:border-foreground"
+              className="mt-9 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary underline underline-offset-4"
             >
-              Read more about us
+              Meet the team behind every order
+              <span aria-hidden>&rarr;</span>
             </a>
           )}
         </div>

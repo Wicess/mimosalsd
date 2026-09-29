@@ -28,7 +28,7 @@ export const CANNED_REPLIES: readonly CannedReply[] = [
     id: 'payment',
     question: 'How do I pay?',
     answer:
-      'No payment is taken on this site. You submit an order and choose a method — Cash App, Chime, Apple Cash or Bitcoin — we verify the order, then send instructions. No card details are ever entered here, so there is nothing here to steal.',
+      'You place your order and choose a method — Cash App, Chime, Apple Cash or Bitcoin. A person confirms the order, then sends payment details right here in the chat and by email. We never ask for card details.',
     href: url.guide('how-ordering-and-payment-works'),
     linkLabel: 'How ordering works',
   },

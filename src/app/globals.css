@@ -58,8 +58,8 @@
   --color-citron-100: #faf4d9;
 
   /* Type */
-  --font-display: var(--font-newsreader), Georgia, 'Times New Roman', serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-display-face), Georgia, 'Times New Roman', serif;
+  --font-sans: var(--font-text-face), ui-sans-serif, system-ui, -apple-system, sans-serif;
   /*
     Products only — names, prices, batch codes. Not a third general-purpose face:
     if it starts appearing on headings the site has three voices and no hierarchy.

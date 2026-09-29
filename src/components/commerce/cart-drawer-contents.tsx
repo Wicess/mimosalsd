@@ -89,8 +89,8 @@ export async function CartDrawerContents() {
           </dd>
         </dl>
         <p className="mt-1 text-xs leading-relaxed text-foreground-subtle">
-          Shipping is confirmed when we contact you. No payment
-          is taken on this website.
+          Shipping is confirmed with your order. Payment details
+          follow in your order chat.
         </p>
 
         {compliance.blocked.length > 0 ? (

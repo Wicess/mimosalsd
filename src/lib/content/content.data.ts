@@ -212,18 +212,18 @@ export const GUIDES: readonly Guide[] = [
     title: 'How to Order Root Bark Here, and How Payment Works',
     metaTitle: 'How to Order Root Bark Here, and How Payment Works',
     metaDesc:
-      'Ordering here: send an order request, a person checks it, then you pay by Cash App, Chime, Apple Cash or Bitcoin. No card form and no card details, ever.',
+      'Ordering here: place your order, a person checks it, then payment details for Cash App, Chime, Apple Cash or Bitcoin arrive in your order chat.',
     summary:
-      'You order here by sending a request, not a payment. A person checks the stock and your address, then emails payment details for the method you chose: Cash App, Chime, Apple Cash or Bitcoin. Once payment arrives, the bark is weighed, nitrogen-sealed and shipped from California with tracking.',
+      'You order here by sending a request, not a payment. A person checks the stock and your address, then sends payment details in your order chat and by email for the method you chose: Cash App, Chime, Apple Cash or Bitcoin. Once payment arrives, the bark is weighed, nitrogen-sealed and shipped from California with tracking.',
     body: [
       'Ordering root bark here takes one step more than a card checkout, and that step is a person. This is how it works from cart to doorstep.',
       '## Five steps, start to finish',
-      '1. **Choose a cut and a size.** Every root bark comes in 1/4, 1/3, 1/2 and 1 lb, and the price for the size you pick is the price you are quoted.\n2. **Send the order request.** At checkout you give your delivery address and the way you would like to pay. Nothing is charged.\n3. **A person checks it.** We confirm the stock and the address, then email you payment details for your chosen method, with your Order ID.\n4. **Pay off the site.** Send the payment with your Order ID as the reference, and tell us it has gone.\n5. **We ship.** Once the payment is confirmed, the order is weighed, packed in a double-sealed, smell-proof bag flushed with nitrogen to keep the bark fresh, and shipped from California, and the tracking number follows.',
+      '1. **Choose a cut and a size.** Every root bark comes in 1/4, 1/3, 1/2 and 1 lb, and the price for the size you pick is the price you are quoted.\n2. **Place the order.** At checkout you give your delivery address and the way you would like to pay.\n3. **A person checks it.** We confirm the stock and the address, then send payment details for your chosen method in your order chat and by email, with your Order ID.\n4. **Pay.** Send the payment with your Order ID as the reference, and tell us in the chat once it has gone.\n5. **We ship.** Once the payment is confirmed, the order is weighed, packed in a double-sealed, smell-proof bag flushed with nitrogen to keep the bark fresh, and shipped from California, and the tracking number follows.',
       '## Ways to pay',
       'Cash App, Chime, Apple Cash and Bitcoin. Bitcoin orders take a discount off the items, shown next to the payment choice at checkout. The payment details you receive belong to your order alone and are never printed on this website.',
       'A note on names: we take Apple Cash, the person-to-person transfer in Apple Wallet, and not Apple Pay. Apple Pay runs on the card networks and needs a card processor, which this site does not have.',
-      '## Why there is no card form',
-      'Because a card form is the one thing on a shop that is worth attacking. With no processor behind this site, there are no card numbers here to leak in a breach. The cost is a short wait while a person checks your order; what you get is a checkout with nothing in it to steal.',
+      '## Why we never ask for card details',
+      'Because a card number is the one thing on a shop worth stealing, and we have no reason to hold one. Payment runs through the method you chose, with details sent to your order chat for that order alone. The cost is a short wait while a person checks your order; what you get is an order no one else can pay into or intercept.',
       '## How long it takes',
       'Payment details usually follow your request the same day. Delivery time depends on how far the parcel travels from California, so we confirm a window with your order rather than printing one here. Parcel orders from 100 dollars ship free.',
       '## Changing or cancelling',

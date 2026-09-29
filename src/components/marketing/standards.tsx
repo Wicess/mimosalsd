@@ -52,9 +52,9 @@ const STANDARDS = [
     action: { label: 'Where we ship', href: url.legalityHub() },
   },
   {
-    claim: 'No payment is taken on this website.',
+    claim: 'Payment details come to your order chat.',
     detail:
-      'There is no card form here, no processor behind it and nothing stored — so there is nothing for anyone to take.',
+      'Once a person has confirmed your order, the details for the method you chose arrive in your order chat and by email. We never ask for card details.',
     action: { label: 'Contact us', href: url.contact() },
   },
 ] as const
@@ -263,13 +263,17 @@ export function Standards() {
               conditions, which is what they are — and a screen reader gets three
               items rather than one run-on.
             */}
-            <ul className="mt-3 space-y-1.5 text-sm text-foreground-muted">
-              <li>United States only.</li>
-              <li>{BRAND.minimumAge} and over.</li>
-              <li>
-                We do not advertise; paid advertising is not permitted in this
-                category, so everything here had to be worth finding.
-              </li>
+            <ul className="mt-4 grid gap-3">
+              {[
+                ['Every US state', `Shipped from ${BRAND.location.region} with tracking`],
+                [`${BRAND.minimumAge} and over`, 'For adult buyers only'],
+                ['Dyeing and craft', 'Raw botanical material, not for human consumption'],
+              ].map(([term, detail]) => (
+                <li key={term} className="flex items-baseline gap-3 border-b border-border pb-3 last:border-b-0">
+                  <span className="font-display text-lg font-medium text-foreground">{term}</span>
+                  <span className="text-sm text-foreground-muted">{detail}</span>
+                </li>
+              ))}
             </ul>
           </div>
 

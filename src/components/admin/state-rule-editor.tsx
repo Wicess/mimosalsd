@@ -136,7 +136,7 @@ export function StateRuleEditor({ rule }: { rule: EditableRule }) {
               ['requiresProductDirectory', 'State product directory applies', rule.requiresProductDirectory],
               ['watch', 'Legislation pending — flag for review', rule.watch],
             ].map(([name, label, checked]) => (
-              <label key={name as string} className="flex cursor-pointer items-center gap-2 text-foreground">
+              <label key={name as string} className="flex min-h-11 cursor-pointer items-center gap-2 text-foreground">
                 <input
                   type="checkbox"
                   name={name as string}

@@ -86,7 +86,7 @@ export default async function AboutPage() {
             {
               heading: 'How an order works',
               body: [
-                'No payment is taken on this site. You send an order request, we check it against the address it is going to, and then we contact you with how to pay.',
+                'You place your order and a person confirms it against the address it is going to. Payment details then arrive in your order chat on this site, and by email, for the method you chose.',
                 'Once payment is confirmed, the order is weighed, packed and handed to the carrier, and the tracking number follows. Disposables travel as a separate parcel from root bark.',
               ],
             },

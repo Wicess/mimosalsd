@@ -53,7 +53,7 @@ import { ButtonLink } from '@/components/ui/button'
  */
 const UNIVERSAL = [
   'Do you ship to my state?',
-  'Why can I not pay on your website?',
+  'When do I pay for my order?',
   'How old do I have to be to order?',
 ] as const
 

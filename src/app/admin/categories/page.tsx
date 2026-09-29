@@ -63,7 +63,7 @@ async function CategoryPanels() {
         return (
           <section
             key={category.slug}
-            className="rounded-lg border border-border bg-surface p-4 sm:p-5"
+            className="rounded-lg border border-border bg-surface p-3.5 md:p-5"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">

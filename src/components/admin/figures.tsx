@@ -69,7 +69,7 @@ export function BarChart({
         : 'left-1/2 -translate-x-1/2'
 
   return (
-    <figure className="rounded-lg border border-border bg-surface p-4 sm:p-5">
+    <figure className="rounded-lg border border-border bg-surface p-3.5 md:p-5">
       <figcaption className="text-sm text-foreground-muted">{caption}</figcaption>
 
       {/*

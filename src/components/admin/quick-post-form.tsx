@@ -278,7 +278,7 @@ function QuickPostFields({
         </p>
       ) : null}
 
-      <section className="space-y-4 rounded-lg border border-border bg-surface p-4 sm:p-5">
+      <section className="space-y-4 rounded-lg border border-border bg-surface p-3.5 md:p-5">
         <div>
           <label htmlFor={`${id}-name`} className={LABEL}>
             Product name

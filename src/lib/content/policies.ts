@@ -151,7 +151,7 @@ export const POLICIES: readonly Policy[] = [
       {
         heading: 'When your order actually ships',
         body: [
-          'No payment is taken on this website. Submitting an order places a request, and that request moves through a fixed sequence: we check the stock is available and that we can ship to your address, we send you payment instructions, you pay, and only then is it packed and dispatched.',
+          'Placing an order starts a fixed sequence: we check the stock is available and that we can ship to your address, we send payment details in your order chat and by email, you pay, and only then is it packed and dispatched.',
           `Nothing ships before payment has cleared. If we do not receive payment within ${POLICY_TERMS.paymentWindowDays} business days of sending instructions, the order is released and the stock returns to sale.`,
           'Every change of state on your order is recorded and timestamped, and you can follow it from the order link we email you.',
         ],
@@ -210,7 +210,7 @@ export const POLICIES: readonly Policy[] = [
         heading: 'How refunds are issued',
         body: [
           `Once a return reaches us we inspect it and issue the refund within ${POLICY_TERMS.refundProcessingDays} business days. Refunds go back by the same method you paid, to the same account.`,
-          'Because we take no payment on this website and hold no card details, a refund is a transfer we send rather than a reversal we trigger. That means we need the payment details to match the ones the order was paid from; we cannot refund a different account.',
+          'Because we hold no card details, a refund is a transfer we send rather than a reversal we trigger. That means we need the payment details to match the ones the order was paid from; we cannot refund a different account.',
           'Original shipping is refunded when the fault was ours, and retained when the return is a change of mind.',
         ],
       },
@@ -229,8 +229,8 @@ export const POLICIES: readonly Policy[] = [
     slug: 'purchase',
     title: 'Purchase policy',
     metaTitle: 'Purchase Policy — Age, Eligibility and How Ordering Works',
-    metaDescription: `You must be ${BRAND.minimumAge} or older and in the United States. No payment is taken on this website: you place an order request, we check stock and that we can ship to your address, then we send payment instructions.`,
-    summary: `You must be ${BRAND.minimumAge} or older and ordering for delivery within the United States. No payment is taken on this website. You submit an order request and choose how you would prefer to pay; we check that the stock is available and that we can ship to your address, then contact you with instructions. Your order is confirmed when payment is received.`,
+    metaDescription: `You must be ${BRAND.minimumAge} or older and in the United States. You place your order, we check stock and that we can ship to your address, then send payment details in your order chat.`,
+    summary: `You must be ${BRAND.minimumAge} or older and ordering for delivery within the United States. You place your order and choose how you would prefer to pay; we check that the stock is available and that we can ship to your address, then send payment details in your order chat and by email. Your order is confirmed when payment is received.`,
     lastReviewedAt: '2026-09-13',
     sections: [
       {
@@ -249,7 +249,7 @@ export const POLICIES: readonly Policy[] = [
       {
         heading: 'How ordering and payment work',
         body: [
-          'This website does not process payments. There is no card form here, no payment processor behind it, and no card details stored anywhere in our systems — which is also why there is nothing here for anyone to steal.',
+          'Payment details are sent in your order chat on this site, and by email, once a person has confirmed your order. They belong to that order alone. We never ask for, and never store, card details.',
           'Before we confirm an order, we check two things:',
         ],
         list: [
@@ -321,7 +321,7 @@ export const POLICIES: readonly Policy[] = [
           'Some of the most sensitive data a shop normally holds simply does not exist here, and that is by design rather than by promise.',
         ],
         list: [
-          'Card numbers, expiry dates and security codes. No payment is taken on this website, so none is ever entered, transmitted or stored.',
+          'Card numbers, expiry dates and security codes. We never ask for them, so none is ever entered, transmitted or stored.',
           'Third-party advertising or analytics trackers. There is no advertising pixel, no cross-site tracking, and no tag manager on this site — partly on principle, and partly because paid advertising is not permitted in this category anyway.',
           'Any data about you sold or rented to anyone. We do not do this, and there is no arrangement under which we would.',
         ],
@@ -409,7 +409,7 @@ export const POLICIES: readonly Policy[] = [
       {
         heading: 'Orders are requests until we accept them',
         body: [
-          'Submitting an order on this site is an offer to buy, not a concluded contract. No payment is taken at that point. A contract is formed only when we have confirmed the stock and that we can ship to your address, and received payment for it.',
+          'Submitting an order on this site is an offer to buy, not a concluded contract. A contract is formed only when we have confirmed the stock and that we can ship to your address, and received payment for it.',
           'This matters in your favour as well as ours: it is why a state restriction or a stock error is caught before any money changes hands rather than after.',
         ],
       },

@@ -100,7 +100,7 @@ function Section({
 }) {
   return (
     // `scroll-mt-28` clears the phone's admin bar and the jump chips above it.
-    <section id={anchorFor(title)} className="scroll-mt-28 rounded-lg border border-border bg-surface p-4 sm:p-5">
+    <section id={anchorFor(title)} className="scroll-mt-28 rounded-lg border border-border bg-surface p-3.5 md:p-5">
       <h2 className="font-display text-lg text-foreground">{title}</h2>
       {hint ? <p className="mt-1 text-xs text-foreground-muted">{hint}</p> : null}
       <div className="mt-4 space-y-4">{children}</div>
@@ -359,7 +359,7 @@ export function PostedProductForm({
             <div className="flex items-start gap-4">
               {/* eslint-disable-next-line @next/next/no-img-element -- admin preview of an uploaded original */}
               <img src={values.photoUrl} alt="" className="h-24 w-24 rounded-md object-cover ring-1 ring-border" />
-              <label className="flex items-center gap-2 text-sm text-foreground">
+              <label className="flex min-h-11 items-center gap-2 text-sm text-foreground">
                 <input type="checkbox" name="removePhoto" className="size-6 shrink-0 md:size-4" />
                 Remove the photos
               </label>
@@ -396,7 +396,7 @@ export function PostedProductForm({
           ) : (
             <div className="grid gap-2 md:grid-cols-2">
               {lineBatches.map((b) => (
-                <label key={b.code} className="flex items-center gap-2 text-sm text-foreground">
+                <label key={b.code} className="flex min-h-11 items-center gap-2 text-sm text-foreground">
                   <input
                     type="checkbox"
                     name="batchCodes"
@@ -412,7 +412,7 @@ export function PostedProductForm({
         </Section>
 
         <Section title="Placement">
-          <label className="flex items-center gap-2 text-sm text-foreground">
+          <label className="flex min-h-11 items-center gap-2 text-sm text-foreground">
             <input type="checkbox" name="isFeatured" defaultChecked={values?.isFeatured} className="size-6 shrink-0 md:size-4" />
             Featured: sorts to the front of the shop and the homepage
           </label>
@@ -436,7 +436,7 @@ export function PostedProductForm({
 function VisibilityForm({ slug, isActive }: { slug: string; isActive: boolean }) {
   const [state, action, pending] = useActionState(setPostedProductActive, INITIAL)
   return (
-    <section className="rounded-lg border border-border bg-surface p-4 sm:p-5">
+    <section className="rounded-lg border border-border bg-surface p-3.5 md:p-5">
       <h2 className="font-display text-lg text-foreground">Visibility</h2>
       <p className="mt-1 text-xs text-foreground-muted">
         {isActive

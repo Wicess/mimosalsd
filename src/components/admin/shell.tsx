@@ -32,7 +32,7 @@ export function AdminPage({
       reading width of their own.
     */
     <main className="w-full px-4 pb-16 md:px-8 2xl:px-12">
-      <header className="sticky top-0 z-10 -mx-4 border-b border-border bg-background/95 px-4 py-5 backdrop-blur max-md:static max-md:mx-0 max-md:border-0 max-md:px-0 md:-mx-8 md:px-8 2xl:-mx-12 2xl:px-12">
+      <header className="sticky top-0 z-10 -mx-4 border-b border-border bg-background/95 px-4 py-5 backdrop-blur max-md:static max-md:py-3 max-md:mx-0 max-md:border-0 max-md:px-0 md:-mx-8 md:px-8 2xl:-mx-12 2xl:px-12">
         {/*
           On a phone the title and its actions each take the full width: sharing one
           row left the description 98px wide on a 360px screen, which broke words out
@@ -40,9 +40,9 @@ export function AdminPage({
         */}
         <div className="flex flex-wrap items-start gap-4">
           <div className="min-w-0 flex-1 max-md:basis-full">
-            <h1 className="font-display text-2xl text-foreground sm:text-3xl">{title}</h1>
+            <h1 className="font-display text-[1.375rem] leading-tight text-foreground md:text-3xl">{title}</h1>
             {description && (
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-foreground-muted">
+              <p className="mt-1.5 max-w-2xl text-[13px] leading-snug text-foreground-muted md:mt-2 md:text-sm md:leading-relaxed">
                 {description}
               </p>
             )}
@@ -50,7 +50,7 @@ export function AdminPage({
           {actions && <div className="flex flex-wrap gap-2 max-md:basis-full">{actions}</div>}
         </div>
       </header>
-      <div className="mt-6">
+      <div className="mt-4 md:mt-6">
         <Suspense fallback={<AdminSkeleton />}>{children}</Suspense>
       </div>
     </main>
@@ -68,7 +68,7 @@ export function AdminSkeleton() {
 
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {
   return (
-    <div className="rounded-lg border border-border bg-surface p-8 text-center sm:p-10">
+    <div className="rounded-lg border border-border bg-surface p-6 text-center md:p-10">
       <p className="font-medium text-foreground">{title}</p>
       {hint && (
         <p className="mx-auto mt-1 max-w-prose text-sm leading-relaxed text-foreground-muted">
@@ -254,11 +254,15 @@ export function StatCard({
     on a phone; this makes the card safe at any width rather than trusting them to.
   */
   return (
-    <div className={`rounded-lg border p-3 sm:p-4 ${toneClass}`}>
-      <p className="text-xs tracking-wide break-words uppercase opacity-75">{label}</p>
+    /*
+      md:, not sm:. This project sets --breakpoint-sm to 375px, so sm: matched every
+      phone and these cards never used their compact sizes.
+    */
+    <div className={`rounded-lg border p-3 md:p-4 ${toneClass}`}>
+      <p className="text-[10.5px] tracking-wide break-words uppercase opacity-75 md:text-xs">{label}</p>
       {/* Tabular figures so a changing number does not reflow the card beside it. */}
-      <p className="tabular mt-1 text-xl font-semibold break-words sm:text-2xl">{value}</p>
-      {hint && <p className="mt-1 text-xs break-words opacity-80">{hint}</p>}
+      <p className="tabular mt-1 text-xl font-semibold break-words md:text-2xl">{value}</p>
+      {hint && <p className="mt-1 text-[11px] leading-snug break-words opacity-80 md:text-xs">{hint}</p>}
     </div>
   )
 }

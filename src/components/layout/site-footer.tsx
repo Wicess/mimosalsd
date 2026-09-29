@@ -196,7 +196,7 @@ export function SiteFooter() {
                 `${BRAND.minimumAge}+ only`,
                 'United States only',
                 'No international shipping',
-                'No payment taken on this website',
+                'Payment details sent in your order chat',
               ].map((fact, i) => (
                 <li key={fact} className="flex items-center gap-2.5">
                   {i > 0 && (

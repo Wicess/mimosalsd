@@ -253,7 +253,7 @@ export async function renderInvoicePng(d: InvoiceData): Promise<Buffer> {
         {/* Footer */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48, paddingTop: 22, borderTop: `1px solid ${RULE}` }}>
           <span style={{ fontSize: 21, color: MUTED }}>{`Order ID ${d.orderId}`}</span>
-          <span style={{ fontSize: 21, color: MUTED }}>No payment is taken on our website.</span>
+          <span style={{ fontSize: 21, color: MUTED }}>Questions? Reply in your order chat.</span>
         </div>
         <div style={{ display: 'flex', height: 8, width: 8, backgroundColor: '#ffffff', marginTop: 4 }} data-end="" />
       </div>

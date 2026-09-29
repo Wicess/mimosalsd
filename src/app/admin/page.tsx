@@ -18,7 +18,7 @@ function Stat({
 }) {
   return (
     <div
-      className={`rounded-lg border p-4 ${
+      className={`rounded-lg border p-3 md:p-4 ${
         tone === 'danger'
           ? 'border-transparent bg-danger-bg text-danger-fg'
           : tone === 'warning'
@@ -26,9 +26,9 @@ function Stat({
             : 'border-border bg-surface'
       }`}
     >
-      <p className="text-xs tracking-wide uppercase opacity-75">{label}</p>
-      <p className="tabular mt-1 text-2xl font-semibold">{value}</p>
-      {hint && <p className="mt-1 text-xs opacity-80">{hint}</p>}
+      <p className="text-[10.5px] tracking-wide uppercase opacity-75 md:text-xs">{label}</p>
+      <p className="tabular mt-1 text-xl font-semibold md:text-2xl">{value}</p>
+      {hint && <p className="mt-1 text-[11px] leading-snug opacity-80 md:text-xs">{hint}</p>}
     </div>
   )
 }

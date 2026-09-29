@@ -152,6 +152,21 @@ export const clinical = {
  * colour with an icon and a text label. In this category a misread status is not a
  * cosmetic problem — it is someone believing we can ship to a state we cannot.
  */
+/**
+ * Dye swatches (2026-09-29): the shades Mimosa hostilis root bark gives on wool, for
+ * the home page's colour range. Content colours, not interface colours: they appear
+ * only as swatch fills, and they are approximations of a dyed skein, which the page
+ * says.
+ */
+export const dyeSwatch = {
+  rose: '#c4868b',
+  plum: '#7e3e5c',
+  burgundy: '#6a2432',
+  chocolate: '#4b2b22',
+  slate: '#5c5d69',
+  charcoal: '#2d2c32',
+} as const
+
 export const status = {
   successFg: '#0F3D22',
   success: '#1A7A40',

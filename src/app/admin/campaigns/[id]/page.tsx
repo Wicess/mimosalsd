@@ -21,7 +21,7 @@ export const maxDuration = 300
 
 function Panel({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border bg-surface p-4 sm:p-5">
+    <section className="rounded-lg border border-border bg-surface p-3.5 md:p-5">
       <h2 className="font-display text-lg text-foreground">{title}</h2>
       {hint ? <p className="mt-1 text-xs leading-relaxed text-foreground-muted">{hint}</p> : null}
       <div className="mt-4">{children}</div>

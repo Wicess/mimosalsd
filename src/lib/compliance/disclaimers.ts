@@ -21,12 +21,16 @@ export const INTENDED_USE_ATTESTATION =
 export const AGE_ATTESTATION =
   'I confirm that I am 21 years of age or older and that the person receiving this delivery will be 21 or older.'
 
+/*
+  Reworded 2026-09-29 (owner): payment is arranged through the order chat on this
+  site, so the site no longer says that no payment happens here. What stays true,
+  and is said, is the order of events and that no card details are ever asked for.
+*/
 export const PAYMENT_ATTESTATION =
-  'I understand that no payment is taken on this website. I will receive payment instructions after this order is verified, and my order is not confirmed until payment is received.'
+  'I understand that a person confirms my order first, then sends payment instructions in my order chat and by email, and that my order is confirmed once payment is received.'
 
-/** Honest, and a genuine trust asset: it is literally true. */
 export const PAYMENT_SECURITY_STATEMENT =
-  'We never take payment on this website and we never store card details. There is no card processing on our servers, so there is nothing here for anyone to steal.'
+  'Payment details reach you in your order chat, and by email, once a person has confirmed your order, and they are only ever for that order. We never ask for card details.'
 
 export function disclaimersFor(lines: readonly ProductLine[]): readonly string[] {
   const out: string[] = [FDA_DISCLAIMER]

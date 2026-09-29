@@ -28,9 +28,13 @@ import { BRAND } from '@/lib/brand'
  */
 
 /*
-  Rewritten 2026-09-28. Two of the four claims were no longer true: no state rule
-  cites a statute, and checkout stopped refusing sales by location on 2026-09-19.
-  Each line below is something the business does on every order.
+  LAYOUT FROM THE SIBLING BUILD, CLAIMS FROM THIS ONE (2026-09-29).
+
+  The owner asked for the landing page to match the sibling site section for section,
+  so the markup below is that build's. The four claims are NOT: two of the sibling's
+  are false here. No state rule cites a statute any more — every rule was cleared to
+  ALLOWED on the owner's instruction — and the cart stopped refusing sales by location
+  on the same day. Reverting the design must never revert a claim back into a lie.
 */
 const STANDARDS = [
   {
@@ -263,17 +267,13 @@ export function Standards() {
               conditions, which is what they are — and a screen reader gets three
               items rather than one run-on.
             */}
-            <ul className="mt-4 grid gap-3">
-              {[
-                ['Every US state', `Shipped from ${BRAND.location.region} with tracking`],
-                [`${BRAND.minimumAge} and over`, 'For adult buyers only'],
-                ['Dyeing and craft', 'Raw botanical material, not for human consumption'],
-              ].map(([term, detail]) => (
-                <li key={term} className="flex items-baseline gap-3 border-b border-border pb-3 last:border-b-0">
-                  <span className="font-display text-lg font-medium text-foreground">{term}</span>
-                  <span className="text-sm text-foreground-muted">{detail}</span>
-                </li>
-              ))}
+            <ul className="mt-3 space-y-1.5 text-sm text-foreground-muted">
+              <li>United States only.</li>
+              <li>{BRAND.minimumAge} and over.</li>
+              <li>
+                We do not advertise; paid advertising is not permitted in this
+                category, so everything here had to be worth finding.
+              </li>
             </ul>
           </div>
 

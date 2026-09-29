@@ -1,3 +1,4 @@
+import { meetsMinimumOrder, minimumOrderMessage } from '@/lib/orders/minimum-order'
 import { readCart } from '@/lib/cart/storage'
 import { resolveCartLive } from '@/lib/catalog/live-cart'
 import { getVisitorState } from '@/lib/geo/visitor-state'
@@ -199,10 +200,21 @@ export async function CartContents() {
             </p>
           )}
 
-          {compliance.canProceed ? (
+          {/* The minimum order (owner, 2026-09-29), said here before checkout refuses it. */}
+          {!meetsMinimumOrder(cart.subtotalCents) && (
+            <p role="status" className="mt-4 rounded-md bg-warning-bg px-4 py-3 text-sm font-medium text-warning-fg">
+              {minimumOrderMessage(cart.subtotalCents)}
+            </p>
+          )}
+
+          {compliance.canProceed && meetsMinimumOrder(cart.subtotalCents) ? (
             <ButtonLink href={url.checkout()} variant="accent" size="lg" fullWidth className="mt-5">
               Continue to checkout
             </ButtonLink>
+          ) : !meetsMinimumOrder(cart.subtotalCents) ? (
+            <Button variant="accent" size="lg" fullWidth className="mt-5" disabled>
+              Minimum order not reached
+            </Button>
           ) : (
             <Button variant="accent" size="lg" fullWidth className="mt-5" disabled>
               {compliance.blocked.length > 0

@@ -1,3 +1,4 @@
+import { meetsMinimumOrder, minimumOrderMessage } from '@/lib/orders/minimum-order'
 import { readCart } from '@/lib/cart/storage'
 import { resolveCartLive } from '@/lib/catalog/live-cart'
 import { getVisitorState } from '@/lib/geo/visitor-state'
@@ -96,6 +97,10 @@ export async function CartDrawerContents() {
         {compliance.blocked.length > 0 ? (
           <p className="mt-4 rounded-md bg-surface-sunken px-4 py-3 text-center text-sm font-medium text-foreground-muted">
             Remove the blocked items to continue
+          </p>
+        ) : !meetsMinimumOrder(cart.subtotalCents) ? (
+          <p role="status" className="mt-4 rounded-md bg-warning-bg px-4 py-3 text-center text-sm font-medium text-warning-fg">
+            {minimumOrderMessage(cart.subtotalCents)}
           </p>
         ) : (
           <ButtonLink

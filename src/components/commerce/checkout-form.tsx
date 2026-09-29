@@ -1,5 +1,6 @@
 'use client'
 
+import { meetsMinimumOrder, minimumOrderMessage } from '@/lib/orders/minimum-order'
 import { useActionState, useState, useSyncExternalStore, useTransition } from 'react'
 import { PaymentMark } from '@/components/commerce/payment-mark'
 import {
@@ -570,7 +571,13 @@ export function CheckoutForm({
         <p className="mt-2 text-xs text-foreground-muted">We confirm every figure on the invoice we send you.</p>
       </section>
 
-      <Button type="submit" variant="accent" size="lg" fullWidth loading={pending}>
+      {/* The minimum order: the action refuses it too, this says so before a submit. */}
+      {!meetsMinimumOrder(subtotalCents) && (
+        <p role="status" className="rounded-md bg-warning-bg px-4 py-3 text-sm font-medium text-warning-fg">
+          {minimumOrderMessage(subtotalCents)}
+        </p>
+      )}
+      <Button type="submit" variant="accent" size="lg" fullWidth loading={pending} disabled={!meetsMinimumOrder(subtotalCents)}>
         {pending ? 'Submitting your order' : 'Submit order request'}
       </Button>
     </form>

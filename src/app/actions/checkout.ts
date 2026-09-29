@@ -1,5 +1,6 @@
 'use server'
 
+import { meetsMinimumOrder, minimumOrderMessage } from '@/lib/orders/minimum-order'
 import { ensureLiveStateRules } from '@/lib/compliance/live-state-rules'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -147,6 +148,11 @@ export async function submitOrder(
 
   if (cart.lines.length === 0) {
     return { formError: 'Your cart is empty.' }
+  }
+  // The minimum order (owner, 2026-09-29), on the item subtotal before shipping.
+  // Enforced here, where it cannot be skipped; the pages only say so ahead of time.
+  if (!meetsMinimumOrder(cart.subtotalCents)) {
+    return { formError: minimumOrderMessage(cart.subtotalCents) }
   }
   if (!cart.compliance.canProceed) {
     const names = cart.compliance.blocked.map((b) => b.item.name).join(', ')

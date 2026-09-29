@@ -84,6 +84,13 @@ export const BRAND = {
   freeShippingThresholdCents: 10_000,
 
   /**
+   * Minimum order, in integer cents, on the item subtotal before shipping (owner,
+   * 2026-09-29: "set the minimum order to $100, enforce it in checkout"). Enforced in
+   * the checkout action; the cart and checkout pages say so before anyone gets there.
+   */
+  minimumOrderCents: 10_000,
+
+  /**
    * The owner, as the client supplied him (2026-09-28): Dr Kevin Turner, CEO, a PhD in
    * business and chemical engineering specialising in fumes, more than 30 years in the
    * industry, more than ten businesses.

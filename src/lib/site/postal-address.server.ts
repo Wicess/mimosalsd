@@ -10,7 +10,7 @@ import { DEFAULT_POSTAL_ADDRESS, normalisePostalAddress, POSTAL_ADDRESS_KEY } fr
  * than caught, so a failure is never cached as if it were the answer.
  */
 async function readStoredPostalAddress(): Promise<string | null> {
-  'use cache'
+  'use cache: remote'
   cacheTag(SITE_SETTINGS_TAG)
   const row = await db.setting.findUnique({
     where: { key: POSTAL_ADDRESS_KEY },

@@ -30,7 +30,7 @@ export function AutoRefresh({
   /** Seconds between refreshes while the operator is active. */
   intervalSeconds = 45,
   /** Stop refreshing after this long with no interaction at all. */
-  idleAfterSeconds = 180,
+  idleAfterSeconds = 60,
 }: {
   intervalSeconds?: number
   idleAfterSeconds?: number

@@ -48,7 +48,7 @@ export const STATE_RULES_TAG = 'state-rules'
  * thrown result is never cached: the next request tries again.
  */
 export async function loadStateRulesCached(): Promise<StateRule[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(STATE_RULES_TAG)
   return loadStateRules()
 }

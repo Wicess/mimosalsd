@@ -52,7 +52,7 @@ function describedHere(p: { categorySlug: string; name: string }): boolean {
  * silently degrading.
  */
 async function buildLlmsTxt(): Promise<string> {
-  'use cache'
+  'use cache: remote'
   /*
     Tagged so a publish refreshes it. It was cached with no tag at all, which was
     harmless while everything in it was authored and changed only with a deploy. It

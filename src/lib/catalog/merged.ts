@@ -47,7 +47,7 @@ export const CATALOG_TAG = 'catalog'
  * database that bills by how long it stays awake.
  */
 async function loadOverrides(): Promise<ReadonlyMap<string, ProductOverrideRecord>> {
-  'use cache'
+  'use cache: remote'
   cacheTag(CATALOG_TAG)
 
   try {
@@ -81,7 +81,7 @@ async function loadOverrides(): Promise<ReadonlyMap<string, ProductOverrideRecor
  * to see them.
  */
 async function loadPostedProducts(): Promise<readonly Product[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(CATALOG_TAG)
 
   try {
@@ -170,7 +170,7 @@ export async function getOverrideRecord(
 async function loadCategoryOverrides(): Promise<
   ReadonlyMap<string, CategoryOverrideRecord>
 > {
-  'use cache'
+  'use cache: remote'
   cacheTag(CATALOG_TAG)
 
   try {
@@ -235,7 +235,7 @@ export async function getCategoryOverrideRecord(
 export const LAB_TAG = 'lab-batches'
 
 export async function listMergedBatches(): Promise<readonly LabBatch[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(LAB_TAG)
 
   try {

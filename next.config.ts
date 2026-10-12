@@ -14,6 +14,30 @@ const nextConfig: NextConfig = {
    */
   cacheComponents: true,
   /**
+   * How long cached data lives, for every `'use cache: remote'` in the app.
+   *
+   * Every cached read here carries a tag (catalog, content, state rules, settings,
+   * lab batches, blocked IPs) and every admin write that changes one invalidates
+   * its tag, so the data is refreshed when it changes. Refreshing it on a timer as
+   * well, every 15 minutes by default, only meant a database query each time a
+   * crawler came by after the timer ran out, and Neon bills for each wake-up
+   * (~/.claude/cost-reduction-playbook.md). So `default` is redefined: a week.
+   *
+   * A script that writes to the database directly bypasses the tags; deploy after
+   * running one (a deploy starts every cache afresh).
+   *
+   * And `remote`, not the in-memory cache: a serverless instance starts with an
+   * empty memory, so the parts of a page rendered per request queried Postgres on
+   * every cold start. The remote cache is shared by all instances.
+   */
+  cacheLife: {
+    default: {
+      stale: 300,
+      revalidate: 60 * 60 * 24 * 7,
+      expire: 60 * 60 * 24 * 30,
+    },
+  },
+  /**
    * Crawlers that get the page with its <title> and meta description in <head>.
    *
    * Next 16 streams metadata to everything outside this list, which puts the title

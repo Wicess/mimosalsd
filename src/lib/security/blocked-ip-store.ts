@@ -17,7 +17,7 @@ export const BLOCKED_IPS_TAG = 'blocked-ips'
  * A failure is thrown, and a thrown result is never cached: the next request retries.
  */
 export async function blockedIpsCached(): Promise<string[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(BLOCKED_IPS_TAG)
   const rows = await db.blockedIp.findMany({ select: { ip: true } })
   return rows.map((row) => normaliseIp(row.ip) ?? row.ip)

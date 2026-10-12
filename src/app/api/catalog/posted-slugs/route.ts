@@ -12,7 +12,7 @@ import { CATALOG_TAG } from '@/lib/catalog/merged'
  * product, and Neon bills by the minute it is awake.
  */
 async function livePostedSlugs(): Promise<readonly string[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(CATALOG_TAG)
 
   const { db } = await import('@/lib/db/client')

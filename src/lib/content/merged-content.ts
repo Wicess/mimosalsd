@@ -44,7 +44,7 @@ export const CONTENT_TAG = 'content'
 const AUTHOR_SELECT = { select: { slug: true } } as const
 
 async function cachedPostedPosts(): Promise<readonly Post[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(CONTENT_TAG)
   const { db } = await import('@/lib/db/client')
   try {
@@ -62,7 +62,7 @@ async function cachedPostedPosts(): Promise<readonly Post[]> {
 }
 
 async function cachedPostedGuides(): Promise<readonly Guide[]> {
-  'use cache'
+  'use cache: remote'
   cacheTag(CONTENT_TAG)
   const { db } = await import('@/lib/db/client')
   try {

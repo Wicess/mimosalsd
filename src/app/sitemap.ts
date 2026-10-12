@@ -29,7 +29,7 @@ import { ROUTES, absoluteUrl, url } from '@/lib/seo/routes'
 const RELEASE_DATE = new Date('2026-09-28T00:00:00Z')
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  'use cache'
+  'use cache: remote'
   /*
     Both tags: publishing a product drops this entry, and so does publishing or
     unpublishing a post or guide. With only the catalogue tag, an article written

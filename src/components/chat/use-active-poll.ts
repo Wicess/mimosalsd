@@ -9,7 +9,9 @@ import { useEffect, useRef } from 'react'
  * database is awake and only sleeps after ~5 minutes with ZERO queries, so an inbox
  * left open on a second monitor that keeps polling is the single most expensive
  * thing an admin panel can do. This polls only while the tab is visible AND the
- * operator has touched the page in the last three minutes. Walk away and it stops;
+ * operator has touched the page in the last minute (the playbook's figure for an
+ * inbox: three minutes of polling after the last touch kept the database up for
+ * eight, counting Neon's own five before it suspends). Walk away and it stops;
  * the next mouse move, keypress or return to the tab fetches at once and resumes.
  *
  * `poll` and `intervalMs` are read through refs, so changing them — a faster rate
@@ -18,7 +20,7 @@ import { useEffect, useRef } from 'react'
  * filter or search loads at once. `repeat: false` keeps the immediate fetch but no
  * timer — a search result is a lookup, not a live feed.
  */
-const IDLE_AFTER_MS = 3 * 60_000
+const IDLE_AFTER_MS = 60_000
 
 export function useActivePoll(
   poll: () => Promise<void> | void,

@@ -3,6 +3,7 @@ import { db } from '@/lib/db/client'
 import { HUMAN_KIND } from './activity'
 import { NO_EVIDENCE, type HumanEvidence } from './human'
 import { parseVisitEvent, type VisitEvent } from './page-view'
+import { readHeldDay } from './held-visits'
 
 export { whenMigrated, type Migrated } from '@/lib/db/migrated'
 
@@ -98,9 +99,11 @@ export function visitorThreads(visitorId: string) {
  */
 export async function bufferedToday(now: Date): Promise<number | null> {
   try {
-    return await db.visitEvent.count({
-      where: { day: new Date(`${now.toISOString().slice(0, 10)}T00:00:00Z`) },
-    })
+    const [inTable, held] = await Promise.all([
+      db.visitEvent.count({ where: { day: dayOf(now) } }),
+      heldToday(now),
+    ])
+    return inTable + held.length
   } catch {
     return null
   }
@@ -108,11 +111,20 @@ export async function bufferedToday(now: Date): Promise<number | null> {
 
 const dayOf = (now: Date) => new Date(`${now.toISOString().slice(0, 10)}T00:00:00Z`)
 
+/** Today's views waiting in object storage. Empty if R2 cannot be read: a nicety, not a dependency. */
+async function heldToday(now: Date): Promise<VisitEvent[]> {
+  return readHeldDay(now.toISOString().slice(0, 10))
+    .then((day) => day.events)
+    .catch(() => [])
+}
+
 /**
- * Today's page views from the buffer, optionally for one visitor. Empty rather than
- * an error when the buffer table is missing, so the page still renders.
+ * Today's page views from the buffer, optionally for one visitor: the batches
+ * waiting in object storage, and any the VisitEvent table took as the fallback.
+ * Empty rather than an error when either is missing, so the page still renders.
  */
 export async function bufferedEvents(now: Date, visitorId?: string): Promise<VisitEvent[]> {
+  const held = (await heldToday(now)).filter((event) => !visitorId || event.v === visitorId)
   try {
     const rows = await db.visitEvent.findMany({
       where: {
@@ -122,9 +134,10 @@ export async function bufferedEvents(now: Date, visitorId?: string): Promise<Vis
       select: { payload: true },
       take: 5000,
     })
-    return rows.map((row) => parseVisitEvent(JSON.stringify(row.payload))).filter((e): e is VisitEvent => e !== null)
+    const inTable = rows.map((row) => parseVisitEvent(JSON.stringify(row.payload))).filter((e): e is VisitEvent => e !== null)
+    return [...inTable, ...held]
   } catch {
-    return []
+    return held
   }
 }
 

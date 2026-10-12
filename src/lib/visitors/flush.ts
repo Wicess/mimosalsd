@@ -6,15 +6,20 @@ import { isSchemaBehindError } from '@/lib/db/errors'
 import { aggregateDay, type VisitorDay } from './aggregate'
 import { parseVisitEvent, type VisitEvent } from './page-view'
 import { humanEvidence } from './queries'
+import { clearHeld, clearHeldDay, heldDays, readHeldDay } from './held-visits'
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
  *  THE FILING — finished days become visitor rows and daily counts.
  *
- *  Page views wait in VisitEvent, written a batch at a time by the proxy through
- *  /api/visits/collect. Filing a day aggregates its events, writes the rows, and
- *  DELETES the day's raw events — all in one transaction, so a day is either
- *  filed and cleared or left exactly as it was.
+ *  Page views wait in object storage (lib/visitors/held-visits.ts), a batch at a
+ *  time from the proxy through /api/visits/collect, so that browsing never wakes
+ *  the database; the VisitEvent table takes a batch only when R2 cannot. Filing
+ *  a day aggregates its events from both, writes the rows, and DELETES the day's
+ *  raw events — the table's in the same transaction, the objects straight after
+ *  — so a day is either filed and cleared or left exactly as it was. Objects
+ *  that outlive their commit are cleared by the next run, which finds the day's
+ *  VisitFlush marker and counts nothing twice.
  *
  *  It runs whenever it is due: from the nightly cron if one is configured, and
  *  otherwise from the collection endpoint, which checks about once an hour. That
@@ -62,7 +67,9 @@ async function dueDays(now: Date): Promise<string[]> {
     select: { day: true },
     orderBy: { day: 'asc' },
   })
-  return days.map((row) => iso(row.day))
+  const today = iso(now)
+  const held = (await heldDays()).filter((dayIso) => dayIso < today)
+  return [...new Set([...days.map((row) => iso(row.day)), ...held])].sort()
 }
 
 async function readDay(dayIso: string): Promise<VisitEvent[]> {
@@ -152,10 +159,12 @@ async function fileDay(dayIso: string): Promise<FiledDay> {
   if (marker) {
     // Filed already: clear whatever turned up afterwards rather than count it twice.
     await db.visitEvent.deleteMany({ where: { day } })
+    await clearHeldDay(dayIso)
     return { day: dayIso, events: marker.events, visitors: 0, status: 'already filed' }
   }
 
-  const events = await readDay(dayIso)
+  const held = await readHeldDay(dayIso)
+  const events = [...(await readDay(dayIso)), ...held.events]
   // Who proved to be a person, so the day's counts are real visitors only.
   const evidence = await humanEvidence([...new Set(events.map((e) => e.v))])
   const { visitors, stats } = aggregateDay(events, evidence)
@@ -193,6 +202,8 @@ async function fileDay(dayIso: string): Promise<FiledDay> {
     }
     throw error
   }
+  // After the commit, never before: a failure here leaves objects the next run clears.
+  await clearHeld(held.keys).catch(() => {})
   return { day: dayIso, events: events.length, visitors: visitors.length, status: 'filed' }
 }
 

@@ -16,7 +16,7 @@ import {
  * rather than caught, so a failure is never cached as if it were the answer.
  */
 async function readStoredCompanyEmail(): Promise<string | null> {
-  'use cache'
+  'use cache: remote'
   cacheTag(SITE_SETTINGS_TAG)
   const row = await db.setting.findUnique({
     where: { key: COMPANY_EMAIL_KEY },

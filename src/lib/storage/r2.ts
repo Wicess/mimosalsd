@@ -1,7 +1,9 @@
 import {
   DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
   HeadBucketCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
@@ -100,6 +102,53 @@ export async function signedUrl(key: string, expiresInSeconds = 300): Promise<st
 
 export async function deleteObject(key: string): Promise<void> {
   await s3().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key }))
+}
+
+/** True when the credentials and bucket are set, without contacting R2. */
+export function isConfigured(): boolean {
+  return Boolean(
+    process.env.R2_ACCOUNT_ID &&
+      process.env.R2_ACCESS_KEY_ID &&
+      process.env.R2_SECRET_ACCESS_KEY &&
+      process.env.R2_BUCKET,
+  )
+}
+
+/** Every key under a prefix. Paged, so a long day is still listed whole. */
+export async function listKeys(prefix: string): Promise<string[]> {
+  const found: string[] = []
+  let token: string | undefined
+  do {
+    const page = await s3().send(
+      new ListObjectsV2Command({ Bucket: bucket(), Prefix: prefix, ContinuationToken: token }),
+    )
+    for (const object of page.Contents ?? []) if (object.Key) found.push(object.Key)
+    token = page.IsTruncated ? page.NextContinuationToken : undefined
+  } while (token)
+  return found
+}
+
+/** A small text object, read server-side. Null when it is not there. */
+export async function getObjectText(key: string): Promise<string | null> {
+  try {
+    const response = await s3().send(new GetObjectCommand({ Bucket: bucket(), Key: key }))
+    return (await response.Body?.transformToString()) ?? null
+  } catch (error) {
+    if ((error as { name?: string }).name === 'NoSuchKey') return null
+    throw error
+  }
+}
+
+/** Delete many objects, a thousand per request (the S3 limit). */
+export async function deleteObjects(objectKeys: readonly string[]): Promise<void> {
+  for (let i = 0; i < objectKeys.length; i += 1000) {
+    await s3().send(
+      new DeleteObjectsCommand({
+        Bucket: bucket(),
+        Delete: { Objects: objectKeys.slice(i, i + 1000).map((Key) => ({ Key })), Quiet: true },
+      }),
+    )
+  }
 }
 
 export async function checkConnection(): Promise<boolean> {

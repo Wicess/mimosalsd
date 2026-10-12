@@ -6,6 +6,7 @@ import { isSchemaBehindError } from '@/lib/db/errors'
 import { VISITS_TOKEN_HEADER, visitsTokenMatches } from '@/lib/visitors/collect-token'
 import { parseVisitEvent } from '@/lib/visitors/page-view'
 import { fileDueDays } from '@/lib/visitors/flush'
+import { heldDays, holdEvents, holdingConfigured } from '@/lib/visitors/held-visits'
 
 /**
  * Where the proxy posts a batch of page views (lib/visitors/buffer.ts).
@@ -41,34 +42,60 @@ export async function POST(request: Request): Promise<Response> {
 
   // Re-validated here rather than trusted: this is a public endpoint, and only the
   // token says the caller is ours.
-  const rows = events
+  const valid = events
     .slice(0, 1_000)
     .map((event) => parseVisitEvent(typeof event === 'string' ? event : JSON.stringify(event)))
     .filter((event) => event !== null)
-    .map((event) => ({
+
+  /*
+    The batch waits in object storage, not Postgres (lib/visitors/held-visits.ts):
+    a write here would wake the database for every crawler that touches the site.
+    Postgres is the fallback, so a batch R2 will not take is still kept.
+  */
+  let held = false
+  if (valid.length > 0 && holdingConfigured()) {
+    try {
+      await holdEvents(valid)
+      held = true
+    } catch {
+      held = false
+    }
+  }
+
+  if (!held) {
+    const rows = valid.map((event) => ({
       id: randomUUID(),
       day: new Date(`${new Date(event.t).toISOString().slice(0, 10)}T00:00:00Z`),
       // The event's own shape, stored as JSON: Prisma wants a plain JSON value here.
       payload: event as unknown as Prisma.InputJsonObject,
     }))
-
-  try {
-    if (rows.length > 0) await db.visitEvent.createMany({ data: rows })
-  } catch (error) {
-    // Before migration 0014 there is nowhere to put them. Say so quietly rather
-    // than failing the proxy's background send on every batch.
-    if (isSchemaBehindError(error)) {
-      return Response.json({ stored: 0, pending: 'migration' }, { status: 200, headers })
+    try {
+      if (rows.length > 0) await db.visitEvent.createMany({ data: rows })
+    } catch (error) {
+      // Before migration 0014 there is nowhere to put them. Say so quietly rather
+      // than failing the proxy's background send on every batch.
+      if (isSchemaBehindError(error)) {
+        return Response.json({ stored: 0, pending: 'migration' }, { status: 200, headers })
+      }
+      throw error
     }
-    throw error
   }
 
+  /*
+    The filing check, about once an hour per instance. With the batches in object
+    storage it asks R2 whether a finished day is waiting and touches Postgres only
+    when one is, which is once a day, so the check itself never wakes the database.
+  */
   const now = Date.now()
   let filed: string[] | undefined
   if (now - lastFiledCheck > FILE_CHECK_MS) {
     lastFiledCheck = now
-    filed = (await fileDueDays().catch(() => ({ filed: [] }))).filed.map((day) => day.day)
+    const today = new Date(now).toISOString().slice(0, 10)
+    const due = holdingConfigured()
+      ? await heldDays().then((days) => days.some((day) => day < today)).catch(() => false)
+      : true
+    if (due) filed = (await fileDueDays().catch(() => ({ filed: [] }))).filed.map((day) => day.day)
   }
 
-  return Response.json({ stored: rows.length, ...(filed ? { filed } : {}) }, { headers })
+  return Response.json({ stored: valid.length, ...(filed ? { filed } : {}) }, { headers })
 }

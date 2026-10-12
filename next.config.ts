@@ -124,28 +124,6 @@ const nextConfig: NextConfig = {
       '/blog/what-the-pact-act-means-for-buyers': '/policies/shipping',
       '/blog/shipping-restrictions-explained': '/policies/shipping',
       '/blog/how-we-batch-test-every-product': '/lab-results',
-      // The cannabinoid and device articles, withdrawn with those product lines.
-      '/blog/terpenes-and-why-flavour-varies': '/blog',
-      '/blog/the-minor-cannabinoids-cbd-cbg-and-cbn': '/blog',
-      '/blog/full-spectrum-broad-spectrum-and-isolate-what-they-mean': '/blog',
-      '/blog/what-indica-sativa-and-hybrid-actually-tell-you': '/blog',
-      '/blog/live-resin-distillate-rosin-and-diamonds': '/blog',
-      '/blog/thca-and-what-heat-does-to-it': '/blog',
-      '/blog/how-a-total-thc-number-is-worked-out': '/blog',
-      '/blog/what-solventless-actually-means': '/blog',
-      '/blog/what-happens-in-heat-light-and-air': '/blog',
-      '/blog/why-potency-belongs-on-a-certificate': '/blog',
-      '/blog/spotting-counterfeit-hardware': '/blog',
-      '/blog/how-cannabinoid-figures-are-measured': '/blog',
-      '/blog/the-510-thread-explained': '/blog',
-      '/blog/disposable-or-cartridge-what-the-difference-is': '/blog',
-      '/blog/what-a-coil-does-and-why-material-matters': '/blog',
-      '/blog/what-a-blinking-light-usually-means': '/blog',
-      '/blog/charging-a-rechargeable-device-safely': '/blog',
-      '/blog/storing-a-device-heat-light-and-which-way-up': '/blog',
-      '/blog/disposing-of-hardware-and-lithium-batteries': '/blog',
-      '/blog/what-a-dual-chamber-device-is': '/blog',
-      '/blog/why-a-cartridge-clogs': '/blog',
     }
     return [
       /*

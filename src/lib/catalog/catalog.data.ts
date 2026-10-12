@@ -255,13 +255,15 @@ export const CATEGORIES: readonly Category[] = [
 ]
 
 /**
- * The categories the header and footer link to (owner instruction, 2026-09-28).
+ * The categories the header and footer link to.
  *
- * Every listing in the other three was hidden that day, so their pages are empty and
- * noindex. A menu link to an empty page is a dead end for a visitor and wasted crawl
- * for a search engine. Put a slug back here when its category has live products again.
+ * Narrowed to the bark line on 2026-09-28, when every listing in the other three
+ * was hidden. The owner switched those listings back on from the admin panel on
+ * 2026-10-12 and the menu still only linked to bark, so the products were live with
+ * no way to reach them. All four are back. Take a slug out only while its category
+ * has nothing live: a menu link to an empty page is a dead end.
  */
-export const NAV_CATEGORY_SLUGS: readonly string[] = ['mimosa-hostilis']
+export const NAV_CATEGORY_SLUGS: readonly string[] = ['disposable-vapes', 'mimosa-hostilis', 'amanita', 'others']
 
 export const DIRECTORY_STATES = ['FL', 'NC', 'TN', 'VA', 'WI'] as const
 

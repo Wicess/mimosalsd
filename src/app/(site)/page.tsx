@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Image, { getImageProps } from 'next/image'
 import { catalog } from '@/lib/catalog/repository'
-import { publishedGuides, publishedPosts } from '@/lib/content/content.data'
+import { listAllPosts } from '@/lib/content/merged-content'
+import { ArticleFeature, BulkBand } from '@/components/marketing/home-sections'
 import { LegalityChecker } from '@/components/marketing/legality-checker'
 import { ProductCard } from '@/components/commerce/product-card'
 import { CategoryRail } from '@/components/commerce/category-rail'
@@ -11,7 +12,6 @@ import { Proprietor } from '@/components/marketing/proprietor'
 import { ShineRule } from '@/components/ui/shine-rule'
 import { SectionHeading } from '@/components/layout/section-heading'
 import { Standards } from '@/components/marketing/standards'
-import { Badge } from '@/components/ui/badge'
 import { CartIcon, FlaskIcon, ShieldIcon, TruckIcon } from '@/components/ui/icon'
 import { PAYMENT_SECURITY_STATEMENT } from '@/lib/compliance/disclaimers'
 import { BRAND } from '@/lib/brand'
@@ -52,8 +52,10 @@ const TRUST_STRIP = [
     cleared to ALLOWED on the owner's instruction (2026-09-27) and none of the 153 rows
     carries a statute citation any more. The layout is the sibling build's; the claim
     cannot be, because restoring a design must never restore a claim into a lie.
+    Nor a count of jurisdictions: where a line may be sent lives in `state_rules`
+    (CLAUDE.md rule 1), and tests/compliance/no-stale-availability-claims refuses one.
   */
-  [ShieldIcon, 'Ships everywhere', 'All 51 US jurisdictions'],
+  [ShieldIcon, 'Ships across the US', 'US addresses only'],
   [TruckIcon, 'Free over $100', 'Parcel-eligible items'],
 ] as const
 
@@ -153,6 +155,13 @@ const HERO_VIDEO: readonly HeroVideoClip[] = [
 const BLANK_PIXEL =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
+/* The articles the home page points to: the three a new dyer needs first. */
+const STARTER_ARTICLES = [
+  'the-three-cuts-of-mimosa-root-bark',
+  'weighing-bark-against-fibre',
+  'iron-as-a-modifier-how-far-to-go',
+] as const
+
 export default async function Home() {
   const categories = catalog.listCategories()
   /*
@@ -163,8 +172,8 @@ export default async function Home() {
   const featured = mixByCategory(await listMergedProducts({ sort: 'featured' }), 5)
   // The disposables band's own row: the business leads with them (owner, 2026-09-15).
   const disposables = (await listMergedProducts({ categorySlug: 'disposable-vapes', sort: 'featured' })).slice(0, 8)
-  const guides = publishedGuides().slice(0, 3)
-  const posts = publishedPosts().slice(0, 2)
+  const allPosts = await listAllPosts()
+  const articles = STARTER_ARTICLES.flatMap((slug) => allPosts.filter((p) => p.slug === slug))
 
   /*
     Organization and WebSite are the site's identity nodes — the ones a knowledge
@@ -685,63 +694,14 @@ export default async function Home() {
       */}
       <Proprietor />
 
-      {/* 8 — Guides and articles. Feeds the content engine. */}
       {/*
-        Banded, like the trust band and the bulk row.
-
-        Three plain sections ran together with nothing but whitespace between them, so
-        the page read as one long scroll rather than distinct parts. `field-moss` is a
-        wash mixed from `--primary` rather than a fixed colour, so it re-tints itself
-        in dark mode instead of becoming a grey slab — and the rules above and below
-        do the separating that spacing alone was failing to do.
+        8 and 9 — The article feature and the bulk band, kept from the 2026-09-29
+        redesign at the owner's word (2026-10-01); every other section is the
+        sibling build's.
       */}
-      <section className="relative field-moss border-y border-border bg-surface-sunken py-10">
-        <ShineRule />
-        <ShineRule edge="bottom" />
-        <div className="shell reveal">
-        <SectionHeading
-          title="Guides & blogs"
-          summary="Informative first. We publish what we can verify and cite what we rely on."
-        />
-        <div className="stagger grid gap-5 md:grid-cols-3">
-          {[...guides, ...posts].slice(0, 3).map((item) => (
-            <a
-              key={item.slug}
-              href={'clusterSlugs' in item ? url.guide(item.slug) : url.blogPost(item.slug)}
-              className="card-lift rounded-lg border border-border bg-surface p-5"
-            >
-              {'clusterSlugs' in item && <Badge tone="accent">Guide</Badge>}
-              <h3 className="mt-2 font-display text-lg text-foreground">{item.title}</h3>
-              <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-foreground-muted">
-                {item.summary}
-              </p>
-            </a>
-          ))}
-        </div>
-        </div>
-      </section>
+      <ArticleFeature articles={articles} />
 
-      {/* 9 — Bulk. The B2B funnel. */}
-      <section className="relative border-y border-border bg-surface py-10">
-        <ShineRule />
-        <ShineRule edge="bottom" />
-        <div className="shell flex flex-wrap items-center gap-6">
-          <div className="min-w-0 flex-1">
-            <h2 className="font-display text-2xl text-foreground">Buying in volume?</h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-foreground-muted">
-              Disposables in volume for vape shops, retailers and resellers, and
-              botanical materials by the pound, all lab-tested by batch. Tell us what you
-              need and we will quote it.
-            </p>
-          </div>
-          <a
-            href={url.bulk()}
-            className="inline-flex min-h-12 items-center rounded-md border border-border-strong bg-surface px-6 text-base font-medium text-foreground"
-          >
-            Bulk enquiry
-          </a>
-        </div>
-      </section>
+      <BulkBand />
 
       {/*
         10 — The close.

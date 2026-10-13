@@ -171,7 +171,8 @@ export const POLICIES: readonly Policy[] = [
     slug: 'returns',
     title: 'Returns and refunds',
     metaTitle: 'Returns & Refunds — What Can Be Sent Back, and When',
-    metaDescription: `Unopened items in sealed original packaging can be returned within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened age-restricted goods cannot be resold and cannot be accepted back.`,
+    // Short enough to show whole: at full length the clamp kept only the first sentence.
+    metaDescription: `Return unopened items in sealed original packaging within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened goods cannot be accepted back. If the fault is ours, we cover everything.`,
     summary: `Unopened items in their original sealed packaging can be returned within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened age-restricted goods cannot lawfully be resold, so they cannot be accepted back. If we sent the wrong item, or a batch does not match its published laboratory report, we cover everything.`,
     lastReviewedAt: REVIEWED,
     sections: [
@@ -295,7 +296,7 @@ export const POLICIES: readonly Policy[] = [
     title: 'Privacy',
     metaTitle: 'Privacy Policy — What We Collect and Why',
     metaDescription:
-      'We hold your contact and delivery details, your order history, and evidence of age verification. We never hold card details, and we run no third-party advertising or analytics trackers.',
+      'We hold your contact and delivery details, order history and evidence of an age check. We hold no card details and run no third-party ad or analytics trackers.',
     summary:
       'We collect what an order actually needs: contact details, a delivery address, and evidence that age was verified. We hold no card details at all, because we process no payments on this website. We keep our own anonymous record of which pages are visited, and run no third-party advertising or analytics trackers. You can ask us for a copy of your data, or for its deletion.',
     lastReviewedAt: REVIEWED,
@@ -387,7 +388,7 @@ export const POLICIES: readonly Policy[] = [
   {
     slug: 'terms',
     title: 'Terms of service',
-    metaTitle: 'Terms of Service',
+    metaTitle: 'Terms of Service for Using This Site and Placing an Order',
     metaDescription: `The terms you agree to when you use this website or place an order. United States only, ${BRAND.minimumAge} and over, and an order is a request until we confirm it.`,
     summary: `These terms govern your use of this website and any order you place through it. In short: you must be ${BRAND.minimumAge} or older and in the United States, an order is a request until we accept it, and nothing we sell is offered for any medical purpose or with any health claim attached.`,
     lastReviewedAt: REVIEWED,

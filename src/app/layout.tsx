@@ -100,7 +100,16 @@ export const metadata: Metadata = {
     manifest's `display: standalone` was meant to replace.
   */
   appleWebApp: { capable: true, title: BRAND.name, statusBarStyle: 'default' },
-  robots: { index: true, follow: true },
+  /*
+    The googleBot line lets Google show a full-length snippet and the large image
+    preview in results and Discover. Without it the defaults apply, which cap both.
+    Pages that set their own robots (an empty category's noindex) replace this whole.
+  */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 },
+  },
   /*
     Ownership verification for Google Search Console and Bing Webmaster Tools.
 

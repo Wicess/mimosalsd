@@ -13,7 +13,7 @@ import { breadcrumbList, jsonLdScript, organizationRef } from '@/lib/seo/structu
 import { pageMetadata } from '@/lib/seo/meta'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Legal Disclaimer',
+  title: 'Legal Disclaimer, No Health Claims and Not Legal Advice',
   description: 'We make no health, medical or therapeutic claims. Mimosa Hostilis root bark is a botanical material and is not food. Nothing here is legal or medical advice.',
   path: url.legalDisclaimer(),
 })

@@ -13,7 +13,7 @@ import { pageMetadata } from '@/lib/seo/meta'
 import { PageHeader } from '@/components/layout/page-header'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Contact Us',
+  title: 'Contact Us About an Order, a Bulk Quote or a Batch Report',
   description: `How to reach ${BRAND.name} about an order, a bulk quote, a batch report or a privacy request — and what to include so we can answer on the first reply.`,
   path: url.contact(),
 })

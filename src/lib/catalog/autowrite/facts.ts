@@ -74,7 +74,7 @@ export const LAB_FACT =
   'Every batch is tested by a third-party laboratory, and a certified copy of the report is issued to verified buyers on request, against the batch code on the package. Reports are not posted publicly.'
 
 export const SITE_FACTS: readonly string[] = [
-  `${BRAND.name} ships within the United States only. Which products can be sent to a given address is decided at checkout, from the state rules for that product line.`,
+  `${BRAND.name} ships across the United States, and ships root bark abroad only on a quoted order. Which products can be sent to a given address is decided at checkout, from the state rules for that product line.`,
   'Every order is checked before payment is requested: that the stock is there and that the order can be shipped to the address given.',
   'Payment details are sent after that check, by chat on the site and by email, with the invoice. No card details are entered on the site.',
   'Every order is packed in double-sealed, smell-proof packaging.',

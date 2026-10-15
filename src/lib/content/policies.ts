@@ -99,14 +99,16 @@ export const POLICIES: readonly Policy[] = [
       left this description reading "Free shipping on all orders from." in results.
     */
     metaDescription: 'Root bark ships from California in double-sealed, smell-proof, nitrogen-flushed bags, with tracking, to US addresses only. Free from one hundred dollars.',
-    summary: `We ship from California to addresses in the United States and nowhere else, using USPS, UPS and other local carriers. Every order is packed in a double-sealed, smell-proof bag flushed with nitrogen to keep oxygen out, so the bark stays fresh, and sent with tracking. Shipping is free on parcel orders from ${FREE_FROM}.`,
+    summary: `We ship from California to addresses across the United States, using USPS, UPS and other local carriers, and to other countries on root bark orders we have quoted. Every order is packed in a double-sealed, smell-proof bag flushed with nitrogen to keep oxygen out, so the bark stays fresh, and sent with tracking. Shipping is free on parcel orders from ${FREE_FROM}.`,
     lastReviewedAt: '2026-09-13',
     sections: [
       {
         heading: 'Where we ship',
         body: [
           // availability-allow: the owner's statement of the footprint (2026-09-19: "we already ship to all states").
-          'We ship within the United States only — all 50 states and the District of Columbia. We do not ship internationally, we do not ship to freight forwarders, and we cannot accept an order for delivery outside the United States.',
+          'Our focus is the United States: we ship to all 50 states and the District of Columbia, and that is what the cart and checkout are built for. We do not ship to freight forwarders.',
+          // Owner, 2026-10-15: "we are focused in the USA but we also ship worldwide based on the quantity of the order".
+          `We also ship Mimosa hostilis and sassafras root bark to other countries, quoted order by order, because the cost of sending a parcel abroad depends on its weight. Ask for a quote through the bulk enquiry form and choose Outside the United States. Import rules for plant material, and any duties or taxes, are the buyer's to check and pay. [Shipping root bark outside the United States](/blog/shipping-root-bark-outside-the-united-states) explains how it works.`,
           // availability-allow: the owner's statement of the origin (2026-09-27: the main branch is in California).
           'Orders leave our California branch. Nothing about where an order starts changes where it can go: every state is served from the same place.',
         ],
@@ -230,15 +232,15 @@ export const POLICIES: readonly Policy[] = [
     slug: 'purchase',
     title: 'Purchase policy',
     metaTitle: 'Purchase Policy — Age, Eligibility and How Ordering Works',
-    metaDescription: `You must be ${BRAND.minimumAge} or older and in the United States. You place your order, we check stock and that we can ship to your address, then send payment details in your order chat.`,
-    summary: `You must be ${BRAND.minimumAge} or older and ordering for delivery within the United States. You place your order and choose how you would prefer to pay; we check that the stock is available and that we can ship to your address, then send payment details in your order chat and by email. Your order is confirmed when payment is received.`,
+    metaDescription: `You must be ${BRAND.minimumAge} or older. You place your order, we check stock and that we can ship to your address, then send payment details in your order chat.`,
+    summary: `You must be ${BRAND.minimumAge} or older. Orders placed on the site are for delivery within the United States; orders for other countries are quoted first. You place your order and choose how you would prefer to pay; we check that the stock is available and that we can ship to your address, then send payment details in your order chat and by email. Your order is confirmed when payment is received.`,
     lastReviewedAt: '2026-09-13',
     sections: [
       {
         heading: 'Who can order',
         body: [
           `You must be ${BRAND.minimumAge} years of age or older.`,
-          'You must be ordering for delivery to an address in the United States. We do not sell to buyers outside it.',
+          'Orders placed through the cart must be for delivery to an address in the United States. Buyers in other countries can order root bark on a quote, through the bulk enquiry form.',
         ],
       },
       {
@@ -282,7 +284,7 @@ export const POLICIES: readonly Policy[] = [
         list: [
           'The product cannot lawfully be shipped to your state, or we hold no verified legal review for it there.',
           'Age or identity verification did not pass.',
-          'The delivery address is a freight forwarder, or is outside the United States.',
+          'The delivery address is a freight forwarder, or is outside the United States on an order we have not quoted.',
           'The order appears to be for resale where resale is restricted, or for an intended use we do not sell for.',
           'A pricing or stock error was displayed. In that case nothing is charged and you are told before anything ships.',
         ],
@@ -389,8 +391,8 @@ export const POLICIES: readonly Policy[] = [
     slug: 'terms',
     title: 'Terms of service',
     metaTitle: 'Terms of Service for Using This Site and Placing an Order',
-    metaDescription: `The terms you agree to when you use this website or place an order. United States only, ${BRAND.minimumAge} and over, and an order is a request until we confirm it.`,
-    summary: `These terms govern your use of this website and any order you place through it. In short: you must be ${BRAND.minimumAge} or older and in the United States, an order is a request until we accept it, and nothing we sell is offered for any medical purpose or with any health claim attached.`,
+    metaDescription: `The terms you agree to when you use this website or place an order. US focused, ${BRAND.minimumAge} and over, and an order is a request until we confirm it.`,
+    summary: `These terms govern your use of this website and any order you place through it. In short: you must be ${BRAND.minimumAge} or older, an order is a request until we accept it, and nothing we sell is offered for any medical purpose or with any health claim attached.`,
     lastReviewedAt: REVIEWED,
     sections: [
       {
@@ -403,7 +405,7 @@ export const POLICIES: readonly Policy[] = [
       {
         heading: 'Eligibility',
         body: [
-          `You confirm that you are at least ${BRAND.minimumAge} years old, that you are ordering for delivery within the United States, and that the products you order may lawfully be sent to your state.`,
+          `You confirm that you are at least ${BRAND.minimumAge} years old, that your delivery address is in the United States or is one we have quoted for, and that the products you order may lawfully be sent to it.`,
           'You may not order on behalf of someone under the minimum age.',
         ],
       },

@@ -5,7 +5,7 @@ import {
   submitBulkEnquiry,
   type BulkState,
 } from '@/app/actions/bulk'
-import { CADENCES, VOLUME_BANDS } from '@/lib/bulk/options'
+import { CADENCES, OUTSIDE_US, VOLUME_BANDS } from '@/lib/bulk/options'
 import { Button } from '@/components/ui/button'
 import { Select } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
@@ -55,6 +55,7 @@ export function BulkQuoteForm({
   )
   const [picked, setPicked] = useState<readonly string[]>([])
   const [volume, setVolume] = useState('')
+  const [abroad, setAbroad] = useState(false)
   const [missing, setMissing] = useState<{ categories?: boolean; volume?: boolean }>({})
 
   function toggleCategory(slug: string) {
@@ -226,8 +227,23 @@ export function BulkQuoteForm({
             name="stateCode"
             labelId="bulk-state-label"
             placeholder="Choose a state"
-            options={states.map((s) => ({ value: s.code, label: s.name }))}
+            options={[
+              ...states.map((s) => ({ value: s.code, label: s.name })),
+              { value: OUTSIDE_US, label: 'Outside the United States' },
+            ]}
+            onChange={(v) => setAbroad(v === OUTSIDE_US)}
           />
+          {abroad && (
+            <div className="mt-3">
+              <label htmlFor="bulk-country" className="block text-sm font-medium text-foreground">
+                Country
+              </label>
+              <input id="bulk-country" name="country" required autoComplete="country-name" maxLength={80} className={FIELD} />
+              <p className="mt-2 text-sm text-foreground-muted">
+                Root bark only, quoted by order size. Import rules, duties and taxes are yours to check.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -13,7 +13,7 @@ import {
   bulkEnquiryNotificationEmail,
   type BulkEnquiry,
 } from '@/lib/mail/templates'
-import { CADENCES, VOLUME_BANDS } from '@/lib/bulk/options'
+import { CADENCES, OUTSIDE_US, VOLUME_BANDS } from '@/lib/bulk/options'
 import { reportError } from '@/lib/observability/report-error'
 
 export type BulkState = { ok?: boolean; error?: string }
@@ -55,7 +55,9 @@ const schema = z.object({
     .min(7, 'Enter a phone number we can reach you on.')
     .max(32)
     .refine((v) => (v.match(/\d/g) ?? []).length >= 7, 'That does not look like a phone number.'),
-  stateCode: z.string().trim().max(2).optional().or(z.literal('')),
+  /** A state code, or OUTSIDE_US for a quote abroad (root bark only, owner 2026-10-15). */
+  stateCode: z.string().trim().max(10).optional().or(z.literal('')),
+  country: z.string().trim().max(80).optional().or(z.literal('')),
   volume: z.enum(VOLUME_BANDS),
   cadence: z.enum(CADENCES).optional(),
   categories: z.array(z.string().max(120)).min(1, 'Choose at least one category.').max(10),
@@ -75,6 +77,7 @@ export async function submitBulkEnquiry(
     email: formData.get('email'),
     phone: formData.get('phone'),
     stateCode: formData.get('stateCode') ?? '',
+    country: formData.get('country') ?? '',
     volume: formData.get('volume'),
     cadence: formData.get('cadence') || undefined,
     categories: formData.getAll('categories').map(String),
@@ -102,6 +105,9 @@ export async function submitBulkEnquiry(
     .filter((p) => d.products?.includes(p.slug))
     .map((p) => p.name)
   const state = JURISDICTIONS.find((j) => j.code === d.stateCode)
+  const abroad = d.stateCode === OUTSIDE_US
+  if (abroad && !d.country) return { error: 'Tell us which country the order is going to.' }
+  const destination = abroad ? `Outside the US: ${d.country}` : state?.name
 
   const enquiry: BulkEnquiry = {
     name: d.name,
@@ -111,7 +117,7 @@ export async function submitBulkEnquiry(
     categories,
     products,
     ...(d.company ? { company: d.company } : {}),
-    ...(state ? { stateCode: state.name } : {}),
+    ...(destination ? { stateCode: destination } : {}),
     ...(d.cadence ? { cadence: d.cadence } : {}),
     ...(d.message ? { message: d.message } : {}),
   }
@@ -127,7 +133,7 @@ export async function submitBulkEnquiry(
     `Bulk enquiry — ${d.volume}`,
     d.company ? `Company: ${d.company}` : '',
     `Phone: ${d.phone}`,
-    state ? `Ships to: ${state.name}` : '',
+    destination ? `Ships to: ${destination}` : '',
     d.cadence ? `Reorders: ${d.cadence}` : '',
     categories.length ? `Categories: ${categories.join(', ')}` : '',
     products.length ? `Products: ${products.join(', ')}` : '',

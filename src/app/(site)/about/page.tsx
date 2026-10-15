@@ -58,9 +58,8 @@ export default async function AboutPage() {
             /*
               Every fact here is the client's own (2026-09-28): the owner, his
               qualifications and experience, the founding year and the customer count
-              all read from BRAND, so this page and the schema cannot disagree. The
-              client also mentioned international orders; they are left out because
-              this site serves the United States only.
+              all read from BRAND, so this page and the schema cannot disagree.
+              International orders are covered on the shipping policy (2026-10-15).
             */
             {
               heading: 'A new website, not a new business',

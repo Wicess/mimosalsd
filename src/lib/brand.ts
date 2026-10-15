@@ -18,9 +18,9 @@ export const BRAND = {
     other site in this category leads with, and they are the first thing a cautious
     buyer discounts.
   */
-  tagline: 'Botanical raw material. Sold by the pound. Shipped inside the United States.',
+  tagline: 'Botanical raw material. Sold by the pound. Shipped across the United States.',
   description:
-    'Mimosa hostilis and sassafras root bark sold as raw material for natural dyeing, soap and craft, in powder, shredded and whole cuts. Orders are placed as a request rather than paid on the site: the order is checked against the address it is going to, then payment instructions follow. United States only.',
+    'Mimosa hostilis and sassafras root bark sold as raw material for natural dyeing, soap and craft, in powder, shredded and whole cuts. Orders are placed as a request rather than paid on the site: the order is checked against the address it is going to, then payment instructions follow. Shipped across the United States, and abroad on quoted orders.',
 
   /**
    * The registered domain. Display and mailto links only — canonical URLs come from

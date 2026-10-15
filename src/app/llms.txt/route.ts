@@ -88,7 +88,7 @@ async function buildLlmsTxt(): Promise<string> {
       fact the owner supplied or the site enforces; the disposables section, the
       internal note about laboratories and the statute claims are gone.
     */
-    `${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap color, leather work and craft. The business operates from ${BRAND.location.region} and ships to US addresses only${record ? `, and has been ${record}` : ''}. It is owned and run by ${proprietorFullName()}, ${BRAND.proprietor.role}. A customer places an order with a preferred payment method, a person confirms it, and payment details are sent in the order chat on the site and by email. No card details are ever requested.`,
+    `${BRAND.legalName} sells Mimosa hostilis and sassafras root bark as raw botanical material for natural dyeing, soap color, leather work and craft. The business operates from ${BRAND.location.region} ships across the United States, and ships root bark to other countries on a quoted order${record ? `, and has been ${record}` : ''}. It is owned and run by ${proprietorFullName()}, ${BRAND.proprietor.role}. A customer places an order with a preferred payment method, a person confirms it, and payment details are sent in the order chat on the site and by email. No card details are ever requested.`,
     '',
     '## What is sold',
     '',

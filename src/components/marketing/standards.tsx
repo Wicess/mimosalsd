@@ -50,7 +50,7 @@ const STANDARDS = [
     action: { label: 'Bulk and wholesale', href: url.bulk() },
   },
   {
-    claim: 'Shipped from California, to US addresses only.',
+    claim: 'Shipped from California, across the US and abroad on quoted orders.',
     detail:
       'Weighed, packed in double-sealed, smell-proof bags flushed with nitrogen to keep the bark fresh, and shipped with tracking once payment is confirmed. Parcel orders from 100 dollars ship free.',
     action: { label: 'Where we ship', href: url.legalityHub() },
@@ -268,7 +268,7 @@ export function Standards() {
               items rather than one run-on.
             */}
             <ul className="mt-3 space-y-1.5 text-sm text-foreground-muted">
-              <li>United States only.</li>
+              <li>US focused, worldwide on quoted orders.</li>
               <li>{BRAND.minimumAge} and over.</li>
               <li>
                 We do not advertise; paid advertising is not permitted in this

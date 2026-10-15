@@ -56,7 +56,7 @@ export async function productShareCard(params: Promise<{ slug: string }>): Promi
             </div>
           ) : null}
           <div style={{ display: 'flex', height: 2, width: 96, background: RULE }} />
-          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>Sold by weight · Ships from California to US addresses</div>
+          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>Sold by weight · Ships from California</div>
         </div>
       </div>
     ),

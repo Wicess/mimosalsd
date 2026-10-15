@@ -120,7 +120,7 @@ export default function Image() {
               string so the node only ever has one child.
             */}
             <div style={{ display: 'flex', color: MUTED }}>
-              {`· ${BRAND.minimumAge}+ · US only`}
+              {`· ${BRAND.minimumAge}+ · Ships from California`}
             </div>
           </div>
         </div>

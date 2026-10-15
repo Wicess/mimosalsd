@@ -152,7 +152,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     // carrier footprint, not what any product line may be sent to a given state.
     question: 'Do you ship internationally?',
     answer:
-      'No. We ship within the United States only — all 50 states and the District of Columbia. We do not ship to any other country, and we do not ship to freight forwarders.',
+      'Yes, for root bark. Our focus is the United States, where we ship to all 50 states and the District of Columbia. We also ship Mimosa hostilis and sassafras root bark to other countries on a quote, based on the size of the order: use the bulk enquiry form and choose Outside the United States. Import rules, duties and taxes are the buyer’s to check. We do not ship to freight forwarders.',
   },
   {
     category: 'Shipping',

@@ -24,7 +24,7 @@ export const CATEGORIES: readonly Category[] = [
     intro:
       'Mimosa hostilis root bark in powder, shredded and whole cuts, plus sassafras root bark, sold by the pound for natural dyeing, soap color and craft. Not for human consumption.',
     detail:
-      'Root bark sold by weight as raw material for natural dyers, soap makers and leather workers, shipped from California to US addresses.',
+      'Root bark sold by weight as raw material for natural dyers, soap makers and leather workers, shipped from California across the US, and abroad on a quote.',
     /*
       Rewritten 2026-09-28 around what buyers type: "mimosa hostilis root bark for
       sale", "powder vs shredded", "how much per pound of wool", "what colors". Each
@@ -72,7 +72,7 @@ export const CATEGORIES: readonly Category[] = [
         { label: 'Cuts', value: 'Powder, shredded, whole chips and strips' },
         { label: 'Also in this range', value: 'Sassafras root bark (Sassafras albidum)' },
         { label: 'Sold by', value: 'The pound: 1/4, 1/3, 1/2 and 1 lb; bulk on request' },
-        { label: 'Ships from', value: 'California, to US addresses only' },
+        { label: 'Ships from', value: 'California, across the US; abroad on a quote' },
         { label: 'Use', value: 'Natural dyeing, soap color, leather work, craft; not for human consumption' },
       ],
     },

@@ -40,7 +40,10 @@ Acquisition is **100% organic** — paid ads are prohibited in this category.
     Google Business Profile.
 13. **Blogs are informative first**, converting via contextual `<RecommendedProducts>` —
     never hype, never a health claim.
-14. **US market only.** No international shipping, pricing, or content targeting.
+14. **US first.** The cart, checkout, pricing and content target the United States. Owner
+    sign-off (2026-10-15): root bark (Mimosa hostilis, sassafras) also ships abroad, **quoted
+    order by order** through the bulk enquiry form, never through the cart. No other product
+    line ships abroad. Copy may say so; it must not imply the cart takes foreign addresses.
 
 ## Engineering conventions
 - Server Components by default; `"use client"` only when interactivity requires it.

@@ -67,7 +67,6 @@ export default function manifest(): MetadataRoute.Manifest {
     prefer_related_applications: false,
     categories: ['shopping'],
     lang: 'en-US',
-    // US only. Stated wherever the site describes itself.
     scope: '/',
   }
 }

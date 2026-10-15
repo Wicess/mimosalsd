@@ -55,7 +55,7 @@ const TRUST_STRIP = [
     Nor a count of jurisdictions: where a line may be sent lives in `state_rules`
     (CLAUDE.md rule 1), and tests/compliance/no-stale-availability-claims refuses one.
   */
-  [ShieldIcon, 'Ships across the US', 'US addresses only'],
+  [ShieldIcon, 'Ships across the US', 'Worldwide on larger orders'],
   [TruckIcon, 'Free over $100', 'Parcel-eligible items'],
 ] as const
 

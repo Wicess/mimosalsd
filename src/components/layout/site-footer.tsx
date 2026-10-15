@@ -194,8 +194,8 @@ export function SiteFooter() {
               {[
                 `© ${COPYRIGHT_YEAR} ${BRAND.legalName}`,
                 `${BRAND.minimumAge}+ only`,
-                'United States only',
-                'No international shipping',
+                'Shipping across the United States',
+                'Worldwide on quoted orders',
                 'Payment details sent in your order chat',
               ].map((fact, i) => (
                 <li key={fact} className="flex items-center gap-2.5">

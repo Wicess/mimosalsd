@@ -22,5 +22,11 @@ export const VOLUME_BANDS = [
 
 export const CADENCES = ['One-off', 'Monthly', 'Quarterly', 'Ongoing supply'] as const
 
+/**
+ * The "Shipping to" choice for a quote abroad. Root bark only, quoted order by order
+ * (owner, 2026-10-15): the cart stays US-only, so this form is the one way in.
+ */
+export const OUTSIDE_US = 'OUTSIDE_US'
+
 export type VolumeBand = (typeof VOLUME_BANDS)[number]
 export type Cadence = (typeof CADENCES)[number]

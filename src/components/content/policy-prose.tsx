@@ -1,5 +1,6 @@
 import type { PolicySection } from '@/lib/content/policies'
 import { AnswerFirst } from '@/components/content/answer-first'
+import { RichText } from '@/components/content/rich-text'
 
 /**
  * Shared long-form shell for policy, disclaimer and about pages.
@@ -93,7 +94,8 @@ export function PolicyProse({
           </h2>
           {section.body.map((para, i) => (
             <p key={i} className="mt-3 leading-relaxed text-foreground-muted">
-              {para}
+              {/* Links and bold, the same inline syntax as articles. Plain text passes through. */}
+              <RichText text={para} />
             </p>
           ))}
           {section.list && (

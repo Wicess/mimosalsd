@@ -13,7 +13,7 @@ import { JURISDICTIONS } from '@/lib/compliance/jurisdictions'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Wholesale Mimosa Hostilis Root Bark, Bulk Pricing by the lb',
-  description: 'Wholesale Mimosa hostilis root bark in powder, shredded and whole cuts, by the pound or the case. Request a bulk quote. Ships from California to US addresses.',
+  description: 'Wholesale Mimosa hostilis root bark in powder, shredded and whole cuts, by the pound or the case. Request a bulk quote. Ships from California, across the US and abroad.',
   path: url.bulk(),
 })
 

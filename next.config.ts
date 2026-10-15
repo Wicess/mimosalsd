@@ -148,6 +148,13 @@ const nextConfig: NextConfig = {
       '/blog/what-the-pact-act-means-for-buyers': '/policies/shipping',
       '/blog/shipping-restrictions-explained': '/policies/shipping',
       '/blog/how-we-batch-test-every-product': '/lab-results',
+      /*
+        Two addresses that were never pages: typos in URL.md that got submitted to
+        Search Console (2026-10-15). Sent to the article each one was meant to be, so
+        the submission resolves instead of failing as not found.
+      */
+      '/blog/sassafras-albidum-the-north-ameat-homer-erican-dye-tree': '/blog/sassafras-albidum-the-north-american-dye-tree',
+      '/blog/milling-your-own-powder': '/blog/milling-your-own-powder-at-home',
     }
     return [
       /*

@@ -231,7 +231,7 @@ https://www.mimosalsd.com/guides/how-to-read-a-certificate-of-analysis
 https://www.mimosalsd.com/guides/what-is-mimosa-hostilis-root-bark
 ```
 
-### Articles — 33 (sitemap priority 0.7)
+### Articles — 39 (sitemap priority 0.7)
 
 ```
 https://www.mimosalsd.com/blog/a-glossary-of-certificate-terms
@@ -246,6 +246,12 @@ https://www.mimosalsd.com/blog/filtering-a-bark-bath-without-losing-the-colour
 https://www.mimosalsd.com/blog/getting-a-second-and-third-bath-from-one-batch
 https://www.mimosalsd.com/blog/iron-as-a-modifier-how-far-to-go
 https://www.mimosalsd.com/blog/is-mimosa-hostilis-dye-colorfast
+https://www.mimosalsd.com/blog/mimosa-hostilis-and-mimosa-tenuiflora-one-plant-two-names
+https://www.mimosalsd.com/blog/dyeing-cotton-and-linen-with-mimosa-hostilis
+https://www.mimosalsd.com/blog/scouring-wool-before-a-dye-bath
+https://www.mimosalsd.com/blog/hard-water-and-natural-dyes
+https://www.mimosalsd.com/blog/dyeing-wool-with-sassafras-root-bark
+https://www.mimosalsd.com/blog/overdyeing-with-mimosa-hostilis
 https://www.mimosalsd.com/blog/keeping-a-bark-bath-purple
 https://www.mimosalsd.com/blog/milling-your-own-powder-at-home
 https://www.mimosalsd.com/blog/mimosa-hostilis-vs-cutch-oak-gall-and-quebracho

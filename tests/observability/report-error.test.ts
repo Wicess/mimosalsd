@@ -117,7 +117,18 @@ describe('coalescing', () => {
   })
 })
 
-describe('notifying', () => {
+describe('error pushes are off unless switched on (owner, 2026-10-17)', () => {
+  it('records the error but does not ring the phone', async () => {
+    await reportError(new Error('checkout exploded'), { source: 'action', severity: 'FATAL' })
+    expect(upsert).toHaveBeenCalledTimes(1)
+    expect(notify).not.toHaveBeenCalled()
+  })
+})
+
+describe('notifying, when NTFY_PUSH_ERRORS=1', () => {
+  beforeEach(() => vi.stubEnv('NTFY_PUSH_ERRORS', '1'))
+  afterEach(() => vi.unstubAllEnvs())
+
   it('pushes to the errors topic with a link to the admin log', async () => {
     await reportError(new Error('checkout exploded'), {
       source: 'action',
@@ -157,6 +168,10 @@ describe('notifying', () => {
 })
 
 describe('never making things worse', () => {
+  // Pushes on, so the push-failure cases below exercise a real push.
+  beforeEach(() => vi.stubEnv('NTFY_PUSH_ERRORS', '1'))
+  afterEach(() => vi.unstubAllEnvs())
+
   it('resolves even when the database write fails', async () => {
     // The most likely reason to be reporting an error is that the database is down.
     upsert.mockRejectedValueOnce(new Error('connection refused'))

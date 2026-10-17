@@ -163,7 +163,13 @@ export async function reportError(thrown: unknown, meta: ReportMeta): Promise<vo
     tracker.pending = 0
     tracker.lastWriteAt = now
 
-    const shouldNotify = meta.push !== false && now - tracker.lastNotifiedAt >= NOTIFY_MS
+    /*
+      Off by default (owner, 2026-10-17: "stop sending the error notifications").
+      Every error is still written to /admin/errors; only the phone push is off.
+      Set NTFY_PUSH_ERRORS=1 in the environment to turn the pushes back on.
+    */
+    const shouldNotify =
+      process.env.NTFY_PUSH_ERRORS === '1' && meta.push !== false && now - tracker.lastNotifiedAt >= NOTIFY_MS
     if (shouldNotify) tracker.lastNotifiedAt = now
 
     await Promise.allSettled([

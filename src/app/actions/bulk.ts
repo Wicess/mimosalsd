@@ -5,7 +5,7 @@ import { getCompanyEmail } from '@/lib/site/company-email.server'
 import { clientIp, createThread, isBlocked, messagesUrl, visitorId as visitorKey } from '@/lib/chat/core'
 import { catalog } from '@/lib/catalog/repository'
 import { JURISDICTIONS } from '@/lib/compliance/jurisdictions'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { absoluteUrl } from '@/lib/seo/routes'
 import { getMailProvider } from '@/lib/mail/mailer'
 import {
@@ -170,10 +170,19 @@ export async function submitBulkEnquiry(
 
   await notify({
     topic: 'chat-inbound',
-    title: `Bulk enquiry — ${d.company || d.name} · ${d.volume}`,
-    body: body.slice(0, 400),
-    tags: ['package'],
+    title: abroad ? `Quote request from abroad: ${d.company || d.name}` : `Bulk quote request: ${d.company || d.name}`,
+    body: alertLines([
+      ['Volume', d.volume],
+      ['Ships to', destination ?? null],
+      ['Wants', [...categories, ...products].join(', ') || null],
+      ['Reorders', d.cadence ?? null],
+      ['Email', d.email],
+      ['Phone', d.phone],
+      ['Note', d.message ? d.message.slice(0, 300) : null],
+    ]),
+    tags: [abroad ? 'globe_with_meridians' : 'package', 'quote'],
     clickUrl: absoluteUrl(messagesUrl(threadId)),
+    actions: [{ label: 'Open chat and reply', url: absoluteUrl(messagesUrl(threadId)) }],
   })
 
   const mail = getMailProvider()

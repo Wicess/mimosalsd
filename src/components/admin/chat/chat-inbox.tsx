@@ -807,7 +807,7 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
           </div>
         ) : null}
 
-        <ul className="min-h-0 flex-1 divide-y overflow-y-auto overscroll-contain">
+        <ul className="scrollbar-touch-hidden min-h-0 flex-1 divide-y overflow-y-auto overscroll-contain">
           {!listLoaded ? (
             [0, 1, 2, 3].map((i) => (
               <li key={i} className="flex gap-3 px-3 py-3.5" aria-hidden>
@@ -1049,7 +1049,7 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
                 const el = scrollRef.current
                 if (el) atBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60
               }}
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-background px-3 py-4 md:px-5"
+              className="scrollbar-touch-hidden min-h-0 flex-1 overflow-y-auto overscroll-contain bg-background px-3 py-4 md:px-5"
             >
               <div ref={contentRef} className="space-y-3">
               {loadingThread && messages.length === 0 ? (

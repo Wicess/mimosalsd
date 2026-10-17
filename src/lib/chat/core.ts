@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { cookies, headers } from 'next/headers'
 import { db } from '@/lib/db/client'
 import { scanText } from '@/lib/compliance/lexicon'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { recordAdminAction } from '@/lib/admin/audit'
 import type { AdminIdentity } from '@/lib/admin/auth'
 import { reportError } from '@/lib/observability/report-error'
@@ -321,20 +321,91 @@ export function checkOperatorReply(body: string): { ok: true } | { ok: false; er
   }
 }
 
-/** Push the operator a new-message alert. Throttled by the caller. */
+/**
+ * Whether a customer's message rings the owner's phone.
+ *
+ * It used to ring only when nothing was already unread, so a customer who wrote "hi"
+ * and then sent a photo of their payment rang once, for the "hi" (2026-10-17: the
+ * owner never heard about the photo). Now:
+ *
+ *  - a photo or a file ALWAYS rings: it is usually a receipt or a product question;
+ *  - text rings when nothing was waiting, as before;
+ *  - and again when the customer has been quiet for five minutes, so a conversation
+ *    the owner has not opened yet still announces that the customer is back.
+ *
+ * A burst of typed lines still rings once.
+ */
+export const REALERT_AFTER_MS = 5 * 60_000
+
+export function shouldAlertOperator(input: {
+  readonly hasAttachment: boolean
+  readonly wasWaiting: boolean
+  /** The customer's previous message in this thread, before the one just sent. */
+  readonly previousCustomerAt: Date | null
+  readonly now?: number
+}): boolean {
+  if (input.hasAttachment) return true
+  if (!input.wasWaiting) return true
+  if (!input.previousCustomerAt) return true
+  return (input.now ?? Date.now()) - input.previousCustomerAt.getTime() >= REALERT_AFTER_MS
+}
+
+/** When the customer last wrote in this thread. Read BEFORE posting the new message. */
+export async function lastCustomerMessageAt(threadId: string): Promise<Date | null> {
+  const row = await db.supportMessage.findFirst({
+    where: { threadId, fromCustomer: true, deletedAt: null },
+    orderBy: { createdAt: 'desc' },
+    select: { createdAt: true },
+  })
+  return row?.createdAt ?? null
+}
+
+/**
+ * Push the owner a new-message alert, carrying what they need to answer from the
+ * lock screen: who, their email, what they sent and its reference. A photo comes with
+ * the image itself, through a link that works for a day. Tapping opens the
+ * conversation; the buttons open it or the customer's orders.
+ */
 export async function alertOperator(input: {
   readonly publicId: string
   readonly displayName: string
   readonly preview: string
   /** Opens this conversation directly when the notification is tapped. */
   readonly threadId?: string
+  readonly email?: string | null
+  /** What arrived. `photo` and `pdf` change the icon; a photo is shown inline. */
+  readonly kind?: 'text' | 'photo' | 'pdf'
+  /** The stored photo, so the alert can show it. */
+  readonly attachmentKey?: string
 }): Promise<void> {
+  const kind = input.kind ?? 'text'
+  let attach: { url: string; filename: string } | undefined
+  if (kind === 'photo' && input.attachmentKey) {
+    try {
+      const { signedUrl } = await import('@/lib/storage/r2')
+      attach = { url: await signedUrl(input.attachmentKey, 24 * 60 * 60), filename: `${input.publicId}.jpg` }
+    } catch {
+      // The alert still goes, without the picture.
+    }
+  }
+  const chat = absoluteUrl(messagesUrl(input.threadId))
   await notify({
     topic: 'chat-inbound',
-    title: `Chat — ${input.displayName}`,
-    body: `${input.preview || 'New message'} (${input.publicId})`,
-    tags: ['speech_balloon'],
-    clickUrl: absoluteUrl(messagesUrl(input.threadId)),
+    title:
+      kind === 'photo'
+        ? `${input.displayName} sent a photo`
+        : kind === 'pdf'
+          ? `${input.displayName} sent a PDF`
+          : `New message from ${input.displayName}`,
+    body: alertLines([
+      ['', input.preview || (kind === 'text' ? 'New message' : '')],
+      ['Email', input.email ?? null],
+      ['Chat', input.publicId],
+    ]),
+    tags: [kind === 'photo' ? 'camera' : kind === 'pdf' ? 'page_facing_up' : 'speech_balloon', 'chat'],
+    clickUrl: chat,
+    actions: [{ label: 'Open chat and reply', url: chat }],
+    ...(attach ? { attach } : {}),
   })
 }
 

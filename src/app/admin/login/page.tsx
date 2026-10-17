@@ -8,18 +8,21 @@ import { BRAND } from '@/lib/brand'
 const INITIAL: LoginState = {}
 
 /**
- * Admin sign-in, in the owner's chosen design (2026-09-13): a green welcome panel
- * with curved shapes and the site logo centred on it, beside a white panel with
- * pill-shaped fields. On a phone the green becomes a curved header above the form.
+ * Admin sign-in (redesigned 2026-10-17: "standing in the centre on a background is
+ * boring; let it fit the phone, one page, no scroll").
  *
- * Two lines of the reference were links to features this panel deliberately does
- * not have — a password-reset flow and self sign-up — so they say what to do
- * instead rather than leading nowhere. The email is only a username; nothing is
- * sent to it.
+ * No card floating on a backdrop any more. On a phone the page IS the screen: a moss
+ * band with the logo across the top, the form filling everything below it, the button
+ * in the bottom third where a thumb reaches. On a computer it is a full-screen split,
+ * the brand on the left and the form on the right.
  *
- * One screen, never a scroll: the page is exactly the viewport tall, and every gap
- * and the logo are sized with min(…, dvh) so they shrink on a short screen instead
- * of pushing the button below the fold.
+ * One screen, never a scroll: the page is fixed to the viewport, and the band, the
+ * logo and the gaps are sized with dvh so a short screen (or an open keyboard)
+ * shrinks them rather than pushing the button off the bottom.
+ *
+ * Two links the old reference had (password reset, self sign-up) are features this
+ * panel does not have, so the page says what to do instead. The email is only a
+ * username; nothing is sent to it.
  */
 export default function AdminLoginPage() {
   const [state, formAction, pending] = useActionState(adminLogin, INITIAL)
@@ -50,108 +53,91 @@ export default function AdminLoginPage() {
   return (
     // Fixed to the screen: <body> reserves 3.5rem at the bottom on phones for the
     // storefront's tab bar, which would otherwise make this page scroll by that much.
-    <main className="fixed inset-0 grid touch-manipulation place-items-center overflow-hidden overscroll-none bg-background p-3 md:p-6">
-      <div className="relative flex max-h-full w-full max-w-sm flex-col overflow-hidden rounded-3xl bg-white shadow-2xl md:grid md:h-[min(34rem,100%)] md:max-w-4xl md:grid-cols-[1.1fr_1fr] md:bg-linear-to-b md:from-moss-600 md:to-moss-800">
-        {/* ── The green welcome panel ─────────────────────────────────────── */}
-        <section className="relative isolate flex flex-col items-center justify-center overflow-hidden shrink-0 rounded-bl-[55%_40%] bg-linear-to-b from-moss-600 to-moss-800 px-6 pt-[min(2.5rem,4.5dvh)] pb-[min(3rem,5.5dvh)] text-center text-white md:rounded-none md:bg-none md:px-10 md:py-[min(3rem,5dvh)]">
-          {/* The soft circles behind it. */}
-          <span aria-hidden className="absolute -bottom-40 -left-32 -z-10 size-[26rem] rounded-full bg-moss-500/40" />
-          <span aria-hidden className="absolute -right-24 -top-28 -z-10 size-72 rounded-full bg-moss-700/50" />
-          <span aria-hidden className="absolute -bottom-52 -left-48 -z-10 hidden size-[20rem] rounded-full bg-white md:block" />
+    <main className="fixed inset-0 flex touch-manipulation flex-col overflow-hidden overscroll-none bg-white md:grid md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+      {/* ── The brand band (top on a phone, left half on a computer) ─────────── */}
+      <section className="relative isolate flex h-[clamp(9.5rem,34dvh,17rem)] shrink-0 flex-col items-center justify-center overflow-hidden bg-linear-to-br from-moss-600 to-moss-800 px-6 text-center text-white md:h-auto md:px-12">
+        <span aria-hidden className="absolute -bottom-32 -left-24 -z-10 size-[22rem] rounded-full bg-moss-500/35 md:-bottom-48 md:-left-40 md:size-[34rem]" />
+        <span aria-hidden className="absolute -top-24 -right-20 -z-10 size-64 rounded-full bg-moss-900/40 md:size-96" />
 
-          <Image
-            src="/brand/logo.png"
-            alt={BRAND.name}
-            width={1180}
-            height={329}
-            priority
-            sizes="240px"
-            className="mx-auto h-auto w-[min(11rem,22dvh)] drop-shadow-[0_6px_18px_rgb(0_0_0/0.35)] md:w-[min(15rem,30dvh)]"
-          />
+        <Image
+          src="/brand/logo.png"
+          alt={BRAND.name}
+          width={1180}
+          height={329}
+          priority
+          sizes="(min-width: 768px) 320px, 220px"
+          className="h-auto w-[min(13rem,46vw)] drop-shadow-[0_6px_16px_rgb(0_0_0/0.3)] md:w-[min(20rem,32vw)]"
+        />
+        <p className="mt-[min(0.75rem,1.5dvh)] text-[13px] text-moss-100 md:mt-6 md:max-w-xs md:text-base md:leading-relaxed">
+          <span className="md:hidden">Admin panel, staff only</span>
+          <span className="hidden md:inline">
+            Orders, chats and the shop, in one place. For the shop&rsquo;s own team.
+          </span>
+        </p>
+      </section>
 
-          <h1 className="mt-[min(1.5rem,3dvh)] hidden font-product text-3xl font-medium md:block">Welcome Back!</h1>
-          <p className="mt-3 hidden max-w-[16rem] text-sm leading-relaxed text-moss-100 md:block">
-            To stay connected with the store, please sign in with your admin details.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => emailRef.current?.focus()}
-            className="mt-[min(2rem,4dvh)] hidden min-h-11 w-full max-w-[14rem] cursor-pointer rounded-full border-2 border-white/85 text-sm font-medium tracking-[0.12em] uppercase transition-colors duration-200 hover:bg-white/10 md:block"
-          >
+      {/* ── The form (fills the rest of the screen) ────────────────────────── */}
+      <section className="flex min-h-0 flex-1 flex-col px-6 pt-[min(2rem,4dvh)] pb-[max(env(safe-area-inset-bottom),min(1.5rem,3dvh))] md:items-center md:justify-center md:px-12 md:py-10">
+        <div className="flex min-h-0 w-full flex-1 flex-col md:max-w-sm md:flex-none">
+          <h1 className="font-product text-[min(1.75rem,4.6dvh)] leading-tight font-semibold tracking-[-0.02em] text-balance text-stone-900 md:text-3xl">
             Sign in
-          </button>
+          </h1>
+          <p className="mt-1 text-sm text-stone-600 [@media(max-height:560px)]:hidden">Use your admin email and password.</p>
 
-          <p className="mt-[min(1.5rem,2.5dvh)] text-[10px] tracking-[0.18em] text-moss-200 uppercase md:mt-[min(2.5rem,5dvh)] [@media(max-height:540px)]:hidden">
-            Admin panel <span aria-hidden>|</span> Authorised staff only
-          </p>
-        </section>
+          <form action={formAction} className="mt-[min(1.5rem,3dvh)] flex min-h-0 flex-1 flex-col md:mt-8 md:flex-none">
+            <div className="space-y-[min(1rem,2dvh)]">
+              <div>
+                <label htmlFor="email" className="block text-[13px] font-medium text-stone-700">
+                  Email
+                </label>
+                <input
+                  ref={emailRef}
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="username"
+                  inputMode="email"
+                  className="mt-1.5 min-h-[min(3rem,6.5dvh)] w-full rounded-xl! border border-stone-300! bg-stone-50 px-4 text-base text-stone-900 outline-none! transition-colors focus-visible:border-moss-600! focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-moss-500/40 md:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-[13px] font-medium text-stone-700">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  className="mt-1.5 min-h-[min(3rem,6.5dvh)] w-full rounded-xl! border border-stone-300! bg-stone-50 px-4 text-base text-stone-900 outline-none! transition-colors focus-visible:border-moss-600! focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-moss-500/40 md:text-sm"
+                />
+              </div>
 
-        {/* ── The white form panel ────────────────────────────────────────── */}
-        <section className="relative flex min-h-0 flex-col justify-center overflow-y-auto overscroll-none [scrollbar-width:none] bg-white [&::-webkit-scrollbar]:hidden px-7 pt-[min(2rem,4dvh)] pb-[min(2.5rem,5dvh)] text-center md:rounded-tr-[18%_28%] md:rounded-bl-[22%_100%] md:px-12 md:py-[min(3rem,5dvh)]">
-          <h2 className="font-product text-[min(2.25rem,6dvh)] leading-tight font-semibold tracking-tight text-moss-600 md:text-[min(3rem,7dvh)]">welcome</h2>
-          <p className="mt-1.5 text-sm text-stone-600 [@media(max-height:540px)]:mt-0.5 [@media(max-height:540px)]:text-xs">Log in to your account to continue</p>
-
-          <form action={formAction} className="mx-auto mt-[min(1.75rem,3.5dvh)] w-full max-w-xs space-y-[min(1rem,2dvh)] md:mt-[min(2.25rem,4.5dvh)]">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email (your username)
-              </label>
-              <input
-                ref={emailRef}
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="username"
-                placeholder="Email"
-                className="min-h-[min(3rem,6.5dvh)] w-full rounded-full! border-0! bg-moss-200/70 px-5 text-center text-base text-stone-900 outline-none! placeholder:text-stone-600 focus-visible:ring-2 focus-visible:ring-moss-500 md:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                autoComplete="current-password"
-                placeholder="Password"
-                className="min-h-[min(3rem,6.5dvh)] w-full rounded-full! border-0! bg-moss-200/70 px-5 text-center text-base text-stone-900 outline-none! placeholder:text-stone-600 focus-visible:ring-2 focus-visible:ring-moss-500 md:text-sm"
-              />
+              {state.error && (
+                <p role="alert" className="rounded-xl bg-danger-bg px-3 py-2 text-sm text-danger-fg">
+                  {state.error}
+                </p>
+              )}
             </div>
 
-            <p className="text-xs text-stone-700">Forgot your password? Ask the site owner to reset it.</p>
-
-            {state.error && (
-              <p role="alert" className="rounded-xl bg-danger-bg px-3 py-2 text-sm text-danger-fg">
-                {state.error}
+            {/* The button sits in the bottom third on a phone, where the thumb is. */}
+            <div className="mt-auto pt-[min(1.25rem,2.5dvh)] md:mt-7 md:pt-0">
+              <button
+                type="submit"
+                disabled={pending}
+                className="inline-flex min-h-[min(3.25rem,7dvh)] w-full cursor-pointer items-center justify-center rounded-full bg-moss-600 px-8 text-[15px] font-semibold text-white shadow-sm transition-[background-color,scale] duration-150 ease-out hover:bg-moss-700 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70 motion-reduce:transition-none"
+              >
+                {pending ? 'Signing in…' : 'Sign in'}
+              </button>
+              <p className="mt-[min(0.9rem,1.8dvh)] text-center text-[12px] leading-relaxed text-stone-600">
+                Forgotten the password, or need an account? Ask the site owner.
               </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={pending}
-              className="mx-auto mt-[min(0.5rem,1dvh)] inline-flex min-h-[min(2.75rem,6dvh)] min-w-40 cursor-pointer items-center justify-center rounded-full bg-moss-500 px-10 text-sm font-semibold tracking-[0.12em] text-white uppercase shadow-md transition-[background-color,scale] duration-150 hover:bg-moss-600 active:scale-[0.97] disabled:cursor-wait disabled:opacity-70"
-            >
-              {pending ? 'Logging in…' : 'Log in'}
-            </button>
+            </div>
           </form>
-
-          <p className="mt-[min(1.5rem,3dvh)] text-sm text-stone-700 [@media(max-height:540px)]:text-xs">
-            Don&rsquo;t have an account? <span className="font-medium text-moss-600">Ask the site owner</span>
-          </p>
-        </section>
-
-        {/*
-          The green crescent in the bottom corner on a phone. On the card, not inside the
-          form panel: that panel scrolls if a keyboard ever squeezes it, and a shape
-          hanging past its edge gave it a scrollbar on screens with room to spare.
-        */}
-        <span aria-hidden className="pointer-events-none absolute -bottom-10 -left-10 size-20 rounded-full bg-moss-600 md:hidden" />
-      </div>
+        </div>
+      </section>
     </main>
   )
 }

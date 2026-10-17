@@ -154,6 +154,9 @@ function Bubble({
   )
 }
 
+/** Enough to catch a typo before the server's own check; the server validates properly. */
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export function ChatPanel({
   open,
   onClose,
@@ -172,6 +175,7 @@ export function ChatPanel({
     sendFile,
     reportTyping,
     publicId,
+    hasEmail,
     notificationsOn,
     notificationsSupported,
     enableNotifications,
@@ -194,6 +198,8 @@ export function ChatPanel({
     field.style.height = `${Math.min(field.scrollHeight, 128)}px`
   }, [draft])
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState<string | null>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
   const [fileError, setFileError] = useState<string | null>(null)
   const [faq, setFaq] = useState<CannedReply | null>(null)
   const [showEmoji, setShowEmoji] = useState(false)
@@ -207,6 +213,14 @@ export function ChatPanel({
   const emailId = useId()
 
   const firstContact = messages.length === 0
+  /*
+    An email before the first message or file (owner, 2026-10-17). Asked only while the
+    conversation has none: one started at checkout or from a form already does. The
+    server refuses without it as well, so this is the friendly half of the rule.
+  */
+  const needsEmail = !loading && !hasEmail
+  const emailValid = EMAIL.test(email.trim())
+  const blocked = needsEmail && !emailValid
 
   // Newest message in view. Layout effect, so it lands before paint and the list
   // never flashes at the top first.
@@ -222,23 +236,41 @@ export function ChatPanel({
   }
 
   useEffect(() => {
-    if (open) inputRef.current?.focus()
+    if (!open) return
+    if (needsEmail && !emailValid) emailRef.current?.focus()
+    else inputRef.current?.focus()
+    // Only on opening: moving focus as the email becomes valid would yank the keyboard.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
+
+  function askForEmail(): void {
+    setEmailError('Enter your email to start the chat.')
+    emailRef.current?.focus()
+  }
 
   async function submit(event?: React.FormEvent) {
     event?.preventDefault()
     const text = draft.trim()
     if (!text || sending) return
+    if (blocked) return askForEmail()
     setDraft('')
     setShowEmoji(false)
     reportTyping('')
-    await send(text, firstContact && email ? { email } : undefined)
+    const sent = await send(text, needsEmail ? { email: email.trim() } : undefined)
+    if (!sent && needsEmail) {
+      setDraft(text)
+      askForEmail()
+    }
   }
 
   async function pick(file: File | undefined) {
     setFileError(null)
     if (!file) return
-    const error = await sendFile(file, draft)
+    if (blocked) {
+      if (fileRef.current) fileRef.current.value = ''
+      return askForEmail()
+    }
+    const error = await sendFile(file, draft, needsEmail ? email.trim() : undefined)
     if (error) setFileError(error)
     else setDraft('')
     if (fileRef.current) fileRef.current.value = ''
@@ -322,7 +354,7 @@ export function ChatPanel({
           const list = listRef.current
           if (list) atBottomRef.current = list.scrollHeight - list.scrollTop - list.clientHeight < 80
         }}
-        className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain px-3 py-4"
+        className="scrollbar-touch-hidden min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain px-3 py-4"
       >
         {loading && messages.length === 0 ? (
           <div className="space-y-3" aria-hidden>
@@ -422,21 +454,35 @@ export function ChatPanel({
             }}
           />
         ) : null}
-        {firstContact ? (
+        {needsEmail ? (
           <div className="mb-2">
-            <label htmlFor={emailId} className="sr-only">
-              Your email, so we can reply if you leave
+            <label htmlFor={emailId} className="mb-1.5 block px-1 text-[12px] font-medium text-foreground-muted">
+              Your email, to start the chat. We reply here, and by email if you leave.
             </label>
             <input
+              ref={emailRef}
               id={emailId}
               type="email"
               inputMode="email"
               autoComplete="email"
+              required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email — optional, so we can reply if you leave"
-              className="min-h-11 w-full rounded-2xl border border-border-strong bg-background px-4 text-[16px] text-foreground placeholder:text-foreground-subtle md:text-sm"
+              onChange={(e) => {
+                setEmail(e.target.value)
+                if (emailError) setEmailError(null)
+              }}
+              aria-invalid={emailError ? true : undefined}
+              aria-describedby={emailError ? `${emailId}-error` : undefined}
+              placeholder="you@example.com"
+              className={`min-h-11 w-full rounded-2xl border bg-background px-4 text-[16px] text-foreground placeholder:text-foreground-subtle md:text-sm ${
+                emailError ? 'border-danger-fg' : 'border-border-strong'
+              }`}
             />
+            {emailError ? (
+              <p id={`${emailId}-error`} role="alert" className="mt-1.5 px-1 text-[12px] font-medium text-danger-fg">
+                {emailError}
+              </p>
+            ) : null}
           </div>
         ) : null}
 
@@ -457,7 +503,7 @@ export function ChatPanel({
           />
           <button
             type="button"
-            onClick={() => fileRef.current?.click()}
+            onClick={() => (blocked ? askForEmail() : fileRef.current?.click())}
             disabled={sending}
             aria-label="Attach a photo or PDF"
             className="grid size-11 shrink-0 place-items-center rounded-full bg-surface text-foreground-muted hover:text-foreground disabled:opacity-40"
@@ -496,7 +542,7 @@ export function ChatPanel({
           />
           <button
             type="submit"
-            disabled={!draft.trim() || sending}
+            disabled={!draft.trim() || sending || blocked}
             aria-label="Send message"
             className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-on-primary disabled:opacity-40"
           >

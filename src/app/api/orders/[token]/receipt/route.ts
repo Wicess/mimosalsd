@@ -2,7 +2,8 @@ import { randomBytes } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { db } from '@/lib/db/client'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
+import { signedUrl } from '@/lib/storage/r2'
 import { orders } from '@/lib/orders/repository'
 import {
   checkReceipt,
@@ -190,13 +191,33 @@ export async function POST(
     phone three times at the top priority for one payment. Later uploads are still
     recorded (RECEIPT_ADDED above) and shown on the order; they just do not ring.
   */
-  if (firstClaim) await notify({
-    topic: 'orders-paid',
-    title: `Payment proof — ${order.orderNumber}`,
-    body: `${order.firstName} ${order.lastName} sent ${newKeys.length || 'no'} receipt${newKeys.length === 1 ? '' : 's'} for ${formatCents(order.totalCents)}${txRef ? ` (ref ${txRef})` : ''}. Verify the money arrived before marking paid.`,
-    tags: ['receipt'],
-    clickUrl: absoluteUrl(`/admin/orders/${order.orderNumber}`),
-  })
+  if (firstClaim) {
+    // The first image goes inside the notification, so the owner can check it from the lock screen.
+    const image = newKeys.find((k) => /\.(?:jpe?g|png|webp)$/i.test(k))
+    let attach: { url: string; filename: string } | undefined
+    if (image) {
+      try {
+        attach = { url: await signedUrl(image, 24 * 60 * 60), filename: `${order.orderNumber}-receipt.jpg` }
+      } catch {
+        // The alert still goes, without the picture.
+      }
+    }
+    await notify({
+      topic: 'orders-paid',
+      title: `Payment proof for ${order.orderNumber}`,
+      body: alertLines([
+        ['Customer', `${order.firstName} ${order.lastName}`],
+        ['Amount due', formatCents(order.totalCents)],
+        ['Files', String(newKeys.length || 'none')],
+        ['Reference', txRef ?? null],
+        ['', 'Check the money has arrived before marking it paid.'],
+      ]),
+      tags: ['receipt', 'payment'],
+      clickUrl: absoluteUrl(`/admin/orders/${order.orderNumber}`),
+      actions: [{ label: 'Check and confirm payment', url: absoluteUrl(`/admin/orders/${order.orderNumber}`) }],
+      ...(attach ? { attach } : {}),
+    })
+  }
 
   return NextResponse.json({ ok: true, uploaded: newKeys.length })
 }

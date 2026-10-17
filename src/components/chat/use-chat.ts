@@ -73,6 +73,8 @@ const HIDDEN_NOTIFY_WINDOW_MS = 10 * 60_000
 export function useChat({ open }: { open: boolean }) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [publicId, setPublicId] = useState<string | null>(null)
+  /** Whether this visitor's conversation has an email on it. Nothing is sent until it does. */
+  const [hasEmail, setHasEmail] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
 
@@ -121,6 +123,7 @@ export function useChat({ open }: { open: boolean }) {
         changes?: ChatMessage[]
         receipts?: { id: string; receipt: 'delivered' }[]
         publicId: string | null
+        hasEmail?: boolean
       }
 
       if (data.messages.length > 0) {
@@ -149,6 +152,7 @@ export function useChat({ open }: { open: boolean }) {
         })
       }
       setPublicId(data.publicId)
+      if (data.hasEmail) setHasEmail(true)
       if (data.publicId) markHasThread()
       // An open chat has read everything on screen: the badges go to zero.
       if (openRef.current) setUnread(0)
@@ -230,10 +234,17 @@ export function useChat({ open }: { open: boolean }) {
         body: JSON.stringify({ body: text, email: extra?.email, name: extra?.name }),
       })
       const data = (await response.json().catch(() => null)) as
-        | { ok: true; message: ChatMessage; publicId: string | null }
-        | { ok: false; error: string }
+        | { ok: true; message: ChatMessage; publicId: string | null; hasEmail?: boolean }
+        | { ok: false; error: string; needsEmail?: boolean }
         | null
+      if (data && !data.ok && data.needsEmail) {
+        // Nothing was sent: take the line back out and let the panel ask for the email.
+        setMessages((prev) => prev.filter((m) => m.id !== optimistic.id))
+        setHasEmail(false)
+        return false
+      }
       if (!response.ok || !data || !data.ok) throw new Error('send failed')
+      if (data.hasEmail) setHasEmail(true)
       setMessages((prev) => prev.map((m) => (m.id === optimistic.id ? data.message : m)))
       sinceRef.current = data.message.createdAt
       if (data.publicId) setPublicId(data.publicId)
@@ -252,7 +263,7 @@ export function useChat({ open }: { open: boolean }) {
     }
   }, [poll])
 
-  const sendFile = useCallback(async (file: File, caption: string) => {
+  const sendFile = useCallback(async (file: File, caption: string, email?: string) => {
     const preview = file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined
     const optimistic: ChatMessage = {
       id: `pending-${Date.now()}`,
@@ -272,10 +283,11 @@ export function useChat({ open }: { open: boolean }) {
       const form = new FormData()
       form.append('file', file)
       if (caption.trim()) form.append('body', caption.trim())
+      if (email) form.append('email', email)
       const response = await fetch('/api/chat/upload', { method: 'POST', body: form })
       const data = (await response.json().catch(() => null)) as
-        | { ok: true; message: ChatMessage }
-        | { ok: false; error: string }
+        | { ok: true; message: ChatMessage; hasEmail?: boolean }
+        | { ok: false; error: string; needsEmail?: boolean }
         | null
       if (!response.ok || !data || !data.ok) {
         setMessages((prev) =>
@@ -285,6 +297,7 @@ export function useChat({ open }: { open: boolean }) {
       }
       setMessages((prev) => prev.map((m) => (m.id === optimistic.id ? data.message : m)))
       sinceRef.current = data.message.createdAt
+      setHasEmail(true)
       return null
     } finally {
       if (preview) URL.revokeObjectURL(preview)
@@ -365,6 +378,7 @@ export function useChat({ open }: { open: boolean }) {
     sendFile,
     reportTyping,
     publicId,
+    hasEmail,
     notificationsOn,
     notificationsSupported: canNotify,
     enableNotifications,

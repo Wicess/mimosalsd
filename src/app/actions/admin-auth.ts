@@ -16,7 +16,8 @@ import { getAdminIdentity } from '@/lib/admin/auth'
 import { ADMIN_NEXT_COOKIE, firstAllowedAdminPath, safeAdminNext } from '@/lib/admin/areas'
 import { db } from '@/lib/db/client'
 import { dbRetry, isTransientDbError } from '@/lib/db/retry'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
+import { absoluteUrl } from '@/lib/seo/routes'
 import { reportError } from '@/lib/observability/report-error'
 import { markTeamBrowser } from '@/lib/visitors/team'
 
@@ -126,9 +127,13 @@ export async function adminLogin(
   await new Promise((resolve) => setTimeout(resolve, 600))
   await notify({
     topic: 'errors',
-    title: 'Failed admin login',
-    body: `Sign-in failed for ${email}. If this was not you, rotate the credential.`,
-    tags: ['warning'],
+    title: 'Failed admin sign-in',
+    body: alertLines([
+      ['Email tried', email],
+      ['', 'If this was not you, change the admin password.'],
+    ]),
+    tags: ['lock', 'security'],
+    clickUrl: absoluteUrl('/admin/audit'),
   })
   return { error: 'Incorrect email or password.' }
 }

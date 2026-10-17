@@ -13,20 +13,23 @@ import { isVisitorId, VISITOR_COOKIE } from './cookie'
  * recorded, and any failure — including the table not existing yet on a database
  * that has not had migration 0015 — is reported and swallowed. A cart add that fails
  * because the activity log is down would be a bug of the worst kind.
+ *
+ * Returns true when this was recorded now, false when it was a repeat or failed, so
+ * a caller can announce a first-time event (an app install) exactly once.
  */
 export async function recordActivity(
   kind: ActivityKind | typeof TEAM_KIND | typeof HUMAN_KIND,
   { detail, path, visitorId }: { detail?: string | null; path?: string | null; visitorId?: string | null } = {},
-): Promise<void> {
+): Promise<boolean> {
   try {
     const visitor = visitorId ?? (await cookies()).get(VISITOR_COOKIE)?.value
-    if (!isVisitorId(visitor)) return
+    if (!isVisitorId(visitor)) return false
     if (kind === TEAM_KIND || kind === HUMAN_KIND || ONCE_PER_VISITOR.has(kind)) {
       const already = await db.visitorActivity.findFirst({
         where: { visitorId: visitor, kind },
         select: { id: true },
       })
-      if (already) return
+      if (already) return false
     }
     await db.visitorActivity.create({
       data: {
@@ -36,7 +39,9 @@ export async function recordActivity(
         path: path ? path.slice(0, 200) : null,
       },
     })
+    return true
   } catch (error) {
     await reportError(error, { source: 'action', context: { stage: 'record-activity', kind } }).catch(() => undefined)
+    return false
   }
 }

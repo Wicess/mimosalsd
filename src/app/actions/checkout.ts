@@ -20,10 +20,10 @@ import { sendEmail } from '@/lib/mail/mailer'
 import { isUniqueViolation } from '@/lib/db/errors'
 import { reportError } from '@/lib/observability/report-error'
 import { after } from 'next/server'
-import { ensureThread, visitorId } from '@/lib/chat/core'
+import { ensureThread, messagesUrl, visitorId } from '@/lib/chat/core'
 import { linkOrderToChat, sendReceivedInvoice } from '@/lib/invoices/deliver'
 import { orderReceivedEmail } from '@/lib/mail/templates'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import {
   generateOrderId,
   generateOrderNumber,
@@ -429,14 +429,34 @@ export async function submitOrder(
   // order exists and ops has been notified regardless of whether the email lands.
   await sendEmail(orderReceivedEmail(order))
 
-  await notify({
-    topic: 'orders-new',
-    title: `New order — Order ID ${orderNumber} — ${formatCents(order.totalCents)}`,
-    body: `${order.firstName} ${order.lastName} · ${jurisdiction.name} · ${PAYMENT_LABELS[order.preferredPaymentMethod]} · ${order.items.length} line(s)`,
-    tags: ['moneybag'],
-    // Straight to the page where the owner enters this order's payment details.
-    clickUrl: absoluteUrl(`/admin/orders/${orderNumber}/payment`),
-  })
+  /*
+    The owner's alert. Sent after the response, with ntfy's retries, so a slow push
+    can never hold the customer on the checkout page, and a lost one is retried.
+    Tapping it opens the page where the owner enters this order's payment details.
+  */
+  const placedOrder = order
+  const placedThread = chatThreadId
+  after(() =>
+    notify({
+      topic: 'orders-new',
+      title: `New order ${orderNumber}, ${formatCents(placedOrder.totalCents)}`,
+      body: alertLines([
+        ['Customer', `${placedOrder.firstName} ${placedOrder.lastName}`],
+        ['Ships to', `${placedOrder.city}, ${jurisdiction.name}`],
+        ['Pays by', PAYMENT_LABELS[placedOrder.preferredPaymentMethod]],
+        ['Items', placedOrder.items.map((i) => `${i.quantity} x ${i.productName} (${i.variantName})`).join('; ')],
+        ['Total', formatCents(placedOrder.totalCents)],
+        ['Email', placedOrder.email],
+      ]),
+      tags: ['shopping_cart', 'order'],
+      clickUrl: absoluteUrl(`/admin/orders/${orderNumber}/payment`),
+      actions: [
+        { label: 'Send payment details', url: absoluteUrl(`/admin/orders/${orderNumber}/payment`) },
+        { label: 'Open order', url: absoluteUrl(`/admin/orders/${orderNumber}`) },
+        ...(placedThread ? [{ label: 'Customer chat', url: absoluteUrl(messagesUrl(placedThread)) }] : []),
+      ],
+    }),
+  )
 
   redirect(url.orderStatus(orderToken))
 }

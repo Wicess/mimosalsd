@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { getCompanyEmail } from '@/lib/site/company-email.server'
 import { clientIp, createThread, isBlocked, messagesUrl, visitorId as visitorKey } from '@/lib/chat/core'
 import { scanReview } from '@/lib/compliance/lexicon'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { absoluteUrl } from '@/lib/seo/routes'
 import { getMailProvider } from '@/lib/mail/mailer'
 import {
@@ -125,14 +125,16 @@ export async function submitContact(
 
   await notify({
     topic: 'chat-inbound',
-    title: `Contact: ${routed.label} — ${name}`,
-    body:
-      message.slice(0, 240) +
-      (flags.matches.length > 0
-        ? `\n\n⚠ Mentions: ${flags.matches.map((m) => m.term).join(', ')} — take care replying.`
-        : ''),
-    tags: ['envelope'],
+    title: `Contact form: ${routed.label}, from ${name}`,
+    body: alertLines([
+      ['', message.slice(0, 400)],
+      ['Email', email],
+      ['Order', orderNumber ?? null],
+      ['Take care', flags.matches.length > 0 ? `mentions ${flags.matches.map((m) => m.term).join(', ')}; answer without a health claim` : null],
+    ]),
+    tags: ['envelope_with_arrow', 'contact'],
     clickUrl: absoluteUrl(messagesUrl(threadId)),
+    actions: [{ label: 'Open chat and reply', url: absoluteUrl(messagesUrl(threadId)) }],
   })
 
   const enquiry = { name, email, topic: topic as ContactTopic, message, ...(orderNumber ? { orderNumber } : {}) }

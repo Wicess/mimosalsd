@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
   if (!thread) {
     return NextResponse.json(
-      { messages: [], publicId: null, unread: 0 },
+      { messages: [], publicId: null, unread: 0, hasEmail: false },
       { headers: { 'Cache-Control': 'no-store' } },
     )
   }
@@ -107,6 +107,7 @@ export async function GET(request: Request) {
       changes,
       receipts,
       publicId: thread.publicId,
+      hasEmail: Boolean(thread.email),
       unread: open ? 0 : thread.unreadForCustomer,
     },
     { headers: { 'Cache-Control': 'no-store' } },

@@ -4,7 +4,10 @@ import {
   alertOperator,
   clientIp,
   ensureThread,
+  findThread,
   isBlocked,
+  lastCustomerMessageAt,
+  shouldAlertOperator,
   postMessage,
   visitorId,
 } from '@/lib/chat/core'
@@ -13,6 +16,9 @@ import { forCustomer } from '@/lib/chat/serialize'
 import { checkReceipt } from '@/lib/orders/receipts'
 import { reportError } from '@/lib/observability/report-error'
 import { keys, putObject } from '@/lib/storage/r2'
+import { z } from 'zod'
+
+const emailSchema = z.string().trim().toLowerCase().email().max(320)
 
 /**
  * A customer sends a photo or a PDF in the chat.
@@ -48,9 +54,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Could not start a conversation.' }, { status: 500 })
   }
 
+  // Same rule as a typed message: an email before anything is sent.
+  const typedEmail = emailSchema.safeParse(form?.get('email') ?? '')
+  const email = typedEmail.success ? typedEmail.data : null
+  const existing = await findThread(visitor)
+  if (!existing?.email && !email) {
+    return NextResponse.json(
+      { ok: false, error: 'Enter your email to start the chat.', needsEmail: true },
+      { status: 422 },
+    )
+  }
+
   try {
-    const thread = await ensureThread({ visitor })
+    const thread = await ensureThread({ visitor, email })
     const wasWaiting = thread.unreadForAdmin > 0
+    const previousCustomerAt = await lastCustomerMessageAt(thread.id)
 
     const key = keys.chatAttachment(thread.id, randomBytes(8).toString('hex'), check.signature.ext)
     await putObject(key, bytes, check.signature.contentType)
@@ -69,16 +87,21 @@ export async function POST(request: Request) {
       },
     })
 
-    if (!wasWaiting) {
+    // A photo or a file always rings, with the photo inside the notification.
+    if (shouldAlertOperator({ hasAttachment: true, wasWaiting, previousCustomerAt })) {
+      const pdf = check.signature.ext === 'pdf'
       await alertOperator({
         publicId: thread.publicId ?? 'SG-?',
         displayName: thread.displayName ?? 'Visitor',
         threadId: thread.id,
-        preview: caption || (check.signature.ext === 'pdf' ? 'Sent a PDF' : 'Sent a photo'),
+        email: thread.email,
+        kind: pdf ? 'pdf' : 'photo',
+        attachmentKey: key,
+        preview: caption || (pdf ? 'A PDF is attached. Open the chat to read it.' : 'Photo shown below.'),
       })
     }
 
-    return NextResponse.json({ ok: true, message: forCustomer(message) })
+    return NextResponse.json({ ok: true, message: forCustomer(message), hasEmail: true })
   } catch (error) {
     await reportError(error, {
       source: 'route',

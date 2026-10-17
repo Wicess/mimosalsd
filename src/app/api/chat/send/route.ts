@@ -5,7 +5,10 @@ import {
   alertOperator,
   clientIp,
   ensureThread,
+  findThread,
   isBlocked,
+  lastCustomerMessageAt,
+  shouldAlertOperator,
   postMessage,
   visitorId,
 } from '@/lib/chat/core'
@@ -81,6 +84,19 @@ export async function POST(request: Request) {
     )
   }
 
+  /*
+    An email before the first word (owner, 2026-10-17): a conversation the owner
+    cannot answer once the visitor closes the tab is one that never finishes. A thread
+    that already has one (an order, a form, an earlier chat) needs nothing more.
+  */
+  const existing = await findThread(visitor)
+  if (!existing?.email && !parsed.data.email) {
+    return NextResponse.json(
+      { ok: false, error: 'Enter your email to start the chat.', needsEmail: true },
+      { status: 422 },
+    )
+  }
+
   try {
     const thread = await ensureThread({
       visitor,
@@ -92,6 +108,7 @@ export async function POST(request: Request) {
     // waiting" to "something waiting". A customer typing five messages in a row is
     // one conversation needing attention, not five phone buzzes.
     const wasWaiting = thread.unreadForAdmin > 0
+    const previousCustomerAt = await lastCustomerMessageAt(thread.id)
 
     const message = await postMessage({
       threadId: thread.id,
@@ -117,16 +134,17 @@ export async function POST(request: Request) {
       })
     }
 
-    if (!wasWaiting) {
+    if (shouldAlertOperator({ hasAttachment: false, wasWaiting, previousCustomerAt })) {
       await alertOperator({
         publicId: thread.publicId ?? 'SG-?',
         displayName: thread.displayName ?? 'Visitor',
         threadId: thread.id,
-        preview: body.slice(0, 140),
+        email: thread.email,
+        preview: body.slice(0, 300),
       })
     }
 
-    return NextResponse.json({ ok: true, message: forCustomer(message), publicId: thread.publicId })
+    return NextResponse.json({ ok: true, message: forCustomer(message), publicId: thread.publicId, hasEmail: Boolean(thread.email) })
   } catch (error) {
     await reportError(error, {
       source: 'route',

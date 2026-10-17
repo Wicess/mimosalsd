@@ -1,3 +1,5 @@
+import { InvoiceEditor } from '@/components/admin/invoice-editor'
+import { INVOICE_EDITABLE } from '@/lib/orders/invoice-edit'
 import { notFound } from 'next/navigation'
 import { db } from '@/lib/db/client'
 import { AdminPage } from '@/components/admin/shell'
@@ -216,6 +218,25 @@ async function OrderDetail({ orderNumber }: { orderNumber: string }) {
           <RefundForm
             token={order.orderToken}
             remainingCents={refundSummary.remainingCents}
+          />
+        </Panel>
+      )}
+
+      {/*
+        Before payment only: quantities, prices, shipping and a discount, agreed with the
+        customer in the chat. Saving posts the new invoice to that chat.
+      */}
+      {INVOICE_EDITABLE.has(order.status as never) && (
+        <Panel
+          title="Edit invoice"
+          hint="Change quantities, prices, shipping or a discount before the customer pays. Every change is recorded with your name and reason."
+        >
+          <InvoiceEditor
+            orderNumber={order.orderNumber}
+            lines={order.items.map((i) => ({ id: i.id, name: i.productName, variant: i.variantName, quantity: i.quantity, unitPriceCents: i.unitPriceCents }))}
+            shippingCents={order.shippingCents}
+            discountCents={order.discountCents}
+            earnedDiscountCents={order.subscriberDiscountCents + order.appDiscountCents + order.paymentDiscountCents}
           />
         </Panel>
       )}

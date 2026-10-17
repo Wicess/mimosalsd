@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { orders } from '@/lib/orders/repository'
 import { PAYMENT_LABELS } from '@/lib/orders/types'
 import { absoluteUrl, url } from '@/lib/seo/routes'
@@ -49,10 +49,16 @@ export async function claimPayment(
 
   await notify({
     topic: 'orders-paid',
-    title: `Payment claimed — ${order.orderNumber}`,
-    body: `${order.firstName} ${order.lastName} reports paying ${formatCents(order.totalCents)} by ${PAYMENT_LABELS[order.preferredPaymentMethod]}. Verify receipt before despatch.`,
-    tags: ['money_with_wings'],
+    title: `Customer says they paid ${order.orderNumber}`,
+    body: alertLines([
+      ['Customer', `${order.firstName} ${order.lastName}`],
+      ['Amount', formatCents(order.totalCents)],
+      ['Method', PAYMENT_LABELS[order.preferredPaymentMethod]],
+      ['', 'Check the money has arrived before it ships.'],
+    ]),
+    tags: ['money_with_wings', 'payment'],
     clickUrl: absoluteUrl(`/admin/orders/${order.orderNumber}`),
+    actions: [{ label: 'Check and confirm payment', url: absoluteUrl(`/admin/orders/${order.orderNumber}`) }],
   })
 
   revalidatePath(url.orderStatus(order.orderToken))

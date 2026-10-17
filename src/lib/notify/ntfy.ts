@@ -52,12 +52,39 @@ export const TOPIC_ENV: Record<NtfyTopic, 'NTFY_TOPIC_ORDERS' | 'NTFY_TOPIC_ALER
   'chat-inbound': 'NTFY_TOPIC_ALERTS',
 }
 
+/** A button on the notification. Tapping it opens `url` (ntfy's "view" action). */
+export interface NtfyAction {
+  readonly label: string
+  readonly url: string
+}
+
 export interface NtfyMessage {
   readonly topic: NtfyTopic
   readonly title: string
   readonly body: string
+  /**
+   * ntfy tags. A tag that is an emoji short code (`shopping_cart`, `camera`) shows as
+   * the notification's icon, in front of the title; anything else shows as a label.
+   * Put the emoji first: it is how the owner tells an order from a chat at a glance.
+   */
   readonly tags?: readonly string[]
+  /** Where tapping the notification itself goes: always the admin page it is about. */
   readonly clickUrl?: string
+  /** Up to three buttons. ntfy shows them under the text. */
+  readonly actions?: readonly NtfyAction[]
+  /** An image the phone shows inside the notification, e.g. the photo a customer sent. */
+  readonly attach?: { readonly url: string; readonly filename: string }
+}
+
+/**
+ * The body as labelled lines, the shape every alert uses: the facts the owner needs
+ * to decide whether to act now, one per line, and a line left out when it is empty.
+ */
+export function alertLines(lines: readonly (readonly [label: string, value: string | null | undefined | false])[]): string {
+  return lines
+    .filter(([, value]) => typeof value === 'string' && value.trim() !== '')
+    .map(([label, value]) => (label ? `${label}: ${value}` : String(value)))
+    .join('\n')
 }
 
 /**
@@ -92,6 +119,29 @@ export function headerSafe(value: string): string {
   return folded
 }
 
+/** The app icon, shown beside every alert, so a MIMOSALSD alert never looks like another app's. */
+function iconUrl(): string | undefined {
+  const site = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
+  return site ? `${site}/brand/app-icon-v2-192.png` : undefined
+}
+
+/** ntfy's published limit for a message body; longer is cut, never refused. */
+const MAX_BODY = 3800
+const ATTEMPTS = 3
+const ATTEMPT_TIMEOUT_MS = 6000
+
+/**
+ * Publish one alert.
+ *
+ * Sent as JSON to the server root rather than as headers to the topic URL: a JSON body
+ * is UTF-8, so titles keep their dashes, accents and emoji, and it is the only form
+ * that carries action buttons and an attached image. `headerSafe` is kept for the one
+ * thing that is still a header, the token.
+ *
+ * Retried. ntfy.sh timed out on 2026-10-08 and the alert was lost; an order or a
+ * customer's photo is worth a second and third try. Callers that sit in front of a
+ * customer (checkout) send it from `after()`, so the retries never hold a page open.
+ */
 export async function notify(message: NtfyMessage): Promise<boolean> {
   const base = process.env.NTFY_URL
   const topic = process.env[TOPIC_ENV[message.topic]]
@@ -101,38 +151,53 @@ export async function notify(message: NtfyMessage): Promise<boolean> {
     return false
   }
 
-  try {
-    const headers: Record<string, string> = {
-      Title: headerSafe(message.title),
-      Priority: 'urgent',
-    }
-    if (message.tags?.length) headers.Tags = headerSafe(message.tags.join(','))
-    if (message.clickUrl) headers.Click = headerSafe(message.clickUrl)
-    if (process.env.NTFY_TOKEN) {
-      headers.Authorization = `Bearer ${process.env.NTFY_TOKEN}`
-    }
-
-    const response = await fetch(`${base.replace(/\/$/, '')}/${topic}`, {
-      method: 'POST',
-      headers,
-      body: message.body,
-      // Never let a slow notification hold a checkout response open.
-      signal: AbortSignal.timeout(4000),
-    })
-    return response.ok
-  } catch (error) {
-    // Imported lazily on purpose. report-error.ts imports THIS module to send its
-    // pushes, so a static import here is a cycle — and a cycle whose evaluation order
-    // decides whether `notify` is defined when the reporter first calls it.
-    const { reportError } = await import('@/lib/observability/report-error')
-    // `push: false` — this IS the notifier. Alerting about it through itself would
-    // either fail identically or loop. It still lands in the admin error log.
-    await reportError(error, {
-      source: 'ntfy',
-      severity: 'ERROR',
-      push: false,
-      context: { topic: message.topic, title: message.title },
-    })
-    return false
+  const icon = iconUrl()
+  const payload = {
+    topic,
+    title: message.title,
+    message: message.body.length > MAX_BODY ? `${message.body.slice(0, MAX_BODY)}…` : message.body,
+    priority: 5,
+    ...(message.tags?.length ? { tags: [...message.tags] } : {}),
+    ...(message.clickUrl ? { click: message.clickUrl } : {}),
+    ...(message.actions?.length
+      ? { actions: message.actions.slice(0, 3).map((a) => ({ action: 'view', label: a.label, url: a.url, clear: true })) }
+      : {}),
+    ...(message.attach ? { attach: message.attach.url, filename: message.attach.filename } : {}),
+    ...(icon ? { icon } : {}),
   }
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (process.env.NTFY_TOKEN) headers.Authorization = headerSafe(`Bearer ${process.env.NTFY_TOKEN}`)
+
+  let lastError: unknown = null
+  for (let attempt = 1; attempt <= ATTEMPTS; attempt += 1) {
+    try {
+      const response = await fetch(base.replace(/\/$/, ''), {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(ATTEMPT_TIMEOUT_MS),
+      })
+      if (response.ok) return true
+      // A 4xx will not improve on a retry: a bad token, a reserved topic, a malformed field.
+      lastError = new Error(`ntfy answered HTTP ${response.status}`)
+      if (response.status < 500 && response.status !== 429) break
+    } catch (error) {
+      lastError = error
+    }
+    if (attempt < ATTEMPTS) await new Promise((resolve) => setTimeout(resolve, 400 * attempt))
+  }
+
+  // Imported lazily on purpose. report-error.ts imports THIS module to send its
+  // pushes, so a static import here is a cycle — and a cycle whose evaluation order
+  // decides whether `notify` is defined when the reporter first calls it.
+  const { reportError } = await import('@/lib/observability/report-error')
+  // `push: false` — this IS the notifier. Alerting about it through itself would
+  // either fail identically or loop. It still lands in the admin error log.
+  await reportError(lastError, {
+    source: 'ntfy',
+    severity: 'ERROR',
+    push: false,
+    context: { topic: message.topic, title: message.title },
+  })
+  return false
 }

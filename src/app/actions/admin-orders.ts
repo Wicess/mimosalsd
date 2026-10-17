@@ -11,12 +11,13 @@ import {
   paymentConfirmedEmail,
   shippedEmail,
 } from '@/lib/mail/templates'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { orders } from '@/lib/orders/repository'
 import { ALLOWED_TRANSITIONS } from '@/lib/orders/transitions'
 import { releaseRedemption } from '@/lib/orders/coupon-store'
 import type { OrderStatus } from '@/lib/orders/types'
 import { absoluteUrl, url } from '@/lib/seo/routes'
+import { formatCents } from '@/lib/utils'
 
 export type AdminOrderState = { error?: string; ok?: boolean }
 
@@ -174,9 +175,14 @@ export async function advanceOrder(
 
     await notify({
       topic: 'orders-paid',
-      title: `Payment confirmed — ${order.orderNumber}`,
-      body: `${order.firstName} ${order.lastName} · ready to pack.`,
+      title: `Paid: ${order.orderNumber} is ready to pack`,
+      body: alertLines([
+        ['Customer', `${order.firstName} ${order.lastName}`],
+        ['Total', formatCents(order.totalCents)],
+      ]),
+      tags: ['white_check_mark', 'paid'],
       clickUrl: absoluteUrl(`/admin/orders/${order.orderNumber}`),
+      actions: [{ label: 'Open order', url: absoluteUrl(`/admin/orders/${order.orderNumber}`) }],
     })
   }
 

@@ -28,7 +28,7 @@ vi.mock('@/lib/storage/r2', async (importOriginal) => ({
     stored.push({ key, bytes: body.byteLength })
   }),
 }))
-vi.mock('@/lib/notify/ntfy', () => ({ notify: vi.fn(async () => true), headerSafe: (v: string) => v, TOPIC_ENV: {} }))
+vi.mock('@/lib/notify/ntfy', () => ({ notify: vi.fn(async () => true), alertLines: () => '', headerSafe: (v: string) => v, TOPIC_ENV: {} }))
 const reported: unknown[] = []
 vi.mock('@/lib/observability/report-error', () => ({
   reportError: vi.fn(async (error: unknown) => {

@@ -200,6 +200,6 @@ describe('ntfy', () => {
     const { notify } = await import('@/lib/notify/ntfy')
     await notify({ topic: 'orders-new', title: 'New order', body: 'SG-1001' })
     const init = fetch.mock.calls[0]?.[1] as RequestInit | undefined
-    expect((init?.headers as Record<string, string>).Priority).toBe('urgent')
+    expect(JSON.parse(String(init?.body)).priority).toBe(5)
   })
 })

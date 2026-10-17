@@ -72,7 +72,7 @@ export function ProfilePanel({
         ) : null}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div className="scrollbar-touch-hidden min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <div className="flex flex-col items-center px-4 pt-6 pb-5 text-center">
           <span className="relative grid size-16 place-items-center rounded-full bg-accent-muted font-product text-lg font-semibold text-accent-fg">
             {initials(profile.displayName)}

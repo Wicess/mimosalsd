@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { absoluteUrl } from '@/lib/seo/routes'
 import { db } from '@/lib/db/client'
 import { reportError } from '@/lib/observability/report-error'
@@ -77,10 +77,14 @@ export async function subscribeToNewsletter(
   if (isNew) {
     await notify({
       topic: 'signups',
-      title: 'New newsletter subscriber',
-      body: `${email} signed up from ${where}.`,
-      tags: ['email'],
+      title: 'New subscriber',
+      body: alertLines([
+        ['Email', email],
+        ['Signed up from', where],
+      ]),
+      tags: ['incoming_envelope', 'newsletter'],
       clickUrl: absoluteUrl('/admin/newsletter'),
+      actions: [{ label: 'Open subscribers', url: absoluteUrl('/admin/newsletter') }],
     })
   }
   return { ok: DONE }

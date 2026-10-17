@@ -1393,3 +1393,33 @@ p {
     top: calc(var(--app-vv-top, 0px) + var(--app-vh, 100dvh) - var(--chat-card-h) - 0.75rem);
   }
 }
+
+/*
+  Scrollbars in the site's own colours (owner, 2026-10-17: the chat's grey system bar
+  "does not match the design"). Thin everywhere, a muted moss thumb on no track, so a
+  scrollable panel reads as part of the page rather than as the operating system's.
+  Both themes follow, because the colours are the theme's tokens.
+*/
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--border-strong) 55%, transparent) transparent;
+  }
+  html {
+    scrollbar-color: color-mix(in oklab, var(--border-strong) 55%, transparent) var(--background);
+  }
+}
+
+/*
+  For panels people scroll with a finger — the chat lists. On a touch screen the bar
+  is dead weight beside the messages, so it is not drawn at all; scrolling is unchanged.
+  A mouse or trackpad still gets the thin themed bar above.
+*/
+@utility scrollbar-touch-hidden {
+  @media (pointer: coarse) {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

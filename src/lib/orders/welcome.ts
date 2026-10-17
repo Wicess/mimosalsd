@@ -1,7 +1,7 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 import { db } from '@/lib/db/client'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { absoluteUrl } from '@/lib/seo/routes'
 import { isVisitorId, VISITOR_COOKIE } from '@/lib/visitors/cookie'
 import { recordActivity } from '@/lib/visitors/record-activity'
@@ -161,10 +161,14 @@ export async function joinListFromCheckout(email: string): Promise<void> {
   if (!existing) {
     await notify({
       topic: 'signups',
-      title: 'New newsletter subscriber',
-      body: `${address} signed up at checkout, with their order.`,
-      tags: ['email'],
+      title: 'New subscriber',
+      body: alertLines([
+        ['Email', address],
+        ['Signed up from', 'checkout, with their order'],
+      ]),
+      tags: ['incoming_envelope', 'newsletter'],
       clickUrl: absoluteUrl('/admin/newsletter'),
+      actions: [{ label: 'Open subscribers', url: absoluteUrl('/admin/newsletter') }],
     })
   }
 }

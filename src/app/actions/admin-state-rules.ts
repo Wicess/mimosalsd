@@ -8,7 +8,7 @@ import { recordAdminAction } from '@/lib/admin/audit'
 import { db } from '@/lib/db/client'
 import { STATE_RULES_TAG } from '@/lib/compliance/prisma-state-rules'
 import { getJurisdiction } from '@/lib/compliance/jurisdictions'
-import { notify } from '@/lib/notify/ntfy'
+import { alertLines, notify } from '@/lib/notify/ntfy'
 import { absoluteUrl, url } from '@/lib/seo/routes'
 
 export type RuleUpdateState = { error?: string; ok?: string }
@@ -149,8 +149,12 @@ export async function updateStateRule(
   await notify({
     topic: 'errors',
     title: `State rule changed — ${jurisdiction.name} / ${data.productLine}`,
-    body: `${before.status} → ${data.status}. Reason: ${data.reason}`,
-    tags: ['scales'],
+    body: alertLines([
+      ['Was', before.status],
+      ['Now', data.status],
+      ['Reason', data.reason],
+    ]),
+    tags: ['scales', 'rules'],
     clickUrl: absoluteUrl('/admin/state-rules'),
   })
 

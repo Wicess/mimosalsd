@@ -3,6 +3,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 import { cookies } from 'next/headers'
 import { verifyPassword } from './password'
 import { reportError } from '@/lib/observability/report-error'
+import { ADMIN_SESSION_COOKIE, ADMIN_SESSION_TTL_MS, adminSessionCookieOptions } from './session-policy'
 
 /**
  * Admin authentication.
@@ -17,8 +18,9 @@ import { reportError } from '@/lib/observability/report-error'
  * `npm run admin:hash`.
  */
 
-const SESSION_COOKIE = 'admin_session'
-const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // one working day
+// 90 days, renewed by the proxy while the device is in use; see session-policy.ts.
+const SESSION_COOKIE = ADMIN_SESSION_COOKIE
+const SESSION_TTL_MS = ADMIN_SESSION_TTL_MS
 
 /**
  * The session payload.
@@ -29,8 +31,9 @@ const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // one working day
  * query the database.
  *
  * The cost is that a permission change takes effect at next sign-in rather than
- * instantly (TTL is 8 hours). To lock someone out immediately, disable the user AND
- * rotate ADMIN_SESSION_SECRET — that invalidates every outstanding session.
+ * instantly, and sessions are long-lived (90 days, renewed while in use). To lock
+ * someone out immediately, disable the user AND rotate ADMIN_SESSION_SECRET — that
+ * invalidates every outstanding session.
  *
  * The payload is HMAC-signed, so a user cannot edit their own role.
  */
@@ -108,13 +111,9 @@ export async function createAdminSession(
     expiresAt: now + SESSION_TTL_MS,
   }
   const store = await cookies()
-  store.set(SESSION_COOKIE, serialize(session), {
-    httpOnly: true,
-    sameSite: 'strict', // admin actions are state-changing; strict blocks cross-site
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: Math.floor(SESSION_TTL_MS / 1000),
-    path: '/',
-  })
+  // Lax, not Strict: a tap on an ntfy notification opens the admin from another app,
+  // and Strict cookies are not sent then. See session-policy.ts.
+  store.set(SESSION_COOKIE, serialize(session), adminSessionCookieOptions())
 }
 
 export async function destroyAdminSession(): Promise<void> {

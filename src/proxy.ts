@@ -11,6 +11,12 @@ import { BRAND } from '@/lib/brand'
 import { clientIpFrom } from '@/lib/security/client-ip'
 import { blocklistExempt, isBlockedIp } from '@/lib/security/blocklist'
 import { trackVisit } from '@/lib/visitors/track'
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_RENEW_AFTER_MS,
+  ADMIN_SESSION_TTL_MS,
+  adminSessionCookieOptions,
+} from '@/lib/admin/session-policy'
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -56,7 +62,37 @@ function segment(pathname: string, index: number): string | undefined {
  *  The layout still checks, as defence in depth. This is the check that enforces.
  * ─────────────────────────────────────────────────────────────────────────────
  */
-const ADMIN_SESSION_COOKIE = 'admin_session'
+/**
+ * A fresh session cookie for an admin who is using the panel, or null when none is due.
+ *
+ * Sessions last 90 days from their last renewal (lib/admin/session-policy.ts). Any
+ * admin request with a valid session more than a day old gets the same session
+ * re-signed with a new expiry, so a device in regular use never has to sign in again.
+ * The role, areas and identity are carried over unchanged: renewal extends a session,
+ * it never widens one.
+ */
+export function renewedAdminToken(request: NextRequest): string | null {
+  const secret = process.env.ADMIN_SESSION_SECRET
+  if (!secret || secret.length < 32) return null
+  const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
+  const [payload, signature] = token?.split('.') ?? []
+  if (!payload || !signature) return null
+  const expected = createHmac('sha256', secret).update(payload).digest('base64url')
+  const a = Buffer.from(signature)
+  const b = Buffer.from(expected)
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null
+  try {
+    const session = JSON.parse(Buffer.from(payload, 'base64url').toString()) as Record<string, unknown>
+    const expiresAt = session.expiresAt
+    const now = Date.now()
+    if (typeof expiresAt !== 'number' || now >= expiresAt) return null
+    if (expiresAt - now > ADMIN_SESSION_TTL_MS - ADMIN_SESSION_RENEW_AFTER_MS) return null
+    const next = Buffer.from(JSON.stringify({ ...session, expiresAt: now + ADMIN_SESSION_TTL_MS })).toString('base64url')
+    return `${next}.${createHmac('sha256', secret).update(next).digest('base64url')}`
+  } catch {
+    return null
+  }
+}
 
 interface ProxySession {
   readonly role?: string
@@ -267,6 +303,16 @@ function blockedResponse(pathname: string): NextResponse {
 }
 
 export async function proxy(request: NextRequest, event?: NextFetchEvent): Promise<NextResponse> {
+  const response = await handle(request, event)
+  // Keep a device that uses the admin signed in (owner, 2026-10-17).
+  if (request.nextUrl.pathname.startsWith('/admin') && !response.headers.get('set-cookie')?.includes(`${ADMIN_SESSION_COOKIE}=`)) {
+    const renewed = renewedAdminToken(request)
+    if (renewed) response.cookies.set(ADMIN_SESSION_COOKIE, renewed, adminSessionCookieOptions())
+  }
+  return response
+}
+
+async function handle(request: NextRequest, event?: NextFetchEvent): Promise<NextResponse> {
   const { pathname } = request.nextUrl
 
   /*

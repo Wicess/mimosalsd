@@ -29,7 +29,7 @@ describe('GET /api/chat/unread', () => {
     const { GET } = await import('@/app/api/chat/unread/route')
 
     findThread.mockResolvedValueOnce({ unreadForCustomer: 4 })
-    expect(await (await GET()).json()).toEqual({ unread: 4, hasThread: true })
+    expect(await (await GET()).json()).toEqual({ unread: 4, hasThread: true, live: null })
 
     findThread.mockResolvedValueOnce(null)
     const none = await GET()

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { db } from '@/lib/db/client'
 import { ensureThread, findThread, visitorId } from '@/lib/chat/core'
+import { isRecent, TYPING_WINDOW_MS } from '@/lib/chat/rules'
+import { pingStaff } from '@/lib/live/push'
 
 /**
  * "Customer is typing…" — plus WHAM's live preview of what they have typed so far,
@@ -41,5 +43,12 @@ export async function POST(request: Request) {
         // stale "typing…" until it times out.
         { customerTypingAt: null, customerTypingText: null },
   })
+  /*
+    The inbox hears that someone STARTED typing by push, so the row and its preview
+    appear without the inbox polling for them. Only the start: while they keep typing
+    the inbox polls that conversation itself, and one ping per burst keeps well inside
+    ntfy's limits.
+  */
+  if (text && !isRecent(thread.customerTypingAt, TYPING_WINDOW_MS)) pingStaff()
   return new NextResponse(null, { status: 204 })
 }

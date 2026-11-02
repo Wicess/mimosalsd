@@ -49,9 +49,15 @@ import type { InboxFilter, InboxMessage, InboxProfile, InboxReceipt, InboxThread
  * WHAT IS DIFFERENT, and why:
  *
  *  · POLLING STOPS WHEN NOBODY IS THERE. WHAM polls the list every 8s and the thread
- *    every 3–8s for as long as the tab is visible. Here both also stop after three
- *    minutes without a touch — an inbox left open on a second monitor is exactly the
+ *    every 3–8s for as long as the tab is visible. Here both also stop after a
+ *    minute without a touch — an inbox left open on a second monitor is exactly the
  *    pattern the cost playbook exists to stop (useActivePoll).
+ *  · PUSH, NOT POLLING. A customer's message, their first keystroke, and their
+ *    device receiving or reading a reply ring the staff ntfy topic (lib/live/push.ts);
+ *    the inbox polls once when it hears it. While that stream is up, the timers only
+ *    run where time itself changes the picture — a customer who is online or typing
+ *    right now — and otherwise fall back to a 15-minute safety poll. Without the
+ *    stream the old 8s / 3–8s timers carry on unchanged.
  *  · BLOCK IS CHAT-ONLY. WHAM bans the IP from the whole site by mirroring the block
  *    list into Redis for its edge proxy. This site has no Redis, and a database
  *    lookup on every request would keep Neon awake around the clock.
@@ -67,6 +73,8 @@ const LIST_MS = 8000
 /** While the customer is on screen or typing, the conversation deserves 3s. */
 const THREAD_FAST_MS = 3000
 const THREAD_SLOW_MS = 8000
+/** With the push stream connected, and nobody online or typing: just a safety net. */
+const LIVE_SAFETY_MS = 15 * 60_000
 const MAX_FILE_BYTES = 15 * 1024 * 1024
 
 type Confirm = null | 'block' | 'delete' | 'bulk'
@@ -116,6 +124,8 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
   const [query, setQuery] = useState('')
   const [searchBusy, setSearchBusy] = useState(false)
   const [signedOut, setSignedOut] = useState(false)
+  // The staff push topic, as the list endpoint reports it (null: timers only).
+  const [liveTopic, setLiveTopic] = useState<string | null>(null)
   const [selectMode, setSelectMode] = useState(false)
   const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set())
 
@@ -168,8 +178,9 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
         return
       }
       if (!res.ok) return
-      const data = (await res.json()) as { threads: InboxThread[] }
+      const data = (await res.json()) as { threads: InboxThread[]; live?: string | null }
       setThreads(data.threads)
+      setLiveTopic(data.live ?? null)
       setSignedOut(false)
     } catch {
       // Transient. The next tick retries.
@@ -258,10 +269,15 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
   // the active timer. A search result is a deliberate lookup, not a live feed —
   // re-running a message-body search every 8 seconds would be the most expensive
   // thing the inbox does, and would reshuffle rows mid-read — so it does not repeat.
+  // Someone on the list is online or typing: their dot and preview move with time,
+  // which no push announces, so the list keeps its 8s rate while that lasts.
+  const someoneHere = threads.some((t) => t.online || t.typing)
   useActivePoll(loadThreads, LIST_MS, {
     immediate: true,
     key: `${filter}|${query}`,
     repeat: query.length < 2 && !signedOut,
+    live: liveTopic,
+    liveIntervalMs: someoneHere ? LIST_MS : LIVE_SAFETY_MS,
   })
 
   const pollThread = useCallback(async () => {
@@ -272,6 +288,8 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
   useActivePoll(pollThread, customerHere ? THREAD_FAST_MS : THREAD_SLOW_MS, {
     enabled: Boolean(activeId) && !signedOut,
     key: activeId ?? '',
+    live: liveTopic,
+    liveIntervalMs: customerHere ? THREAD_FAST_MS : LIVE_SAFETY_MS,
   })
 
   // 300ms after the last keystroke, and only from two characters up.

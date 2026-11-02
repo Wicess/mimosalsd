@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { db } from '@/lib/db/client'
 import { customerViewing, findThread, markDelivered, visitorId } from '@/lib/chat/core'
 import { forCustomer } from '@/lib/chat/serialize'
+import { threadTopic } from '@/lib/live/push'
 
 /**
  * The customer's live view of their conversation.
@@ -109,6 +110,9 @@ export async function GET(request: Request) {
       publicId: thread.publicId,
       hasEmail: Boolean(thread.email),
       unread: open ? 0 : thread.unreadForCustomer,
+      // The ntfy topic this browser listens on for "the shop changed something"
+      // (lib/live/push.ts). Null when pushes are not configured: the timer carries on.
+      live: threadTopic(thread.id),
     },
     { headers: { 'Cache-Control': 'no-store' } },
   )

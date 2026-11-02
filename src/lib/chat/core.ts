@@ -12,6 +12,7 @@ import { clientIpFrom } from '@/lib/security/client-ip'
 import { isVisitorId, VISITOR_COOKIE, VISITOR_MAX_AGE } from '@/lib/visitors/cookie'
 import { deleteObject } from '@/lib/storage/r2'
 import { absoluteUrl } from '@/lib/seo/routes'
+import { pingStaff, pingThread, pingThreads } from '@/lib/live/push'
 import { cleanBody, deriveDisplayName, newPublicId, previewLine } from './rules'
 
 /**
@@ -185,8 +186,8 @@ export async function postMessage(input: {
   readonly ip?: string | null
 }) {
   const now = new Date()
-  return db.$transaction(async (tx) => {
-    const created = await tx.supportMessage.create({
+  const created = await db.$transaction(async (tx) => {
+    const row = await tx.supportMessage.create({
       data: {
         threadId: input.threadId,
         fromCustomer: input.fromCustomer,
@@ -231,8 +232,17 @@ export async function postMessage(input: {
             : { unreadForCustomer: { increment: 1 } }),
       },
     })
-    return created
+    return row
   })
+  /*
+    The other side's live view learns of it by push (lib/live/push.ts), after the
+    response. A customer's message rings the inbox; the shop's reply, invoice or
+    payment details ring the customer's browser. The automatic welcome rings nobody:
+    it is posted inside the customer's own send, which fetches it straight away.
+  */
+  if (input.fromCustomer) pingStaff()
+  else if (!input.isSystem) pingThread(input.threadId)
+  return created
 }
 
 /**
@@ -240,10 +250,12 @@ export async function postMessage(input: {
  * Reaching a device is not the same as having been looked at.
  */
 export async function markDelivered(threadId: string, recipient: 'CUSTOMER' | 'ADMIN') {
-  await db.supportMessage.updateMany({
+  const { count } = await db.supportMessage.updateMany({
     where: { threadId, fromCustomer: recipient === 'ADMIN', deliveredAt: null },
     data: { deliveredAt: new Date() },
   })
+  // A tick appeared on the shop's reply: the inbox shows it without waiting for a poll.
+  if (count > 0 && recipient === 'CUSTOMER') pingStaff()
 }
 
 /** Clear one side's unread counter and stamp the other side's messages read. */
@@ -268,6 +280,8 @@ export async function markRead(threadId: string, reader: 'CUSTOMER' | 'ADMIN') {
           : { unreadForCustomer: 0, customerLastSeenAt: now },
     })
   })
+  // The customer read the shop's replies: the second tick reaches the inbox at once.
+  if (reader === 'CUSTOMER') pingStaff()
 }
 
 /**
@@ -488,6 +502,8 @@ export async function deleteThreads(
   if (found.length === 0) return 0
   // Messages cascade with their thread.
   await db.supportThread.deleteMany({ where: { id: { in: found } } })
+  // An open chat panel learns its conversation is gone, and starts afresh.
+  pingThreads(found)
 
   const keys = threads.flatMap((t) => t.messages.map((m) => m.attachmentKey).filter((k): k is string => Boolean(k)))
   const results = await Promise.allSettled(keys.map((key) => deleteObject(key)))

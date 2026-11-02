@@ -5,6 +5,7 @@ import { deleteThreads } from '@/lib/chat/core'
 import { isRecent, ONLINE_WINDOW_MS, TYPING_WINDOW_MS } from '@/lib/chat/rules'
 import { reportError } from '@/lib/observability/report-error'
 import { requireChatAdmin } from '@/lib/chat/admin-guard'
+import { staffTopic } from '@/lib/live/push'
 
 /**
  * The inbox list.
@@ -88,6 +89,8 @@ export async function GET(request: Request) {
         }
       }),
       totalUnread: threads.reduce((sum, t) => sum + t.unreadForAdmin, 0),
+      // The inbox's push channel (lib/live/push.ts): customer activity rings it.
+      live: staffTopic(),
     },
     { headers: { 'Cache-Control': 'no-store' } },
   )

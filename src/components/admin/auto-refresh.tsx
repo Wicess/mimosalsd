@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { isPresent, markPresent, onWake } from '@/lib/live/activity'
 
 /**
  * Keeps a live admin page current without a hard reload — and lets the database sleep.
@@ -15,8 +16,9 @@ import { useRouter } from 'next/navigation'
  *
  * So the refresh is gated on the operator actually being there. It fires only while
  * the tab is BOTH visible AND recently interacted with. Walk away and it stops, the
- * queries stop, and the database is allowed to scale to zero; the next mouse move,
- * keypress, tab switch or window focus wakes it and pulls current data immediately.
+ * queries stop, and the database is allowed to scale to zero; the next click,
+ * keypress, touch, wheel or return to the tab wakes it and pulls current data
+ * immediately.
  *
  * `router.refresh()` rather than `location.reload()`: it re-fetches the RSC payload
  * and reconciles in place, so scroll position and open `<details>` survive.
@@ -36,23 +38,15 @@ export function AutoRefresh({
   idleAfterSeconds?: number
 }) {
   const router = useRouter()
-  // A tab switch and a focus event fire together, and the interval can land in the
-  // same instant. One refresh per window is plenty.
+  // A wake and the interval can land in the same instant. One refresh per window is plenty.
   const lastRefreshRef = useRef(0)
-  // Initialised inside the effect, not here: calling Date.now() during render is
-  // impure and the React Compiler rejects it.
-  const lastActivityRef = useRef(0)
 
   useEffect(() => {
     const MIN_GAP_MS = 3000
     const idleMs = Math.max(30, idleAfterSeconds) * 1000
 
     // Mounting counts as being present, so the first interval tick is allowed.
-    lastActivityRef.current = Date.now()
-
-    const markActive = () => {
-      lastActivityRef.current = Date.now()
-    }
+    markPresent()
 
     const refresh = () => {
       const now = Date.now()
@@ -63,40 +57,22 @@ export function AutoRefresh({
 
     const tick = () => {
       // Hidden tab, or nobody home. Either way, let the database sleep.
-      if (document.visibilityState !== 'visible') return
-      if (Date.now() - lastActivityRef.current > idleMs) return
+      if (!isPresent(idleMs)) return
       refresh()
     }
 
     const id = window.setInterval(tick, Math.max(5, intervalSeconds) * 1000)
 
-    // Returning to the tab counts as activity AND earns an immediate refresh.
-    const onWake = () => {
-      if (document.visibilityState !== 'visible') return
-      markActive()
-      refresh()
-    }
-
-    const ACTIVITY = [
-      'mousedown',
-      'keydown',
-      'scroll',
-      'touchstart',
-      'wheel',
-      'mousemove',
-    ] as const
-
-    for (const event of ACTIVITY) {
-      window.addEventListener(event, markActive, { passive: true })
-    }
-    document.addEventListener('visibilitychange', onWake)
-    window.addEventListener('focus', onWake)
+    /*
+      Returning to the tab, or the first click, key, touch or wheel after going idle,
+      earns an immediate refresh. Activity is lib/live/activity's: NOT scroll (an
+      auto-moving carousel scrolls forever with nobody there) and not mouse movement.
+    */
+    const stopWake = onWake(refresh, idleMs)
 
     return () => {
       window.clearInterval(id)
-      for (const event of ACTIVITY) window.removeEventListener(event, markActive)
-      document.removeEventListener('visibilitychange', onWake)
-      window.removeEventListener('focus', onWake)
+      stopWake()
     }
   }, [router, intervalSeconds, idleAfterSeconds])
 

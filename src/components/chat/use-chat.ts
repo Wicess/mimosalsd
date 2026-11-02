@@ -11,6 +11,8 @@ import {
   subscribeNotify,
 } from '@/lib/chat/reply-notify'
 import { markHasThread, setUnread } from '@/lib/chat/unread-store'
+import { chatSyncChanged, registerChatSync, setChatLiveTopic } from '@/lib/chat/live-sync'
+import { idleFor, isVisible, markPresent } from '@/lib/live/activity'
 import { disablePushNotifications, enablePushNotifications } from '@/components/pwa/push-client'
 import { openInstallGuide } from '@/components/pwa/install-store'
 
@@ -24,12 +26,15 @@ import { openInstallGuide } from '@/components/pwa/install-store'
  * WHAM polls a closed widget every 30s to keep an unread badge current, and answers
  * those polls from Redis so Postgres can sleep. There is no Redis here, and the same
  * poll against Neon would hold the database awake for every visitor with a tab open.
- * So:
+ * So the panel is PUSH-driven (lib/live): the shop's reply rings an ntfy topic, and
+ * the panel polls once when it hears it. The timing rules live in one place,
+ * lib/chat/live-sync.ts, shared with the unread badges so a page runs one poller:
  *
- *   · panel OPEN, tab visible, customer active  → every 3s
- *   · panel closed                              → nothing at all
- *   · tab hidden                                → nothing, then one catch-up poll
- *   · no interaction for 3 minutes              → nothing, until they touch the page
+ *   · a push from the shop                      → at once
+ *   · panel OPEN, someone here, stream up       → every 25s (presence heartbeat)
+ *   · panel OPEN, someone here, no stream       → every 3s, as before
+ *   · panel closed                              → the badge watcher's rules
+ *   · tab hidden, or no interaction for 3 min   → nothing, then one catch-up poll
  *
  * The last rule is the one from ~/.claude/CLAUDE.md: a chat left open on a second
  * monitor is exactly the "timer keeps both meters running" case the cost playbook
@@ -58,17 +63,14 @@ export interface ChatMessage {
   readonly localPreview?: string
 }
 
-const OPEN_MS = 3000
-const IDLE_AFTER_MS = 3 * 60_000
 const TYPING_THROTTLE_MS = 2500
 /*
   Reply notifications. Polling normally stops while the tab is hidden, so a reply
   could never reach someone who switched away. With notifications on and the chat
-  open, a hidden tab checks slowly for a short while after their last activity,
-  then stops — enough to catch a reply they are waiting for, never an open-ended
-  timer holding the database awake.
+  open, a hidden tab keeps listening for a short while after their last activity
+  (the push stream, or without one a slow poll), then stops — enough to catch a
+  reply they are waiting for, never an open-ended timer holding the database awake.
 */
-const HIDDEN_POLL_MS = 30_000
 const HIDDEN_NOTIFY_WINDOW_MS = 10 * 60_000
 export function useChat({ open }: { open: boolean }) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -82,7 +84,6 @@ export function useChat({ open }: { open: boolean }) {
   // would tear down its own timer.
   const sinceRef = useRef<string | null>(null)
   const openRef = useRef(open)
-  const lastActivityRef = useRef(0)
   const lastTypingRef = useRef(0)
   const notificationsOn = useSyncExternalStore(subscribeNotify, storedNotificationsOn, serverFalse)
   const canNotify = useSyncExternalStore(subscribeNotify, notificationsSupported, serverFalse)
@@ -124,6 +125,8 @@ export function useChat({ open }: { open: boolean }) {
         receipts?: { id: string; receipt: 'delivered' }[]
         publicId: string | null
         hasEmail?: boolean
+        /** The thread's push topic (lib/live/push.ts). */
+        live?: string | null
       }
 
       if (data.messages.length > 0) {
@@ -154,6 +157,7 @@ export function useChat({ open }: { open: boolean }) {
       setPublicId(data.publicId)
       if (data.hasEmail) setHasEmail(true)
       if (data.publicId) markHasThread()
+      setChatLiveTopic(data.publicId ? data.live : null)
       // An open chat has read everything on screen: the badges go to zero.
       if (openRef.current) setUnread(0)
     } catch {
@@ -164,52 +168,26 @@ export function useChat({ open }: { open: boolean }) {
   }, [merge])
 
   /*
-   * THE LOOP. Runs only while the panel is open.
+   * THE LOOP — or rather, this panel's place in the shared one (lib/chat/live-sync).
    *
-   * `open` is a dependency on purpose: closing the panel tears the loop down
-   * completely, and opening it arms a fresh one with an immediate first poll.
+   * `open` is a dependency on purpose: closing the panel withdraws it completely, and
+   * opening it registers afresh, which polls at once.
    */
   useEffect(() => {
     if (!open) return
-    let cancelled = false
-    let timer: number | undefined
-    lastActivityRef.current = Date.now()
-
-    const tick = async () => {
-      if (cancelled) return
-      const visible = document.visibilityState === 'visible'
-      const active = Date.now() - lastActivityRef.current < IDLE_AFTER_MS
-      const waitingForReply =
-        !visible && storedNotificationsOn() && Date.now() - lastActivityRef.current < HIDDEN_NOTIFY_WINDOW_MS
-      if ((visible && active) || waitingForReply) await poll()
-      if (!cancelled) timer = window.setTimeout(tick, visible ? OPEN_MS : HIDDEN_POLL_MS)
-    }
-    void tick()
-
-    const markActive = () => {
-      const wasIdle = Date.now() - lastActivityRef.current >= IDLE_AFTER_MS
-      lastActivityRef.current = Date.now()
-      // Coming back from idle deserves an immediate catch-up, not a 3s wait.
-      if (wasIdle) void poll()
-    }
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') {
-        lastActivityRef.current = Date.now()
-        void poll()
-      }
-    }
-
-    const ACTIVITY = ['pointerdown', 'keydown', 'touchstart', 'wheel'] as const
-    for (const event of ACTIVITY) window.addEventListener(event, markActive, { passive: true })
-    document.addEventListener('visibilitychange', onVisible)
-
-    return () => {
-      cancelled = true
-      if (timer) window.clearTimeout(timer)
-      for (const event of ACTIVITY) window.removeEventListener(event, markActive)
-      document.removeEventListener('visibilitychange', onVisible)
-    }
+    // Opening the chat is a tap: it counts as being here.
+    markPresent()
+    return registerChatSync({
+      role: 'open',
+      run: poll,
+      keepWhileHidden: () => !isVisible() && storedNotificationsOn() && idleFor() < HIDDEN_NOTIFY_WINDOW_MS,
+    })
   }, [open, poll])
+
+  // Turning notifications on or off changes whether a hidden tab keeps listening.
+  useEffect(() => {
+    if (open) chatSyncChanged()
+  }, [open, notificationsOn])
 
   const send = useCallback(async (body: string, extra?: { email?: string; name?: string }) => {
     const text = body.trim()

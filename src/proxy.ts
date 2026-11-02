@@ -8,6 +8,7 @@ import { getJurisdictionBySlug } from '@/lib/compliance/jurisdictions'
 import { publishedLocations } from '@/lib/locations/locations'
 import { getGuide, getPost } from '@/lib/content/content.data'
 import { BRAND } from '@/lib/brand'
+import { LIVE_PUSH_ORIGIN } from '@/lib/live/config'
 import { clientIpFrom } from '@/lib/security/client-ip'
 import { blocklistExempt, isBlockedIp } from '@/lib/security/blocklist'
 import { trackVisit } from '@/lib/visitors/track'
@@ -267,7 +268,8 @@ function buildCsp(): string {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
-    "connect-src 'self'",
+    // ntfy.sh: the live-chat push stream (lib/live). An EventSource is a connection.
+    `connect-src 'self' ${LIVE_PUSH_ORIGIN}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

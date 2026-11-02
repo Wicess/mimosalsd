@@ -13,6 +13,7 @@ import {
 } from '@/lib/chat/core'
 import { cleanBody, isRecent, ONLINE_WINDOW_MS, TYPING_WINDOW_MS } from '@/lib/chat/rules'
 import { forAdmin } from '@/lib/chat/serialize'
+import { pingThread } from '@/lib/live/push'
 import { requireChatAdmin } from '@/lib/chat/admin-guard'
 import { reportError } from '@/lib/observability/report-error'
 import { staffReplyNotification } from '@/lib/push/customer'
@@ -256,6 +257,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           data: { body, editedAt: new Date() },
         })
         await refreshThreadSummary(id)
+        // The correction reaches an open chat panel by push, not on its next timer.
+        pingThread(id)
         await recordAdminAction({
           entityType: 'SupportMessage',
           entityId: message.id,
@@ -280,6 +283,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         if (!message) return NextResponse.json({ ok: false, error: 'Not found.' }, { status: 404 })
         await db.supportMessage.update({ where: { id: message.id }, data: { deletedAt: new Date() } })
         await refreshThreadSummary(id)
+        pingThread(id)
         await recordAdminAction({
           entityType: 'SupportMessage',
           entityId: message.id,

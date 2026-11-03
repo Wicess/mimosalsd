@@ -44,7 +44,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     category: 'Root bark',
     question: 'What is Mimosa hostilis root bark used for?',
     answer:
-      'It is sold as raw botanical material for natural dyeing, soap color, leather work and craft. Dyers use it for rose, plum, burgundy and brown on wool and silk, and grey to charcoal with an iron afterbath. It is not food and it is not for human consumption; at checkout you confirm that is what you are buying it for, and that confirmation is stored with your order.',
+      'It is sold as raw botanical material for natural dyeing, soap color, leather work and craft. Dyers use it for rose, plum, burgundy and brown on wool and silk, and grey to charcoal with an iron afterbath. It is not food, and not for human consumption. Checkout asks you to confirm that intended use, and the confirmation is kept on the order record.',
   },
   {
     category: 'Root bark',
@@ -99,39 +99,39 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     category: 'Ordering and payment',
-    question: 'Is there a discount for paying with Bitcoin?',
+    question: 'Does paying in Bitcoin cost less?',
     answer:
-      `Yes — ${BITCOIN_OFF}% off the items on any order paid in Bitcoin. Card-adjacent rails cost us in fees and in chargeback exposure; a Bitcoin transfer costs neither and cannot be reversed after the fact, so the saving is handed back rather than kept. It applies to the products, not to shipping, which is a cost we pay a carrier. The discount is shown beside the payment choice at checkout and again on the invoice we email you.`,
+      `Yes: paying in Bitcoin takes ${BITCOIN_OFF}% off the product total. Payment rails that sit close to cards charge us fees and leave us open to chargebacks, while a Bitcoin transfer has neither cost and cannot be reversed later, so we pass that saving on. Shipping is not discounted, because that money goes to the carrier. You see the discount next to the payment options at checkout, and once more on the emailed invoice.`,
   },
   {
     category: 'Ordering and payment',
-    question: 'How do I pay for my order?',
+    question: 'Which payment methods do you accept?',
     answer:
-      `We accept Cash App, Chime, Apple Cash and Bitcoin, and Bitcoin orders take ${BITCOIN_OFF}% off the items. After you place an order request we check that the stock is available and that we can ship to your address, then email you the details for the method you chose. Those details are specific to your order and are never published on the site. Your order is confirmed once payment is received.`,
+      `Cash App, Chime, Apple Cash and Bitcoin, with ${BITCOIN_OFF}% off the items when you choose Bitcoin. Submitting an order request starts a check: we confirm the stock is there and that your address can receive it, then email payment details for the method you picked. Those details are issued for your order alone and never appear on the site. The order is confirmed when your payment arrives.`,
   },
   {
     category: 'Ordering and payment',
-    question: 'How old do I have to be to order?',
-    answer: `You must be ${BRAND.minimumAge} or older. You confirm your age once, when you enter the site, and everything we sell is for adults ${BRAND.minimumAge} and over, whatever the product.`,
+    question: 'What is the minimum age to buy?',
+    answer: `${BRAND.minimumAge}. Every product in the shop, without exception, is sold only to adults aged ${BRAND.minimumAge} and up, and you confirm your age a single time, on your first visit.`,
   },
   {
     category: 'Ordering and payment',
-    question: 'Can I cancel or change my order?',
-    answer: `Yes, at no cost, at any point before your order is packed. Tell us and it is closed. If you have already paid and it has not shipped, you are refunded in full. Once a shipment is dispatched it falls under the returns policy instead, which allows unopened items back within ${POLICY_TERMS.returnWindowDays} days.`,
+    question: 'Can I change or cancel an order after placing it?',
+    answer: `Yes, free of charge, right up until the order is packed: let us know and we close it. A paid order that has not shipped yet is refunded in full. After dispatch the returns policy takes over, and it accepts unopened items for ${POLICY_TERMS.returnWindowDays} days.`,
   },
   {
     category: 'Ordering and payment',
     question: 'Can I return something?',
-    answer: `Unopened items in their original sealed packaging can be returned within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened age-restricted goods cannot lawfully be resold, so they cannot be accepted back. If we sent the wrong item or it arrived damaged, we cover everything, including return postage.`,
+    answer: `Yes, for ${POLICY_TERMS.returnWindowDays} days after delivery, as long as the item is unopened and still in its original sealed packaging. Age-restricted goods that have been opened cannot lawfully go back on sale, so those are the exception. When the fault is ours, a wrong item or one that arrives damaged, we pay every cost, return postage included.`,
   },
 
   // ── Shipping ─────────────────────────────────────────────────────────────
   {
     category: 'Shipping',
-    question: 'Do you ship to my state?',
+    question: 'Can you deliver to my state?',
     answer:
       // Owner, 2026-09-19: "we already ship to all states" — no restriction wording.
-      'Yes. We ship to every US state and the District of Columbia, and your cart shows the delivery option and cost for your address before you order.',
+      'Yes. Delivery covers every US state plus the District of Columbia, and before you place an order the cart shows which delivery option your address gets and what it costs.',
   },
   {
     category: 'Shipping',
@@ -139,12 +139,12 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     question: 'Where do you ship from?',
     answer:
       // availability-allow: the owner's own statement of origin and footprint.
-      'From our California branch, to all fifty states and the District of Columbia. Delivery time depends on how far a parcel travels, so we confirm a window with your order rather than publishing one here.',
+      'Our branch in California, which sends parcels to all fifty states and the District of Columbia. Transit time varies with distance, so instead of a published estimate you get a delivery window confirmed with your order.',
   },
   {
     category: 'Shipping',
     question: 'How much is delivery?',
-    answer: `Standard parcel delivery is ${formatCents(795)}, and free on parcel orders over ${formatCents(BRAND.freeShippingThresholdCents)}. We confirm a delivery window with your order rather than publishing one, because it depends on the carrier and how far the parcel travels from California.`,
+    answer: `${formatCents(795)} for standard parcel delivery, and nothing at all on parcel orders over ${formatCents(BRAND.freeShippingThresholdCents)}. Delivery windows are confirmed order by order instead of posted here, since they depend on the carrier and the distance from California.`,
   },
   {
     category: 'Shipping',
@@ -152,13 +152,13 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
     // carrier footprint, not what any product line may be sent to a given state.
     question: 'Do you ship internationally?',
     answer:
-      'Yes, for root bark. Our focus is the United States, where we ship to all 50 states and the District of Columbia. We also ship Mimosa hostilis and sassafras root bark to other countries on a quote, based on the size of the order: use the bulk enquiry form and choose Outside the United States. Import rules, duties and taxes are the buyer’s to check. We do not ship to freight forwarders.',
+      'Yes, for root bark only. The United States comes first, and every state plus the District of Columbia is covered. Beyond the US, Mimosa hostilis and sassafras root bark go out on a quote sized to the order: open the bulk quote form and pick Outside the United States. Checking import rules, and paying any duties and taxes, falls to the buyer. We do not ship to freight forwarders.',
   },
   {
     category: 'Shipping',
     question: 'Will my order arrive discreetly?',
     answer:
-      'Yes. Orders ship in plain outer packaging with no product imagery or branding visible, showing only the information the carrier needs. Inside, the bark is in a double-sealed, smell-proof bag.',
+      'Yes. The outer packaging is plain, with no branding or product pictures, and carries only what the carrier needs to deliver it. Inside, the bark sits in a double-sealed, smell-proof bag.',
   },
   {
     category: 'Shipping',
@@ -176,8 +176,8 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     category: 'Batches and bulk',
-    question: 'Do you offer bulk or wholesale pricing?',
-    answer: `Yes. Root bark is priced by the pound in 1/4, 1/3, 1/2 and 1 lb sizes, and larger quantities for dye studios, soap makers, schools and resellers are quoted by a person. Use the bulk order page or email ${COMPANY_EMAIL_TOKEN} with the cut and the quantity you need.`,
+    question: 'Can I buy root bark in bulk or wholesale?',
+    answer: `Yes. The shop sells root bark in 1/4 lb, 1/3 lb, 1/2 lb and 1 lb bags, and a member of our team quotes anything larger for dye studios, soap makers, schools and resellers. Send the cut and the quantity through the bulk order page or to ${COMPANY_EMAIL_TOKEN}.`,
   },
 ]
 

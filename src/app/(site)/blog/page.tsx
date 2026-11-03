@@ -48,7 +48,7 @@ export default async function BlogPage() {
         <PageHeader
           className="mb-10"
           title="Guides & blogs"
-          summary="We publish what we can verify, and cite what we rely on."
+          summary="Methods, quantities and sources for dyeing with root bark, and plain answers on testing and the rest of the range."
         />
 
         <section>

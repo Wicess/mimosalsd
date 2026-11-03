@@ -52,8 +52,8 @@ function linesFor(
  * phrase tucked beside the heading was not carrying that.
  */
 export async function GuidesStrip({
-  heading = 'Read before you buy',
-  summary = 'Informative first. We publish what we can verify and cite what we rely on.',
+  heading = 'Guides worth reading first',
+  summary = 'Explanation comes before selling here. We write only what we can check, and we name the sources we rely on.',
   exclude = [],
   limit = 3,
   productLine,
@@ -139,7 +139,7 @@ export async function GuidesStrip({
 
         <div className="mt-8">
           <ButtonLink href={url.blog()} variant="secondary">
-            All guides &amp; articles
+            Browse every guide and article
           </ButtonLink>
         </div>
     </div>

@@ -47,7 +47,7 @@ export default async function FaqPage() {
         <PageHeader
           className="mb-10"
           title="Frequently asked questions"
-          summary="The questions we are actually asked, answered directly."
+          summary="Short, direct answers on root bark, dyeing, ordering, shipping and batch reports."
         />
 
         {FAQ_CATEGORIES.map((category) => (

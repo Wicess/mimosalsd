@@ -10,7 +10,7 @@ import { pageMetadata } from '@/lib/seo/meta'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Batch Reports for Root Bark, on Request',
-  description: 'How to ask for the report that covers the batch of root bark you received: send the batch code printed on your package and we reply with what we hold.',
+  description: 'Verified buyers can request the lab report for their batch of root bark by quoting the code on the package. Reports are not posted publicly.',
   path: '/lab-results',
 })
 
@@ -22,15 +22,15 @@ export const metadata: Metadata = pageMetadata({
  * potency alone publishes one of these.
  */
 const PANELS = [
-  { name: 'Potency', detail: 'Active content, measured rather than claimed.' },
+  { name: 'Potency', detail: 'How much active content the batch holds, as measured.' },
   {
     name: 'Heavy metals',
-    detail: 'Lead, arsenic, cadmium and mercury, against ppm limits.',
+    detail: 'Lead, arsenic, cadmium and mercury, each read in ppm against its limit.',
   },
-  { name: 'Pesticides', detail: 'A full 66-analyte screen, not a spot check.' },
-  { name: 'Mycotoxins', detail: 'Aflatoxins B1, B2, G1, G2 and ochratoxin A.' },
-  { name: 'Residual solvents', detail: 'Anything left behind by processing.' },
-  { name: 'Microbials', detail: 'E. coli and salmonella, present or not.' },
+  { name: 'Pesticides', detail: 'Screened for 66 analytes, not sampled for a few.' },
+  { name: 'Mycotoxins', detail: 'Ochratoxin A plus aflatoxins B1, B2, G1 and G2.' },
+  { name: 'Residual solvents', detail: 'Traces that processing may have left in the material.' },
+  { name: 'Microbials', detail: 'Whether E. coli or salmonella is detected.' },
 ] as const
 
 export default async function LabResultsPage() {
@@ -81,12 +81,12 @@ export default async function LabResultsPage() {
             Certificates of analysis
           </p>
           <h1 className="mt-5 max-w-4xl font-display text-4xl leading-[1.05] text-balance text-foreground lg:text-5xl">
-            Certificates are issued on request, to verified buyers.
+            Lab reports go to verified buyers, one batch per request.
           </h1>
           <p className="mt-6 max-w-[62ch] text-lg leading-relaxed text-pretty text-foreground-muted">
-            A certified copy of the laboratory report is released to verified, licensed
-            buyers rather than posted publicly. Ask for the one covering the batch code
-            printed on your package and we will send it to you.
+            We do not post laboratory reports on the open web. If you are a verified,
+            licensed buyer, quote the code from your package and we will send you a
+            certified copy of the report for that batch.
           </p>
           <p className="mt-6">
             <a
@@ -124,13 +124,13 @@ export default async function LabResultsPage() {
               href={url.guide('how-to-read-a-certificate-of-analysis')}
               className="inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4"
             >
-              How to read a certificate of analysis
+              Guide: reading a certificate of analysis
             </a>
           </div>
 
           <p className="mt-3 max-w-[68ch] leading-relaxed text-pretty text-foreground-muted">
-            Potency alone is not a safety test. A report that shows only active content
-            is telling you the least useful part of it.
+            Strength is one result out of six. A certificate that lists active content
+            and nothing else leaves out every safety screen below.
           </p>
 
           <ol className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
@@ -162,7 +162,7 @@ export default async function LabResultsPage() {
         <section>
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
             <h2 className="font-display text-2xl text-foreground">
-              {batches.length > 0 ? 'Published batches' : 'Asking for your certificate'}
+              {batches.length > 0 ? 'Published batches' : 'How to request a report'}
             </h2>
             {batches.length > 0 ? (
               <p className="tabular text-sm text-foreground-subtle">{batches.length} on file</p>
@@ -172,17 +172,16 @@ export default async function LabResultsPage() {
           {batches.length === 0 ? (
             <div className="mt-6 max-w-[68ch] space-y-4 leading-relaxed text-pretty text-foreground-muted">
               <p>
-                No reports are posted on this page. Certified copies go to verified, licensed
-                buyers, one batch at a time, so a report is always released to a named buyer
-                against a named batch rather than left open for anyone to attach to anything.
-              </p>
-              <p>
-                Send us the batch code printed on your package, along with the licence you
-                buy under, and we will send the certificate covering it.{' '}
                 <a href={url.contact()} className="text-primary underline underline-offset-4">
                   Contact us
-                </a>
-                .
+                </a>{' '}
+                with two details: the code on your package and the license you buy under.
+                We reply with the certificate for that batch.
+              </p>
+              <p>
+                Nothing is listed here because each certified copy is released to a named
+                buyer for a named batch. A report anyone could download could be attached
+                to any product, which would defeat its purpose.
               </p>
             </div>
           ) : null}

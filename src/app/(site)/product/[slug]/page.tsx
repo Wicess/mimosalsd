@@ -455,28 +455,29 @@ export default async function ProductPage({
       */}
       <PageSection tone="sunken">
           <section>
-            <h2 className="font-display text-2xl text-foreground">Lab testing and certificates</h2>
+            <h2 className="font-display text-2xl text-foreground">How this product is tested</h2>
             <p className="mt-1 max-w-prose text-sm text-foreground-muted">
-              Every batch is tested before it is offered for sale, on a full panel
-              rather than potency alone.
+              No batch goes on sale untested, and the testing covers a full panel, not
+              just potency. There are two ways to get the paperwork.
             </p>
 
             <dl className="mt-5 grid gap-4 sm:grid-cols-2">
               <div className="rounded-lg border border-border bg-surface p-4">
-                <dt className="text-sm font-semibold text-foreground">Licensed resellers</dt>
+                <dt className="text-sm font-semibold text-foreground">If you resell under a license</dt>
                 <dd className="mt-1 text-sm text-foreground-muted">
-                  The official certificate is issued to licensed resellers on provision
-                  of a licence. Send it with your enquiry on the{' '}
-                  <a href={url.bulk()} className="underline underline-offset-4">wholesale page</a>{' '}
-                  and the full report for your batch comes back with your pricing.
+                  Attach your license to a request on the{' '}
+                  <a href={url.bulk()} className="underline underline-offset-4">wholesale page</a>.
+                  Licensed resellers receive the official certificate, and we send the
+                  complete batch report together with your quote.
                 </dd>
               </div>
               <div className="rounded-lg border border-border bg-surface p-4">
-                <dt className="text-sm font-semibold text-foreground">Everyone else</dt>
+                <dt className="text-sm font-semibold text-foreground">If you bought for your own use</dt>
                 <dd className="mt-1 text-sm text-foreground-muted">
-                  The summary for your batch is issued to verified buyers on request,
-                  against the batch code printed on your package. Ask us on the{' '}
-                  <a href={url.contact()} className="underline underline-offset-4">contact page</a>.
+                  Verified buyers can request a summary of the results for their batch.
+                  Quote the code on your package through the{' '}
+                  <a href={url.contact()} className="underline underline-offset-4">contact page</a>{' '}
+                  and we send the summary that matches it.
                 </dd>
               </div>
             </dl>
@@ -538,8 +539,8 @@ export default async function ProductPage({
         */}
         <GuidesStrip
           className="mt-16"
-          heading="Before you decide"
-          summary="What this material is, how to read the report that comes with it, and what the law says where you are."
+          heading="Background reading"
+          summary="Guides on the material itself, on how a lab report is laid out, and on where each state stands."
         />
       </PageSection>
 

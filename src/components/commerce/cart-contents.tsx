@@ -25,8 +25,8 @@ export async function CartContents() {
       <div className="rounded-lg border border-border bg-surface p-10 text-center">
         <p className="font-display text-xl text-foreground">Your cart is empty</p>
         <p className="mt-2 text-sm text-foreground-muted">
-          Everything we sell is batch-tested, and we will tell you what ships to your
-          state before you add it.
+          Each batch is tested before it goes on sale, and every product page shows
+          whether it can ship to your state before you add it to the cart.
         </p>
         <ButtonLink href={url.shop()} variant="primary" className="mt-6">
           Browse the shop

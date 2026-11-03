@@ -13,8 +13,8 @@ import { pageMetadata } from '@/lib/seo/meta'
 import { PageHeader } from '@/components/layout/page-header'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Contact Us About an Order, a Bulk Quote or a Batch Report',
-  description: `How to reach ${BRAND.name} about an order, a bulk quote, a batch report or a privacy request — and what to include so we can answer on the first reply.`,
+  title: 'Contact: Orders, Bulk Root Bark Quotes and Lab Reports',
+  description: `Write to ${BRAND.name} by form, email or phone about an order, a bulk quote, a lab report or a privacy request, and see which details get you a fast answer.`,
   path: url.contact(),
 })
 
@@ -36,18 +36,18 @@ const REVIEWED = '2026-08-28'
  */
 const CHANNELS = [
   {
-    heading: 'About an order you have placed',
-    body: 'Include your Order ID — it is in the subject line of your confirmation email. With it we can usually answer on the first reply rather than the third.',
+    heading: 'An order you already placed',
+    body: 'Put your Order ID in the message; you will find it in the subject of your confirmation email. Having it up front means we can open the order straight away.',
     action: { label: 'Look up an order', href: url.account() },
   },
   {
-    heading: 'Anything else',
-    body: 'Product questions, lab reports, shipping, returns, or a privacy request. If your question is about what can ship to your state, our per-state pages will usually answer it faster than we can.',
+    heading: 'Everything else',
+    body: 'Write about products, lab reports, shipping, returns or privacy requests here. For whether something can ship to your state, the state pages are quicker than waiting for us.',
     action: { label: 'Check what ships to you', href: url.shopNearMe() },
   },
   {
-    heading: 'Bulk and wholesale',
-    body: 'Volume pricing, standing supply arrangements and reseller enquiries. Tell us the product line, the quantity and the destination state and we will quote directly.',
+    heading: 'Wholesale and volume',
+    body: 'Resellers, standing supply and volume pricing all start with three facts: which product line, how much, and the state it ships to. Send those and we reply with a quote.',
     action: { label: 'Bulk purchasing', href: url.bulk() },
   },
 ] as const
@@ -141,9 +141,9 @@ export default async function ContactPage({
             Or reach us directly
           </h2>
           <p className="mt-2 max-w-[62ch] leading-relaxed text-pretty text-foreground-muted">
-            One address and one number for everything: orders, product questions and
-            bulk enquiries. Say which it is in the subject line and it reaches the
-            right person on the first read.
+            A single email address and a single phone number cover orders, product
+            questions and bulk inquiries alike. Naming the topic in your subject line
+            helps us route it.
           </p>
           {/*
             Both on their own line and both a real link — `mailto:` and `tel:` — so a
@@ -202,14 +202,14 @@ export default async function ContactPage({
 
           <section className="mt-8 rounded-xl border border-border bg-surface p-5">
             <h2 className="font-display text-lg text-foreground">
-              What we cannot help with
+              Outside what we can answer
             </h2>
             <p className="mt-2 max-w-[68ch] text-sm leading-relaxed text-pretty text-foreground-muted">
-              We cannot give legal advice about whether you may possess or use a
-              product where you live, and we cannot give medical advice of any kind.
-              What we can do is show you the statute we rely on for each state and the
-              date we last reviewed it, so you can check our reasoning rather than
-              take our word for it.
+              Whether you may possess or use a product where you live is a legal
+              question, and we are not able to give legal advice; medical advice is
+              off the table entirely. Each state page instead names the statute behind
+              our position and when we last reviewed it, so you can judge our reading
+              for yourself.
             </p>
             <p className="mt-3">
               <a

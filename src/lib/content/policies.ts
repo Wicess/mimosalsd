@@ -82,6 +82,13 @@ const REVIEWED = '2026-08-28'
 /** The cart's own threshold (`>=`, so an order of exactly this much qualifies). */
 const FREE_FROM = formatCents(BRAND.freeShippingThresholdCents)
 
+/*
+  Copy rewritten 2026-11-03 in this site's own words. The policy text had been carried
+  over from the parent site almost verbatim (58–93% of 8-word runs shared), which gets
+  a page filed as a copy of the older one. Every fact and commitment is unchanged;
+  only the wording, order and headings moved. Headings are the question a customer
+  asks, and the first sentence beneath each one answers it on its own.
+*/
 export const POLICIES: readonly Policy[] = [
   // ── Shipping ──────────────────────────────────────────────────────────────
   /*
@@ -92,77 +99,100 @@ export const POLICIES: readonly Policy[] = [
   */
   {
     slug: 'shipping',
-    title: 'Shipping policy',
-    metaTitle: 'Shipping Policy, Root Bark Shipped From California',
+    title: 'Shipping and delivery',
+    metaTitle: 'Shipping and Delivery, Root Bark Sent From California',
     /*
       The price is written in words: sanitizeMeta strips every currency amount, which
       left this description reading "Free shipping on all orders from." in results.
     */
-    metaDescription: 'Root bark ships from California in double-sealed, smell-proof, nitrogen-flushed bags, with tracking, to US addresses only. Free from one hundred dollars.',
-    summary: `We ship from California to addresses across the United States, using USPS, UPS and other local carriers, and to other countries on root bark orders we have quoted. Every order is packed in a double-sealed, smell-proof bag flushed with nitrogen to keep oxygen out, so the bark stays fresh, and sent with tracking. Shipping is free on parcel orders from ${FREE_FROM}.`,
+    metaDescription: 'Tracked root bark parcels from California, in double-sealed, smell-proof bags flushed with nitrogen. Root bark ships free on US orders from one hundred dollars.',
+    summary: `Parcel shipping costs nothing once an order reaches ${FREE_FROM}; vapor products are the exception and are never shipped free. Parcels leave California with tracking, carried by USPS, UPS or another local carrier, in a smell-proof bag that is sealed twice and flushed with nitrogen so oxygen cannot age the bark. The cart delivers anywhere in the United States, and root bark can go to other countries on a quote.`,
     lastReviewedAt: '2026-09-13',
     sections: [
       {
-        heading: 'Where we ship',
+        heading: 'Is shipping free?',
         body: [
-          // availability-allow: the owner's statement of the footprint (2026-09-19: "we already ship to all states").
-          'Our focus is the United States: we ship to all 50 states and the District of Columbia, and that is what the cart and checkout are built for. We do not ship to freight forwarders.',
-          // Owner, 2026-10-15: "we are focused in the USA but we also ship worldwide based on the quantity of the order".
-          `We also ship Mimosa hostilis and sassafras root bark to other countries, quoted order by order, because the cost of sending a parcel abroad depends on its weight. Ask for a quote through the bulk enquiry form and choose Outside the United States. Import rules for plant material, and any duties or taxes, are the buyer's to check and pay. [Shipping root bark outside the United States](/blog/shipping-root-bark-outside-the-united-states) explains how it works.`,
-          // availability-allow: the owner's statement of the origin (2026-09-27: the main branch is in California).
-          'Orders leave our California branch. Nothing about where an order starts changes where it can go: every state is served from the same place.',
+          `Yes, on any order of ${FREE_FROM} or more: from that amount up, we pay the postage.`,
+          'Vapor products are the only exception. Federal law decides how they are carried, so their delivery never qualifies for free shipping.',
         ],
       },
       {
-        heading: 'How we ship',
+        heading: 'Which carrier will deliver my order?',
         body: [
-          'We ship using USPS, UPS and other local agencies when necessary.',
-          'We give you a delivery window with your order rather than publishing one here. It depends on the carrier, the destination and the checks that shipment needs, and a number posted on a policy page cannot account for any of them.',
+          'USPS or UPS, or another local delivery agency when a route calls for one.',
+          'Vapor products go with a specialist carrier instead, for the legal reasons set out further down this page.',
         ],
       },
       {
-        heading: 'Packaging',
+        heading: 'How long will delivery take?',
         body: [
-          'Every order is packed in double-sealed, smell-proof packaging, flushed with nitrogen before it is sealed. The nitrogen displaces the oxygen in the bag, so the bark does not oxidize and stays fresh in transit and in storage.',
+          'You receive a delivery window with your order; we do not print one on this page. The honest answer depends on which carrier takes the parcel, where it is going and which checks it has to clear, and no single figure written here could reflect all three.',
         ],
       },
       {
-        heading: 'Free shipping',
+        heading: 'How is my order packed?',
         body: [
-          `Shipping is free on all orders from ${FREE_FROM}.`,
-          'Vapor products are the one exception: federal law sets how they travel, and they are not included in free shipping.',
+          'In a smell-proof bag that is sealed twice and flushed with nitrogen just before it closes, whatever the order contains. The nitrogen pushes the oxygen out, and bark kept away from oxygen cannot oxidize, so it arrives as fresh as it left us and keeps that way on your shelf.',
         ],
       },
       {
-        heading: 'Why some orders arrive in more than one shipment',
+        heading: 'When will my order leave?',
         body: [
-          'If your order contains both a vapor product and anything else, it will arrive as two separate deliveries, on two different carriers, at two different times. That is not a fulfilment error — those products are not legally permitted to travel together.',
-          'Your cart shows this before you order, one card per shipment, so you are never asked to guess.',
-        ],
-      },
-      {
-        heading: 'Vapor products and the PACT Act',
-        body: [
-          'Vapor products are regulated federally under the Prevent All Cigarette Trafficking (PACT) Act. The United States Postal Service is prohibited from carrying them, and UPS, FedEx and DHL have each chosen to decline them. They therefore travel with a specialist carrier that is registered to handle them, not with USPS or UPS.',
-          'That carrier is slower than a standard parcel service, and there is no way to make it otherwise. The requirements are set by federal law, not by us.',
+          'Once your payment has cleared, never earlier. Every order moves through the same steps, in this order:',
         ],
         list: [
-          'We file the delivery reports that the PACT Act requires with the relevant state authorities each month.',
+          'You place the order.',
+          'We confirm the stock is on hand and that your address is one we can ship to.',
+          'Payment details reach you in your order chat and by email.',
+          'You pay.',
+          'We pack the parcel and hand it to the carrier.',
         ],
       },
       {
-        heading: 'When your order actually ships',
+        heading: 'What happens if I do not pay?',
         body: [
-          'Placing an order starts a fixed sequence: we check the stock is available and that we can ship to your address, we send payment details in your order chat and by email, you pay, and only then is it packed and dispatched.',
-          `Nothing ships before payment has cleared. If we do not receive payment within ${POLICY_TERMS.paymentWindowDays} business days of sending instructions, the order is released and the stock returns to sale.`,
-          'Every change of state on your order is recorded and timestamped, and you can follow it from the order link we email you.',
+          `The order lapses. When ${POLICY_TERMS.paymentWindowDays} business days pass after we send payment instructions without the money reaching us, we release the order and put its stock back on sale.`,
         ],
       },
       {
-        heading: 'If we cannot ship to you',
+        heading: 'Where can I follow my order?',
         body: [
-          'Occasionally a state rule changes between the moment you order and the moment we ship. If that happens, we cancel the affected item, tell you why, and cite the rule we are relying on. If you have already paid, you are refunded in full for that item, including its share of shipping.',
-          'We will never quietly substitute a different product.',
+          'At the order link in the email we send you. Each status change is logged there, with the time it happened.',
+        ],
+      },
+      {
+        heading: 'Where do you ship?',
+        body: [
+          // availability-allow: the owner's statement of the footprint (2026-09-19: "we already ship to all states").
+          'To every one of the 50 states and to the District of Columbia. The United States is the market the cart and checkout were built for. The one kind of address we turn down is a freight forwarder.',
+          // availability-allow: the owner's statement of the origin (2026-09-27: the main branch is in California).
+          'Every parcel starts at our California branch, and that origin has no bearing on where an order can go: each state is served from the same place.',
+          // Owner, 2026-10-15: "we are focused in the USA but we also ship worldwide based on the quantity of the order".
+          `Mimosa hostilis and sassafras root bark can also travel abroad, priced one order at a time, because an international parcel costs what its weight dictates. To get a price, use the bulk enquiry form and pick Outside the United States. Checking your country's import rules for plant material, and paying any duties or taxes, falls to you as the buyer. [Shipping root bark outside the United States](/blog/shipping-root-bark-outside-the-united-states) walks through the process.`,
+        ],
+      },
+      {
+        heading: 'Why did my order come in two parts?',
+        body: [
+          'Because it held a vapor product as well as something else, and the law does not let the two travel together. They go out as separate shipments, with different carriers, and reach you on different days. That is the rule working, not a mistake in packing.',
+          'You can see the split before you order. The cart gives each shipment its own card, so nothing about it comes as a surprise.',
+        ],
+      },
+      {
+        heading: 'How are vapor products shipped?',
+        body: [
+          'Through a specialist carrier registered to handle them, never USPS or UPS. The Prevent All Cigarette Trafficking (PACT) Act regulates vapor products at the federal level and forbids the Postal Service to carry them, and UPS, FedEx and DHL have each decided to refuse them too.',
+          'These deliveries are slower than an ordinary parcel, and nothing we do can change that. Federal law sets the requirements; we only follow them.',
+        ],
+        list: [
+          'Every month, we file the delivery reports the PACT Act calls for with the relevant state authorities.',
+        ],
+      },
+      {
+        heading: 'What if a state rule changes after I order?',
+        body: [
+          'We cancel the affected item, explain the reason and cite the rule we are acting on. This can happen when a state changes its rules in the gap between your order and our shipment. If you have paid already, that item is refunded in full, along with its portion of the shipping.',
+          'You will never be sent a different product in its place without being told.',
         ],
       },
     ],
@@ -171,57 +201,62 @@ export const POLICIES: readonly Policy[] = [
   // ── Returns ───────────────────────────────────────────────────────────────
   {
     slug: 'returns',
-    title: 'Returns and refunds',
-    metaTitle: 'Returns & Refunds — What Can Be Sent Back, and When',
+    title: 'Returns, refunds and cancellations',
+    metaTitle: `Returns and Refunds: Sealed Items Within ${POLICY_TERMS.returnWindowDays} Days`,
     // Short enough to show whole: at full length the clamp kept only the first sentence.
-    metaDescription: `Return unopened items in sealed original packaging within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened goods cannot be accepted back. If the fault is ours, we cover everything.`,
-    summary: `Unopened items in their original sealed packaging can be returned within ${POLICY_TERMS.returnWindowDays} days of delivery. Opened age-restricted goods cannot lawfully be resold, so they cannot be accepted back. If we sent the wrong item, or a batch does not match its published laboratory report, we cover everything.`,
+    metaDescription: `Sealed, unopened items can come back within ${POLICY_TERMS.returnWindowDays} days of delivery, but opened goods cannot. When the mistake is ours, it costs you nothing.`,
+    summary: `You have ${POLICY_TERMS.returnWindowDays} days from delivery to send back anything still unopened and sealed in its original packaging. An age-restricted product that has been opened may not lawfully be sold again, so we cannot take it back. When the error is ours, such as a wrong item or a batch that differs from its published lab report, we pay the whole cost of putting it right.`,
     lastReviewedAt: REVIEWED,
     sections: [
       {
-        heading: 'What can be returned',
+        heading: 'Can I send something back?',
         body: [
-          `You may return any item within ${POLICY_TERMS.returnWindowDays} days of delivery provided it is unopened, unused, and still in its original sealed packaging with the batch label intact.`,
-          'Start a return by replying to your order email or contacting support with your Order ID. Do not send anything back before we have replied — an unannounced return cannot be matched to an order, and age-restricted goods arriving without paperwork create a problem for both of us.',
+          `Yes, for ${POLICY_TERMS.returnWindowDays} days after delivery, as long as the item is unused, unopened and still sealed in its original packaging, with the batch label in place.`,
         ],
       },
       {
-        heading: 'What cannot be returned',
+        heading: 'How do I start a return?',
         body: [
-          'Once the seal on an age-restricted product is broken we cannot accept it back, and we cannot offer it to anyone else. This is not a restocking preference; reselling an opened age-restricted good is not lawful, and the chain of custody that makes our batch testing meaningful is broken the moment a package leaves our control opened.',
+          'Reply to your order email, or contact support and give us your Order ID. Then wait for our answer before posting anything. A parcel that turns up unannounced cannot be linked to its order, and age-restricted goods that arrive with no paperwork leave both of us with a problem.',
+        ],
+      },
+      {
+        heading: 'What if the mistake was ours?',
+        body: [
+          'Then you pay nothing, return postage included, and you decide whether you want a replacement or a full refund. That applies when:',
         ],
         list: [
-          'Opened or unsealed items of any kind.',
-          'Vapor products, once the outer seal is broken.',
-          'Items returned without prior agreement, or with the batch label removed.',
-          'Custom-milled or bulk orders prepared to your specification.',
+          'You received the wrong item, the wrong size or the wrong batch.',
+          'The item was damaged on the way, or its seal broke in transit.',
+          'Your batch differs from the certificate of analysis we issue for its batch code.',
+          'You had already paid when we canceled an item because your state changed its rules.',
         ],
       },
       {
-        heading: 'When we cover everything',
+        heading: 'Which items cannot be returned?',
         body: [
-          'Some faults are ours, and where they are, you pay nothing — including return postage — and you choose between a replacement and a full refund.',
+          'Any age-restricted product with a broken seal. We could not accept it, and we could not pass it on to anyone else, because selling an opened age-restricted product again is unlawful. That is a legal limit, not a restocking preference. An item that has been opened outside our control also breaks the chain of custody that gives our batch testing its meaning.',
         ],
         list: [
-          'We sent the wrong item, the wrong size, or the wrong batch.',
-          'The item arrived damaged, or the seal was broken in transit.',
-          'The batch you received does not match the certificate of analysis we issue for its batch code.',
-          'We cancelled an item after you paid because of a change in your state rules.',
+          'Anything opened or unsealed, whatever it is.',
+          'A vapor product whose outer seal has been broken.',
+          'Anything sent back before we agreed to the return, or with its batch label removed.',
+          'An order we milled or made up in bulk to your specification.',
         ],
       },
       {
-        heading: 'How refunds are issued',
+        heading: 'When will I get my refund?',
         body: [
-          `Once a return reaches us we inspect it and issue the refund within ${POLICY_TERMS.refundProcessingDays} business days. Refunds go back by the same method you paid, to the same account.`,
-          'Because we hold no card details, a refund is a transfer we send rather than a reversal we trigger. That means we need the payment details to match the ones the order was paid from; we cannot refund a different account.',
-          'Original shipping is refunded when the fault was ours, and retained when the return is a change of mind.',
+          `Within ${POLICY_TERMS.refundProcessingDays} business days of your return reaching us, once we have inspected it. The money goes back by the method you used to pay, into the same account.`,
+          'We keep no card details, so there is no charge for us to reverse. A refund is a new transfer we send, and it can only go to the account the order was paid from, never to a different one.',
+          'If we were at fault, your original shipping charge is refunded too. If you simply changed your mind, it is not.',
         ],
       },
       {
-        heading: 'Cancelling before dispatch',
+        heading: 'Can I cancel my order?',
         body: [
-          `An order can be cancelled at no cost at any point before it is packed. If you cancel within ${POLICY_TERMS.cancellationWindowHours} hours of ordering and before payment, nothing further is needed — tell us and it is closed.`,
-          'If you have already paid and the order has not shipped, you are refunded in full.',
+          `Yes, free of charge, at any point until it is packed. If it is within ${POLICY_TERMS.cancellationWindowHours} hours of ordering and you have not paid yet, just tell us and we close it; there is nothing else to do.`,
+          'Paid, but not yet shipped? You get a full refund.',
         ],
       },
     ],
@@ -230,63 +265,68 @@ export const POLICIES: readonly Policy[] = [
   // ── Purchase ──────────────────────────────────────────────────────────────
   {
     slug: 'purchase',
-    title: 'Purchase policy',
-    metaTitle: 'Purchase Policy — Age, Eligibility and How Ordering Works',
-    metaDescription: `You must be ${BRAND.minimumAge} or older. You place your order, we check stock and that we can ship to your address, then send payment details in your order chat.`,
-    summary: `You must be ${BRAND.minimumAge} or older. Orders placed on the site are for delivery within the United States; orders for other countries are quoted first. You place your order and choose how you would prefer to pay; we check that the stock is available and that we can ship to your address, then send payment details in your order chat and by email. Your order is confirmed when payment is received.`,
+    title: 'How ordering works',
+    metaTitle: 'How Ordering Works: Age, Eligibility and Payment',
+    metaDescription: `Buyers must be ${BRAND.minimumAge} or older. Send an order request, we confirm stock and that we can ship to you, then payment details arrive in your order chat.`,
+    summary: `Ordering here happens in two steps. You send an order request and pick the way you would like to pay; we confirm the stock and that your address is one we can ship to, then send payment details in your order chat and by email. The order is confirmed once your payment arrives. Buyers must be ${BRAND.minimumAge} or older, and the cart delivers within the United States; orders for other countries are quoted first.`,
     lastReviewedAt: '2026-09-13',
     sections: [
       {
-        heading: 'Who can order',
+        heading: 'How do I place an order?',
         body: [
-          `You must be ${BRAND.minimumAge} years of age or older.`,
-          'Orders placed through the cart must be for delivery to an address in the United States. Buyers in other countries can order root bark on a quote, through the bulk enquiry form.',
-        ],
-      },
-      {
-        heading: 'How we verify age',
-        body: [
-          `You confirm that you are ${BRAND.minimumAge} or over when you enter the site.`,
-        ],
-      },
-      {
-        heading: 'How ordering and payment work',
-        body: [
-          'Payment details are sent in your order chat on this site, and by email, once a person has confirmed your order. They belong to that order alone. We never ask for, and never store, card details.',
-          'Before we confirm an order, we check two things:',
+          `Send an order request and tell us which of these you would rather pay with: ${['Cash App', 'Chime', 'Apple Cash', 'Bitcoin'].join(', ')}.`,
+          'Before anything else happens, we confirm two things:',
         ],
         list: [
-          'That the stock is available — every item, in the quantity you asked for.',
-          'That we can ship to your address.',
+          'Every item is in stock, in the quantity you asked for.',
+          'Your address is one we can ship to.',
         ],
       },
       {
-        heading: 'From order request to confirmation',
+        heading: 'What happens after those checks?',
         body: [
-          `You submit an order request and tell us which method you would prefer to pay with: ${['Cash App', 'Chime', 'Apple Cash', 'Bitcoin'].join(', ')}.`,
-          'We check the stock and that we can ship to your address. If either is a problem, we tell you before anything is paid — we never quietly substitute a different product.',
-          'Once both are confirmed, we send you the payment details for your chosen method. They are specific to your order, never published on the site, and never reused.',
-          'Your order is confirmed when your payment is received, and only then is it packed and dispatched.',
+          'If both pass, a person confirms your order and we send payment details for the method you chose, in your order chat on this site and by email. Those details are made for that single order: they never appear on the site and are never used again.',
+          'If either check fails, you hear from us before any money changes hands. We never quietly swap in a different product.',
+          'Your order is confirmed the moment your payment arrives, and nothing is packed or dispatched before then.',
         ],
       },
       {
-        heading: 'Intended use',
+        heading: 'Do you take card payments?',
         body: [
-          'Mimosa Hostilis root bark is sold strictly as a raw botanical material for natural dyeing, soap and cosmetic manufacture, craft, and botanical research. It is not food, and it is not for human consumption.',
-          'At checkout you are asked to confirm that this is what you are buying it for. That confirmation is stored with your order. Orders that we have reason to believe are intended otherwise are refused.',
+          'No. We never ask for card details, and we never store them.',
         ],
       },
       {
-        heading: 'When we refuse or cancel an order',
+        heading: 'Who can buy?',
         body: [
-          'We may decline any order, and we may cancel one after it is placed. We will always tell you why.',
+          `Anyone aged ${BRAND.minimumAge} or older.`,
+          'Orders through the cart need a delivery address in the United States. From any other country, root bark can be ordered on a quote through the bulk enquiry form.',
+        ],
+      },
+      {
+        heading: 'How is my age checked?',
+        body: [
+          `When you enter the site, you confirm that you are ${BRAND.minimumAge} or over.`,
+        ],
+      },
+      {
+        heading: 'What is root bark sold for?',
+        body: [
+          'Natural dyeing, soap and cosmetic manufacture, craft, and botanical research. We sell Mimosa hostilis root bark strictly as a raw botanical material for those purposes. It is not food, and it is not for human consumption.',
+          'Checkout asks you to confirm that this is why you are buying it, and that answer is saved with your order. If we have reason to think an order is meant for anything else, we refuse it.',
+        ],
+      },
+      {
+        heading: 'Can you refuse or cancel my order?',
+        body: [
+          'Yes. We can turn down any order, or cancel one after it is placed, and we always give you the reason. Situations where we do so include:',
         ],
         list: [
-          'The product cannot lawfully be shipped to your state, or we hold no verified legal review for it there.',
-          'Age or identity verification did not pass.',
-          'The delivery address is a freight forwarder, or is outside the United States on an order we have not quoted.',
-          'The order appears to be for resale where resale is restricted, or for an intended use we do not sell for.',
-          'A pricing or stock error was displayed. In that case nothing is charged and you are told before anything ships.',
+          'Your state does not allow the product to be shipped there, or we have no verified legal review covering it in your state.',
+          'Your age or identity could not be verified.',
+          'The delivery address belongs to a freight forwarder, or lies outside the United States on an order we have not quoted.',
+          'The order looks intended for resale where resale is restricted, or for a use we do not sell for.',
+          'The site showed a wrong price or stock level. You are not charged, and we tell you before anything ships.',
         ],
       },
     ],
@@ -295,92 +335,106 @@ export const POLICIES: readonly Policy[] = [
   // ── Privacy ───────────────────────────────────────────────────────────────
   {
     slug: 'privacy',
-    title: 'Privacy',
-    metaTitle: 'Privacy Policy — What We Collect and Why',
+    title: 'Privacy policy',
+    metaTitle: 'Privacy Policy: The Data We Keep and Why We Keep It',
     metaDescription:
-      'We hold your contact and delivery details, order history and evidence of an age check. We hold no card details and run no third-party ad or analytics trackers.',
+      'We keep your contact and delivery details, your orders and proof of an age check. No card details, and no third-party advertising or analytics trackers.',
     summary:
-      'We collect what an order actually needs: contact details, a delivery address, and evidence that age was verified. We hold no card details at all, because we process no payments on this website. We keep our own anonymous record of which pages are visited, and run no third-party advertising or analytics trackers. You can ask us for a copy of your data, or for its deletion.',
+      'We keep only what an order needs: how to reach you, where to deliver, and proof that an age check was passed. Card details never reach us, since this website takes no payments. Page visits are counted by our own anonymous record, and no third-party advertising or analytics tracker runs here. You may ask for a copy of your data, or for it to be deleted.',
     lastReviewedAt: REVIEWED,
     sections: [
       {
-        heading: 'What we collect',
+        heading: 'Do you sell my data?',
         body: [
-          'Only what is needed to fulfil an order lawfully, plus what the law requires us to keep as evidence.',
+          'No. Your data is never sold or rented to anyone, and there is no arrangement under which it could be.',
+        ],
+      },
+      {
+        heading: 'Do you store my card details?',
+        body: [
+          'No, and there is nothing to store. We never ask for a card number, expiry date or security code, so none is typed in, sent to us or kept. That rests on how the site is built, not on a promise.',
+        ],
+      },
+      {
+        heading: 'Do you use advertising or analytics trackers?',
+        body: [
+          'Not from any third party. The site carries no advertising pixel and no tag manager, and nothing on it follows you across other websites. Part of that is principle; part is that paid advertising is not allowed in this category in any case.',
+          'We do keep our own record of visits, described below.',
+        ],
+      },
+      {
+        heading: 'What do you keep about me?',
+        body: [
+          'What a lawful order requires, plus the evidence the law obliges us to hold:',
         ],
         list: [
-          'Contact details — your name, email address and, if you give one, a phone number.',
-          'Delivery details — the address an order ships to, including any address you save for reuse.',
-          'Order history — what you ordered, when, what it cost, and every change of status on it.',
-          'Age-verification evidence — the fact that a check passed, when, and the IP address and browser user-agent it came from. We are required to be able to show this.',
-          'Support messages — anything you send us through the chat or by email, so we can answer it. For chat, we also keep the internet address your latest message came from, and use it only to block abuse.',
-          'Visits — a random identifier kept in a cookie, the pages you view and when, the site or campaign link that brought you here, your approximate location as our hosting provider estimates it from your internet connection (city, state, ZIP code, country, approximate coordinates and time zone — about the accuracy of a city or ZIP code, never a street address), and your device type, browser and operating system. We do not store your IP address for this, or the full identifying string your browser sends.',
-          'Newsletter subscription — your email address, if you choose to give it, and where you subscribed from.',
+          'Your name, your email address and, if you give us one, a phone number.',
+          'Delivery addresses: the one each order goes to, and any you save to use again.',
+          'Your orders: the items, the date, the price, and each change of status.',
+          'Proof of your age check: that it passed, when it passed, and the IP address and browser user-agent it came from. We must be able to produce this.',
+          'Messages you send support by chat or email, so we can reply. For chat we also keep the internet address your most recent message came from, and use it for nothing except blocking abuse.',
+          'Your newsletter sign-up, if you choose to give us an email address, and where you signed up.',
         ],
       },
       {
-        heading: 'What we never collect',
+        heading: 'What do you record when I browse?',
         body: [
-          'Some of the most sensitive data a shop normally holds simply does not exist here, and that is by design rather than by promise.',
+          'A random identifier stored in a cookie, the pages you open and when, and the site or campaign link that sent you here. We also note your device type, browser and operating system, and an approximate location that our hosting provider works out from your internet connection: city, state, ZIP code, country, rough coordinates and time zone.',
+          'That location is about as precise as a city or a ZIP code, never a street address. Visit records do not include your IP address, or the full identifying string your browser sends.',
+        ],
+      },
+      {
+        heading: 'Which cookies and browser storage do you use?',
+        body: [
+          'Only the few the site needs in order to work. None of them builds a profile of you or follows you to other sites.',
         ],
         list: [
-          'Card numbers, expiry dates and security codes. We never ask for them, so none is ever entered, transmitted or stored.',
-          'Third-party advertising or analytics trackers. There is no advertising pixel, no cross-site tracking, and no tag manager on this site — partly on principle, and partly because paid advertising is not permitted in this category anyway.',
-          'Any data about you sold or rented to anyone. We do not do this, and there is no arrangement under which we would.',
+          'Your cart: the items you picked, but no prices, which our servers always work out afresh.',
+          'The state you chose, so we can show what may lawfully ship to you without asking a second time.',
+          'A note in your browser that you passed the age check, kept 30 days before we ask again. It never leaves your device.',
+          'A session cookie while you are signed in.',
+          'A visitor cookie with a random identifier, kept 90 days. It ties your page views together, and to any chat you open, so we can see how people find and use the site. It holds nothing about you and is never shared.',
+          'If someone shared a link that brought you here, a cookie naming that link, kept 30 days. It lets us credit whoever sent you if you place an order, and holds nothing about you.',
         ],
       },
       {
-        heading: 'Cookies and browser storage',
+        heading: 'Who else can see my data?',
         body: [
-          'We use the smallest set that makes the site work. None of it is used to profile you or to follow you to other sites.',
+          'Only the services needed to get your order to you, and each one sees only the details it needs.',
         ],
         list: [
-          'A cart cookie holding which items you have selected. It holds no prices — those are always recalculated on our servers.',
-          'A state preference, so we can show you what can lawfully ship to you without asking twice.',
-          'A record in your browser that an age check passed, held for 30 days before we ask again. This one never leaves your device.',
-          'A session cookie when you are signed in.',
-          'A visitor cookie holding a random identifier, kept for 90 days. It links your page views to one another, and to any chat you start, so we can see how people find and use the site. It contains nothing about you and is never shared.',
-          'If you arrived through a link someone shared, a cookie naming that link, kept for 30 days. It lets us credit whoever sent you if you order, and holds nothing about you.',
+          'The carrier: your delivery address and the signature requirement, but not your order history.',
+          'Our hosting, database and file-storage providers, which hold data for us under contract and use it for nothing else. One of them is a short-term store that keeps visit records only until they move into our database overnight.',
+          'Our email provider, which sends order and support messages.',
+          'State or federal authorities where the law requires it, including the monthly PACT Act delivery reports for vapor products.',
         ],
       },
       {
-        heading: 'Who else sees your data',
+        heading: 'How long do you keep it?',
         body: [
-          'Only the parties needed to get an order to you, and only the fields they need to do it.',
+          'It depends on the record. Orders, and the age-check proof attached to them, stay for as long as the law requires us to be able to produce them, which is longer than we would choose.',
+          'Support messages and newsletter sign-ups stay until you ask us to remove them.',
+          'Individual visit records are kept 90 days. Only daily totals remain after that, and they identify nobody.',
+          'An internet address we have blocked for abuse, and our reason for blocking it, are kept as long as the block stands.',
+        ],
+      },
+      {
+        heading: 'What are my rights?',
+        body: [
+          'These, wherever in the United States you live. California and other states with comprehensive privacy laws grant them to their residents by statute; rather than sort customers by ZIP code, we give everyone the same handling. You can:',
         ],
         list: [
-          'The carrier delivering your order — the delivery address and the signature requirement, not your order history.',
-          'Our hosting, database and file-storage providers, who hold data on our behalf under contract and do not use it for anything else. This includes a short-term store that holds visit records only until they are moved into our database overnight.',
-          'Our email provider, to send order and support messages.',
-          'A state or federal authority, where the law requires it — including the monthly delivery reports the PACT Act requires for vapor products.',
+          'Get a copy of the personal data we hold about you.',
+          'Have anything inaccurate corrected.',
+          'Have your data deleted, within the record-keeping the law requires of us. We erase your personal details and keep only the minimum order record the law requires, in a form that no longer identifies you.',
+          'Unsubscribe from marketing email at any time with one click, with no effect on your orders.',
+          'Find out how a decision about an order was reached.',
         ],
       },
       {
-        heading: 'How long we keep it',
+        heading: 'How do I make a privacy request?',
         body: [
-          'Order records and the age-verification evidence attached to them are kept for as long as the law requires us to be able to produce them, which is longer than we would otherwise choose. Support messages and newsletter subscriptions are kept until you ask us to remove them.',
-          'Page-by-page visit records are kept for 90 days. After that only daily totals remain, and those identify no one.',
-          'If we block an internet address because of abuse, we keep that address and our reason for as long as the block stands.',
-          'When you ask for deletion, your personal details are erased while the minimum legally required order record is retained in a form that no longer identifies you.',
-        ],
-      },
-      {
-        heading: 'Your rights',
-        body: [
-          'Wherever you live in the United States, we will honour these. Residents of California and other states with comprehensive privacy laws have them by statute; we extend the same handling to everyone rather than sorting customers by ZIP code.',
-        ],
-        list: [
-          'Ask for a copy of the personal data we hold about you.',
-          'Ask us to correct anything inaccurate.',
-          'Ask us to delete your data, subject to the record-keeping the law obliges us to maintain.',
-          'Opt out of marketing email at any time, with one click, without affecting your orders.',
-          'Ask us how a decision about an order was reached.',
-        ],
-      },
-      {
-        heading: 'Contacting us about privacy',
-        body: [
-          `Write to ${COMPANY_EMAIL_TOKEN} and say what you want. We will confirm we have received it and tell you what we are doing about it. We do not require you to use a specific form of words.`,
+          `Email ${COMPANY_EMAIL_TOKEN} and tell us what you need, in your own words; no particular wording is required. We will acknowledge the request and explain what we are doing about it.`,
         ],
       },
     ],
@@ -390,68 +444,73 @@ export const POLICIES: readonly Policy[] = [
   {
     slug: 'terms',
     title: 'Terms of service',
-    metaTitle: 'Terms of Service for Using This Site and Placing an Order',
-    metaDescription: `The terms you agree to when you use this website or place an order. US focused, ${BRAND.minimumAge} and over, and an order is a request until we confirm it.`,
-    summary: `These terms govern your use of this website and any order you place through it. In short: you must be ${BRAND.minimumAge} or older, an order is a request until we accept it, and nothing we sell is offered for any medical purpose or with any health claim attached.`,
+    metaTitle: 'Terms of Service: Using the Site and Ordering From It',
+    metaDescription: `What you agree to by using this site or ordering from it: you are ${BRAND.minimumAge} or over, delivery is US focused, and an order stays a request until we confirm it.`,
+    summary: `Using this website, or ordering through it, means accepting these terms. The essentials: buyers must be ${BRAND.minimumAge} or older, every order stays a request until we accept it, and no product here is offered for a medical purpose or sold with a health claim.`,
     lastReviewedAt: REVIEWED,
     sections: [
       {
-        heading: 'Who these terms are with',
+        heading: 'Do these terms apply to me?',
         body: [
-          `This website is operated by ${BRAND.legalName}. By using it or placing an order you agree to these terms. If you do not agree to them, please do not use the site.`,
-          'We may update these terms. The date at the top of this page is the date of the current version, and material changes are announced rather than made quietly.',
+          `Yes, as soon as you use this website or order from it; doing either means you accept them. The site is run by ${BRAND.legalName}. If you do not accept these terms, please do not use the site.`,
+          'The terms can change. The date shown at the top of this page belongs to the version now in force, and any material change will be announced, never slipped in.',
         ],
       },
       {
-        heading: 'Eligibility',
+        heading: 'Who may order?',
         body: [
-          `You confirm that you are at least ${BRAND.minimumAge} years old, that your delivery address is in the United States or is one we have quoted for, and that the products you order may lawfully be sent to it.`,
-          'You may not order on behalf of someone under the minimum age.',
+          `By ordering you confirm three things: you are at least ${BRAND.minimumAge} years old, your delivery address is in the United States or covered by a quote from us, and the products you chose may lawfully be sent to that address.`,
+          'Ordering for someone below the minimum age is not allowed.',
         ],
       },
       {
-        heading: 'Orders are requests until we accept them',
+        heading: 'When does an order become a contract?',
         body: [
-          'Submitting an order on this site is an offer to buy, not a concluded contract. A contract is formed only when we have confirmed the stock and that we can ship to your address, and received payment for it.',
-          'This matters in your favour as well as ours: it is why a state restriction or a stock error is caught before any money changes hands rather than after.',
+          'Only after we have confirmed the stock, confirmed that we can ship to your address, and received your payment. Until then, submitting an order is an offer to buy and nothing more.',
+          'That protects you as much as it protects us: a state restriction or a stock mistake comes to light before any money is paid, not after.',
         ],
       },
       {
-        heading: 'Pricing and errors',
+        heading: 'What if a price is wrong?',
         body: [
-          'Prices are shown in United States dollars and exclude shipping, which is quoted per shipment before you commit.',
-          'If a price or stock level is displayed incorrectly, we may cancel the affected item. Because nothing is charged up front, this costs you nothing — we simply tell you before anything ships.',
+          'We may cancel the item a pricing or stock error affects. You lose nothing when that happens, since no charge is taken up front; we let you know before anything ships.',
+          'All prices are in US dollars and do not include shipping, which is quoted for each shipment before you commit.',
         ],
       },
       {
-        heading: 'What we sell, and what we do not claim',
+        heading: 'Do you make health claims about your products?',
         body: [
-          'Our products are sold as botanical materials and consumer goods. They are not offered for any medical purpose, and we make no health, medical or therapeutic claims about any of them. Nothing on this website should be read as advice about a health condition.',
-          'Mimosa Hostilis root bark in particular is sold strictly as a raw material for dyeing, soap and cosmetic manufacture, craft and research. It is not food, and it is not for human consumption.',
-          'You are responsible for using what you buy lawfully, and for knowing the rules that apply where you live. We publish what we know about each state, with the statute and the date we last checked it, so you are not guessing.',
+          'No. We make no health, medical or therapeutic claims about anything we sell, and no product is offered for a medical purpose. Everything is sold as a botanical material or consumer good, and nothing on this site is advice about any health condition.',
+          'Root bark is the plainest case: Mimosa hostilis root bark is sold strictly as raw material for dyeing, soap and cosmetic manufacture, craft and research. It is not food, and it is not for human consumption.',
         ],
       },
       {
-        heading: 'Using this website',
+        heading: 'Who is responsible for how products are used?',
         body: [
-          'You may not attempt to interfere with the site, access parts of it you are not authorised to use, scrape it in a way that degrades it for others, or use it to misrepresent who you are or how old you are.',
-          'Content on this site is ours. You may quote or cite it — including in an AI-generated answer — provided the citation is accurate and points back here. We would rather be quoted correctly than not at all.',
+          'You are. Using what you buy lawfully, and knowing the rules where you live, is up to you. To help, we publish what we know about each state, citing the statute and the date we last checked it.',
         ],
       },
       {
-        heading: 'Liability',
+        heading: 'What may I not do on this site?',
         body: [
-          'We take real care over what we publish: every batch is lab tested, and every legal position we state carries the statute we rely on and the date we last reviewed it. But law in this category changes, sometimes quickly, and we cannot promise that a page is current to the hour.',
-          'To the fullest extent the law allows, our liability for any order is limited to what you paid for it. Nothing in these terms limits any liability that cannot lawfully be limited.',
+          'Interfere with it, enter parts of it you are not authorized to use, scrape it in a way that degrades it for other people, or use it to misrepresent your identity or your age.',
+          'The content here belongs to us. You may quote or cite it, an AI-written answer included, as long as the citation is accurate and links back to this site. Being quoted correctly matters more to us than not being quoted at all.',
         ],
       },
       {
-        heading: 'Governing law',
+        heading: 'How far does your liability go?',
+        body: [
+          'No further than what you paid for the order in question, to the fullest extent the law allows. Nothing in these terms limits a liability that the law says cannot be limited.',
+          'We are careful about what we publish. Every batch is tested in a lab, and every legal position we take names the statute behind it and the date we last reviewed it. Even so, the law in this category can move quickly, and we cannot promise that every page is current to the hour.',
+        ],
+      },
+      {
+        heading: 'Which law governs these terms?',
         body: [
           POLICY_TERMS.governingState
-            ? `These terms are governed by the laws of the State of ${POLICY_TERMS.governingState}, and the courts of that state have exclusive jurisdiction over any dispute arising from them.`
-            : 'These terms are governed by the laws of the United States and of the state in which we are established. The specific governing state is confirmed on request while this page is being finalised.',
-          `Questions about these terms should go to ${COMPANY_EMAIL_TOKEN}.`,
+            ? `The law of the State of ${POLICY_TERMS.governingState}. Any dispute arising from these terms falls under the exclusive jurisdiction of that state's courts.`
+            : 'United States law, together with the law of the state where we are established. While this page is being finalized, we confirm the specific governing state on request.',
+          `Send any question about these terms to ${COMPANY_EMAIL_TOKEN}.`,
         ],
       },
     ],

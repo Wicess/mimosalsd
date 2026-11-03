@@ -56,7 +56,7 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
     <form action={action} className="rounded-xl border border-border bg-surface p-5 md:p-6">
       <h2 className="font-display text-xl text-foreground">Send us a message</h2>
       <p className="mt-1 text-sm text-foreground-muted">
-        Or email the address for your question below — both reach the same people.
+        The form and the email address beside it land in the same inbox.
       </p>
 
       <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -142,8 +142,8 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
             className={`${FIELD} tabular`}
           />
           <p className="mt-1 text-xs text-foreground-subtle">
-            It is in the subject line of your confirmation email. With it we can
-            usually answer on the first reply rather than the third.
+            Find it in the subject of your confirmation email. Quoting it saves a
+            round of back-and-forth before we can look at the order.
           </p>
         </div>
       )}
@@ -186,9 +186,9 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
       </div>
 
       <p className="mt-3 text-xs leading-relaxed text-foreground-subtle">
-        We use what you send here to answer you, and nothing else. We cannot give
-        legal or medical advice — for what may lawfully ship to your state, our
-        per-state pages cite the statute we rely on.
+        Your message is used only to reply to you. Legal and medical advice are
+        outside what we can offer; the state pages show which statute we rely on
+        for what may ship to you.
       </p>
     </form>
   )

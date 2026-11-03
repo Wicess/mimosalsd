@@ -79,7 +79,7 @@ export const CATEGORIES: readonly Category[] = [
     metaTitle: 'Buy Mimosa Hostilis Root Bark, Powder, Shredded or Whole',
     metaDesc:
       'Mimosa hostilis root bark for natural dyeing and soap, by the pound in powder, shredded and whole cuts, plus sassafras root bark. Ships from California.',
-    sortOrder: 1,
+    sortOrder: 0, // root bark leads the menu and the category rail (2026-11-03)
   },
   {
     slug: 'amanita',
@@ -229,8 +229,8 @@ export const CATEGORIES: readonly Category[] = [
     metaTitle: 'Disposable Vapes and 510 Cartridges, Sold by the Unit',
     metaDesc:
       'All-in-one disposables and 510 cartridges from Muha Meds, Ghost, Boutiq and more, sold by the unit to adults 21 and over, with wholesale pricing for retailers.',
-    /* First: the category the business leads with. */
-    sortOrder: 0,
+    /* Second: root bark leads the menu since 2026-11-03. */
+    sortOrder: 1,
   },
   /*
     Others (owner, 2026-09-15): products that are not Mimosa, Amanita or a

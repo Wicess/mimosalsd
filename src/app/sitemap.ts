@@ -28,6 +28,27 @@ import { ROUTES, absoluteUrl, url } from '@/lib/seo/routes'
 // Moved to 2026-09-28: home, shop, about, FAQ and every policy were rewritten that day.
 const RELEASE_DATE = new Date('2026-09-28T00:00:00Z')
 
+/*
+  Rewritten in this site's own words on 2026-11-03, when the last text shared with the
+  parent build was replaced: the home page, the shop index, the FAQ and the trust pages.
+  Each keeps this date until it genuinely changes again.
+*/
+const REWRITTEN_DATE = new Date('2026-11-03T00:00:00Z')
+const REWRITTEN = new Set(['home', 'shop', 'faq', 'lab-results', 'contact', 'bulk', 'legal-disclaimer', 'shop-near-me'])
+
+/*
+  WHAT THIS SITE IS ABOUT, TOLD TO THE CRAWLER IN ORDER AND PRIORITY.
+
+  Root bark for natural dyeing is the subject this site writes about and the one its
+  guides, articles and state pages are built on, so its category and products lead the
+  file and carry the highest priorities. Every other line is still listed, indexable and
+  linked; it simply comes after, at a lower priority. Bing allocates crawl by crawl
+  value, so the order and weights are a request about where to spend it first.
+*/
+const FOCUS_CATEGORY = 'mimosa-hostilis'
+const FOCUS_PRIORITY = { category: 1.0, product: 0.95 } as const
+const OTHER_PRIORITY = { category: 0.6, product: 0.5 } as const
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   'use cache: remote'
   /*
@@ -48,7 +69,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    * argument the comment above makes against `new Date()`.
    */
   const policyDates = new Map(
-    POLICIES.map((p) => [url.policy(p.slug), new Date(p.lastReviewedAt)] as const),
+    // The later of the review date and the 2026-11-03 rewrite: the page changed that day.
+    POLICIES.map((p) => [url.policy(p.slug), new Date(Math.max(Date.parse(p.lastReviewedAt), REWRITTEN_DATE.getTime()))] as const),
   )
 
   const staticEntries = Object.values(ROUTES)
@@ -57,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((r) => r.id !== 'locations-hub' || publishedLocations().length > 0)
     .map((r) => ({
       url: absoluteUrl(r.pattern),
-      lastModified: policyDates.get(r.pattern) ?? RELEASE_DATE,
+      lastModified: policyDates.get(r.pattern) ?? (REWRITTEN.has(r.id) ? REWRITTEN_DATE : RELEASE_DATE),
       changeFrequency: r.changeFrequency,
       priority: r.priority,
     }))
@@ -68,7 +90,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: absoluteUrl(url.category(c.slug)),
     lastModified: RELEASE_DATE,
     changeFrequency: ROUTES.category.changeFrequency,
-    priority: ROUTES.category.priority,
+    priority: c.slug === FOCUS_CATEGORY ? FOCUS_PRIORITY.category : OTHER_PRIORITY.category,
+    focus: c.slug === FOCUS_CATEGORY,
   }))
 
   /*
@@ -96,7 +119,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ? { lastModified: RELEASE_DATE }
         : {}),
     changeFrequency: ROUTES.product.changeFrequency,
-    priority: ROUTES.product.priority,
+    priority: p.categorySlug === FOCUS_CATEGORY ? FOCUS_PRIORITY.product : OTHER_PRIORITY.product,
+    focus: p.categorySlug === FOCUS_CATEGORY,
   }))
 
   const batchEntries = (await listMergedBatches()).map((b) => ({
@@ -154,14 +178,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: ROUTES.guide.priority,
   }))
 
+  const focus = <T extends { focus: boolean }>(xs: T[], want: boolean) =>
+    xs.filter((x) => x.focus === want).map((x) => {
+      const entry: Omit<T, 'focus'> & { focus?: boolean } = { ...x }
+      delete entry.focus
+      return entry
+    })
+  const homeUrl = absoluteUrl(ROUTES.home.pattern)
+  const home = staticEntries.filter((e) => e.url === homeUrl)
+  const otherStatic = staticEntries.filter((e) => e.url !== homeUrl)
+
+  // Root bark first, then what is written about it, then everything else.
   return [
-    ...staticEntries,
-    ...locationEntries,
-    ...postEntries,
+    ...home,
+    ...focus(categoryEntries, true),
+    ...focus(productEntries, true),
     ...guideEntries,
-    ...categoryEntries,
-    ...productEntries,
-    ...batchEntries,
+    ...postEntries,
     ...stateEntries,
+    ...otherStatic,
+    ...locationEntries,
+    ...focus(categoryEntries, false),
+    ...focus(productEntries, false),
+    ...batchEntries,
   ]
 }

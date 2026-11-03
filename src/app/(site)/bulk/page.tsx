@@ -53,21 +53,21 @@ export default async function BulkPage() {
 
       <PageSection first>
         <PageHeader
-          title="Buying in volume"
-          summary="Tell us what you need and a person prices it for you, usually within one business day. One-off volumes and standing supply are both welcome."
+          title="Bulk and wholesale orders"
+          summary="Send the details below and a member of our team prices the order by hand, usually within one business day. We quote single large orders and repeat supply alike."
         />
       </PageSection>
 
       <PageSection tone="sunken">
         <section>
           <h2 className="font-display text-2xl text-foreground">
-            What does not change at volume
+            Larger orders, same rules
           </h2>
           <ul className="mt-4 space-y-2">
             {[
-              'Every batch is still lab tested, and a certified copy of the report is still issued on request against its batch code.',
-              `Age verification is unchanged: ${BRAND.minimumAge} and over.`,
-              'Vapor products still travel on the specialist age-restricted carrier and are still never eligible for free shipping, at any order value.',
+              'Testing: each batch in a bulk order is lab tested like any other, and a certified copy of its report is available on request by batch code.',
+              `Age: buyers must still be ${BRAND.minimumAge} or older, verified the same way as on a single order.`,
+              'Vapor products: they go by the specialist age-restricted carrier whatever the quantity, and free shipping never applies to them, however large the order.',
             ].map((item) => (
               <li
                 key={item}
@@ -82,11 +82,12 @@ export default async function BulkPage() {
 
       <PageSection>
         <section id="quote" className="scroll-mt-24">
-          <h2 className="font-display text-3xl text-foreground">Ask for a quote</h2>
+          <h2 className="font-display text-3xl text-foreground">Request a bulk quote</h2>
           <p className="mt-2 max-w-[68ch] leading-relaxed text-pretty text-foreground-muted">
-            Tell us what you need, how much of it, where it is going and how often it
-            repeats. With those four things we can usually quote on the first reply,
-            including a shipping figure rather than an estimate.
+            A complete quote needs four answers: the product, the quantity, the
+            destination and whether the order will repeat. When the form has all four,
+            our first reply can usually carry a firm price with actual shipping
+            included, not a ballpark.
           </p>
 
           {/*
@@ -102,15 +103,15 @@ export default async function BulkPage() {
           </div>
 
           <p className="mt-4 text-sm text-foreground-muted">
-            Or email{' '}
+            Prefer your own mail app? Write to{' '}
             <a
               href={`mailto:${email}`}
               /* `min-h-11` — an inline mailto is a 20px-tall tap target on a phone. */
               className="inline-flex min-h-11 items-center font-medium text-primary underline underline-offset-4"
             >
               {email}
-            </a>{' '}
-            directly.
+            </a>
+            .
           </p>
         </section>
       </PageSection>

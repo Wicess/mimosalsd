@@ -48,13 +48,13 @@ import { ButtonLink } from '@/components/ui/button'
 /**
  * Questions every page answers, in priority order.
  *
- * "Do you ship to my state" first: in this category it is the question that
+ * "Can you deliver to my state" first: in this category it is the question that
  * decides whether anything else matters.
  */
 const UNIVERSAL = [
-  'Do you ship to my state?',
+  'Can you deliver to my state?',
   'When do I pay for my order?',
-  'How old do I have to be to order?',
+  'What is the minimum age to buy?',
 ] as const
 
 /** The question that only this product line raises. */
@@ -63,7 +63,7 @@ const BY_LINE: Record<ProductLine, readonly string[]> = {
     'What is Mimosa hostilis root bark used for?',
     'Should I buy powder, shredded or whole root bark?',
     'How much Mimosa hostilis do I need to dye a pound of wool?',
-    'Do you offer bulk or wholesale pricing?',
+    'Can I buy root bark in bulk or wholesale?',
   ],
   AMANITA: [
     'Is Amanita muscaria the same as psilocybin mushrooms?',
@@ -98,7 +98,7 @@ function select(productLine?: ProductLine, categorySlug?: string): readonly FaqI
 export async function ProductFaq({
   productLine,
   categorySlug,
-  heading = 'Questions people ask',
+  heading = 'Common questions',
   className,
   productQuestions = [],
 }: {
@@ -152,7 +152,7 @@ export async function ProductFaq({
           href={url.faq()}
           className="inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4"
         >
-          All questions
+          See the full FAQ
         </a>
       </div>
 
@@ -191,13 +191,13 @@ export async function ProductFaq({
         <aside className="lg:col-span-4 lg:col-start-9">
           <div className="lg:sticky lg:top-28">
             <h3 className="font-display text-xl leading-snug text-balance text-foreground">
-              Not answered here?
+              Still have a question?
             </h3>
             <div aria-hidden className="mt-4 h-0.5 w-10 rounded-full bg-accent" />
             <p className="mt-5 max-w-[46ch] leading-relaxed text-pretty text-foreground-muted">
-              Tell us the product and the state it is going to, and we will tell you
-              exactly what we can send — the same check the cart runs on your delivery
-              address before it accepts an order.
+              Name the product and the delivery state. We will run the same check the
+              cart applies to an address before accepting an order, and tell you what
+              can be sent there.
             </p>
             {/*
               No turnaround quoted here on purpose. /contact states one per channel,

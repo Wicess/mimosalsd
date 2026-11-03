@@ -13,8 +13,8 @@ import { breadcrumbList, jsonLdScript, organizationRef } from '@/lib/seo/structu
 import { pageMetadata } from '@/lib/seo/meta'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Legal Disclaimer, No Health Claims and Not Legal Advice',
-  description: 'We make no health, medical or therapeutic claims. Mimosa Hostilis root bark is a botanical material and is not food. Nothing here is legal or medical advice.',
+  title: 'Legal Disclaimer: Health Claims, Legal Positions and Testing',
+  description: 'No product here comes with a health claim. Root bark is a craft and research material, not food. Our state legal positions show our reasoning; they are not legal advice.',
   path: url.legalDisclaimer(),
 })
 
@@ -44,49 +44,51 @@ export default async function LegalDisclaimerPage() {
       <PageSection first>
         <PolicyProse
         title="Legal disclaimer"
-        summary="We make no health, medical or therapeutic claims about anything we sell. Mimosa Hostilis root bark is a raw botanical material and is not food. Nothing on this website is legal or medical advice, and the legal position of these products changes — we publish the statute and the review date so you can check ours."
+        summary="Three limits apply to everything on this site. It makes no health, medical or therapeutic claims about any product. Mimosa hostilis root bark is sold as a raw botanical for craft and research work, and it is not food. And none of it is legal or medical advice: the rules for these products shift, which is why every legal position we state comes with its statute and the date we last checked it."
         lastReviewedAt={REVIEWED}
         sections={[
           {
-            heading: 'Food and Drug Administration',
+            heading: 'Our legal pages explain our position; they are not advice',
             body: [
+              'The state and product pages set out the position we act on, not advice about your situation. For each state and each product line you can see the statute we rely on and the day we last reviewed it, so our reading can be tested instead of trusted. That reading is not tailored to you, and publishing it does not make us your advisers or form a professional relationship of any kind.',
+              'Rules in this category can change between one review and the next, so a page that was accurate on its review date may be stale within weeks. Following the law where you live is your responsibility. For a firm answer, consult a licensed attorney in your state.',
+            ],
+          },
+          {
+            heading: 'Health claims and the FDA',
+            body: [
+              'No product page, guide or post here describes what a product does to the body, and none of our wording should be read that way.',
               FDA_DISCLAIMER,
-              'Nothing we publish is intended to describe an effect on the body, and no statement on this site should be read as one. If you have a question about your health, ask a qualified professional rather than a retailer.',
+              'Questions about your health belong with a qualified professional, not with a shop.',
             ],
           },
           {
-            heading: 'Mimosa Hostilis root bark',
+            heading: 'What root bark is sold for',
             body: [
+              'Mimosa hostilis root bark is sold for natural dyeing, for soap and cosmetic making, and for research.',
               NOT_FOR_HUMAN_CONSUMPTION,
-              'We sell it to natural dyers, soap and cosmetic makers, and researchers. At checkout you confirm that this is what you are buying it for, and that confirmation is recorded with your order.',
+              'Checkout asks you to confirm your intended use, and we store that confirmation alongside the order.',
             ],
           },
           {
-            heading: 'Amanita muscaria',
+            heading: 'Amanita muscaria: federal and state status',
             body: [
-              'Amanita muscaria contains naturally occurring muscimol and ibotenic acid. Neither is listed under the federal Controlled Substances Act, which is the basis on which these products are lawfully sold in the United States.',
-              'In December 2024 the Food and Drug Administration stated that Amanita muscaria is not authorised for use in conventional food. Edible formats therefore sit in a regulatory grey area rather than having been affirmatively cleared, and we say so rather than implying otherwise.',
-              'State positions are separate from the federal one, and they move. We publish the current position for every state with the statute we rely on and the date we last reviewed it, and the cart checks your delivery address against those same records before it accepts an order.',
+              'Amanita muscaria can be sold lawfully in the United States because its naturally occurring compounds, muscimol and ibotenic acid, are not listed under the federal Controlled Substances Act.',
+              'That is not the same as regulatory approval. In December 2024 the Food and Drug Administration said Amanita muscaria is not authorized for use in conventional food, which leaves food-style formats in a gray area instead of cleared, and we would rather tell you that than suggest otherwise.',
+              'Each state can take its own view, and those views change. Our state pages give the current position with its statute and last review date, and the cart reads those same records to check your delivery address before it will take an order.',
             ],
           },
           {
-            heading: 'Vapor products',
+            heading: 'Vapor products and the PACT Act',
             body: [
-              'Vapor products are regulated federally under the PACT Act. They ship via a registered specialist carrier and are reported to state authorities monthly as the law requires.',
+              'Vapor products fall under the federal PACT Act. We send them through a registered specialist carrier and file the monthly reports with state authorities that the law requires.',
             ],
           },
           {
-            heading: 'This is not legal advice',
+            heading: 'Testing, and how to check what we say',
             body: [
-              'We publish, for every state and every product line, the position we rely on, the statute behind it, and the date we last reviewed it. That is our reasoning, made checkable — it is not advice about your circumstances, and it does not create a professional relationship.',
-              'The law in this category moves, sometimes quickly, and a page can be current on the day it was reviewed and out of date a month later. You are responsible for the rules that apply where you are. If you need certainty, speak to a lawyer in your state.',
-            ],
-          },
-          {
-            heading: 'Accuracy and corrections',
-            body: [
-              'Every batch is lab tested before it is offered for sale, the botanical line by an independent third-party laboratory, and a certified copy of the report is issued to verified buyers who ask for it, against the batch code on the package, so our claims about a product can be checked against the report rather than taken on trust.',
-              `If you believe something on this site is wrong — a statute we have misread, a review date that has gone stale, a laboratory report that does not match — tell us at ${email}. We would rather be corrected than cited incorrectly.`,
+              'Each batch is tested before we list it for sale; for the botanical line, that testing is done by an independent third-party laboratory. Verified buyers can ask for a certified copy of the report for the batch code printed on their package, so anything we say about a product can be compared with the report itself instead of accepted on our word.',
+              `Email ${email} if anything here looks wrong: a statute we have read incorrectly, a review date that has lapsed, or a lab report that does not match its batch. We want to fix a mistake before anyone repeats it.`,
             ],
           },
         ]}
@@ -106,13 +108,13 @@ export default async function LegalDisclaimerPage() {
       */}
       {IS_PLACEHOLDER && (
         <section className="mt-12 border-t border-border pt-8">
-          <h2 className="font-display text-2xl text-foreground">Image credits</h2>
+          <h2 className="font-display text-2xl text-foreground">Credits for sample images</h2>
           <p className="mt-3 leading-relaxed text-foreground-muted">
-            Product photography of our own stock is not published yet. Until it is, the
-            images on our product pages are openly licensed samples that show the kind
-            of material only — they are labelled as samples wherever they appear, and
-            they are not photographs of the goods we ship. They are listed here with
-            their authors and licences, as those licences require.
+            Photographs of our own stock have not been published yet. Until they are,
+            product pages use openly licensed sample images that illustrate the type of
+            material and nothing more. Each one is marked as a sample where it appears,
+            none of them shows the goods we actually ship, and their licenses require
+            us to credit them, which we do below.
           </p>
           <ul className="mt-5 space-y-3">
             {imageCredits().map((credit) => (

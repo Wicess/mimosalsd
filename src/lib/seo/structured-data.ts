@@ -131,6 +131,20 @@ export function organization(email: string) {
     ...(BRAND.track.foundedYear > 0 ? { foundingDate: String(BRAND.track.foundedYear) } : {}),
     url: absoluteUrl('/'),
     description: BRAND.description,
+    /*
+      The subjects the site's guides and articles actually cover, so an answer engine
+      resolving "who knows about this?" has the entity's topics stated, not inferred.
+      Every item has published pages behind it; add one only when it does.
+    */
+    knowsAbout: [
+      'Mimosa hostilis root bark',
+      'Mimosa tenuiflora',
+      'Sassafras root bark',
+      'Natural dyeing',
+      'Dyeing wool and silk with plant dyes',
+      'Iron modifiers in natural dyeing',
+      'Botanical color in cold-process soap',
+    ],
     email,
     areaServed: { '@type': 'Country', name: 'United States' },
     /*

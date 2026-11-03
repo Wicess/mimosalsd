@@ -145,7 +145,7 @@ export function BulkQuoteForm({
       >
         <legend className="text-sm font-medium text-foreground">
           Which categories?{' '}
-          <span className="font-normal text-foreground-muted">Choose every line you want priced</span>
+          <span className="font-normal text-foreground-muted">Tick each line to include in the quote</span>
         </legend>
         <div className="mt-2 flex flex-wrap gap-2">
           {categories.map((c) => {
@@ -273,8 +273,8 @@ export function BulkQuoteForm({
       </div>
 
       <p className="mt-3 text-xs leading-relaxed text-foreground-subtle">
-        We use what you send here to price your enquiry and nothing else. A person
-        replies with your quote, and payment is arranged once you accept it.
+        These details are used only to price your request. A member of our team
+        writes back with the quote, and payment is arranged after you accept it.
       </p>
     </form>
   )

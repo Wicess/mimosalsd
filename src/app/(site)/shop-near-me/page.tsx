@@ -111,7 +111,7 @@ export default async function ShopNearMePage() {
           align="center"
           className="mb-8"
           title="What ships to you"
-          summary="One question, answered before we ask you for anything: can we actually send this to your address?"
+          summary="Before you add anything to a cart: here is whether an order can reach your address, and where the answer comes from."
         />
 
         {/*
@@ -127,20 +127,20 @@ export default async function ShopNearMePage() {
           <p className="text-lg leading-relaxed text-pretty text-foreground">
             {shipsEverywhere ? (
               <>
-                <strong className="font-medium">Yes — we ship to you.</strong>{' '}
+                <strong className="font-medium">Yes, your address is covered.</strong>{' '}
                 {/* availability-allow: rendered only when `blocked` is empty, computed from the live rules above. */}
-                {BRAND.name} delivers every product in the catalogue to all {states.length}{' '}
-                US jurisdictions: all 50 states and the District of Columbia. There are no
-                excluded states and no restricted counties. You place the order here, a
-                person verifies it, and it ships once payment is confirmed.
+                Every product in the {BRAND.name} catalog can be delivered in each of the{' '}
+                {states.length} US jurisdictions, meaning the 50 states plus DC, with no
+                state or county left out. Orders are placed on this site, checked by a
+                member of our team, and sent as soon as payment is confirmed.
               </>
             ) : (
               <>
-                <strong className="font-medium">Almost certainly yes.</strong>{' '}
-                {BRAND.name} delivers to all {states.length} US jurisdictions, and every
-                product reaches all but {blocked.length} of them. The exceptions are{' '}
-                {blocked.map((s) => s.name).join(', ')} — where a specific product line is
-                barred by that state&rsquo;s own statute, which we cite on its page.
+                <strong className="font-medium">Very likely, yes.</strong>{' '}
+                {BRAND.name} ships to each of the {states.length} US jurisdictions, and{' '}
+                {blocked.length} of them are closed to at least one product line:{' '}
+                {blocked.map((s) => s.name).join(', ')}. In each case a state statute rules
+                that line out, and the state&rsquo;s page cites it.
               </>
             )}
           </p>
@@ -148,8 +148,8 @@ export default async function ShopNearMePage() {
           {lastReviewed && (
             <p className="mt-3 text-sm text-foreground-subtle">
               Coverage last reviewed{' '}
-              <time dateTime={lastReviewed}>{formatDate(lastReviewed)}</time>. We publish
-              the statute behind every state position rather than summarising it.
+              <time dateTime={lastReviewed}>{formatDate(lastReviewed)}</time>. Each
+              state&rsquo;s position links to the statute itself, not to our paraphrase.
             </p>
           )}
         </div>
@@ -166,12 +166,12 @@ export default async function ShopNearMePage() {
             id="what-you-can-order"
             className="font-display text-2xl text-foreground"
           >
-            What you can order
+            The catalog at a glance
           </h2>
           <p className="mt-2 max-w-[70ch] leading-relaxed text-foreground-muted">
-            {products.length} products across {catalog.listCategories().length} lines, all
-            of them available nationwide. The laboratory report for the batch you receive
-            is on file, and we send a certified copy to verified buyers who ask.
+            There are {products.length} products in {catalog.listCategories().length}{' '}
+            lines, and every one can be ordered nationwide. We keep the lab report for each
+            batch on file; verified buyers can ask for a certified copy of theirs.
           </p>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
             {products.slice(0, 8).map((p) => (
@@ -180,7 +180,7 @@ export default async function ShopNearMePage() {
           </div>
           <p className="mt-6">
             <ButtonLink href={url.shop()} variant="secondary">
-              See the full catalogue
+              Browse every product
             </ButtonLink>
           </p>
         </section>
@@ -198,21 +198,21 @@ export default async function ShopNearMePage() {
         */}
         <section aria-labelledby="store-near-me">
           <h2 id="store-near-me" className="font-display text-2xl text-foreground">
-            Is there a store near me?
+            Can I buy in person near me?
           </h2>
           {storefronts.length === 0 ? (
             <p className="mt-2 max-w-[70ch] leading-relaxed text-foreground-muted">
-              Not yet — we have no public storefront, and we would rather say so than list
-              an address that is really a mailbox. Everything is shipped from our
-              fulfilment centre to your door, anywhere in the United States, so there is
-              nothing you would gain by living closer to us.
+              No, there is no shop you can walk into yet, and we will not dress up a mail
+              drop as a storefront. Orders leave our fulfillment center for your door
+              wherever you are in the United States, so living nearby makes no
+              difference to how you buy.
             </p>
           ) : (
             <>
               <p className="mt-2 max-w-[70ch] leading-relaxed text-foreground-muted">
-                Yes — {storefronts.length} location
-                {storefronts.length === 1 ? '' : 's'}, listed with the same address, phone
-                number and hours as our Google Business Profile.
+                Yes. We have {storefronts.length} location
+                {storefronts.length === 1 ? '' : 's'}, each shown with exactly the address,
+                phone number and hours on our Google Business Profile.
               </p>
               <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
                 {storefronts.map((l) => (
@@ -237,10 +237,10 @@ export default async function ShopNearMePage() {
             id="shipping-questions"
             className="font-display text-2xl text-foreground"
           >
-            Delivery, answered
+            Shipping questions
           </h2>
           <p className="mt-2 max-w-[70ch] leading-relaxed text-foreground-muted">
-            The same answers we give by email, in the order people ask them.
+            The questions customers send us most often about delivery, with our answers.
           </p>
           {/*
             The single FAQ source the rest of the site uses. Sharing it is what keeps the
@@ -284,11 +284,12 @@ async function YourArea() {
         className="mx-auto mt-10 max-w-3xl rounded-lg border border-border bg-surface p-6"
       >
         <h2 id="your-area" className="font-display text-xl text-foreground">
-          Want it confirmed for your own state?
+          Check your own state
         </h2>
         <p className="mt-2 leading-relaxed text-foreground-muted">
-          Pick yours and we will show the legal position with the statute behind it, and
-          the review date, rather than a badge that says &ldquo;compliant&rdquo;.
+          Choosing a state opens its legal position, the statute that position rests on,
+          and the date we last reviewed it. You get the reasoning, not a
+          &ldquo;compliant&rdquo; badge.
         </p>
         <div className="mt-5">
           <ButtonLink href={url.legalityHub()} variant="primary">

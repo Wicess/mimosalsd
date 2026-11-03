@@ -144,18 +144,18 @@ function FactRow({ fact }: { fact: CategoryFact }) {
 const NEXT_STEPS: readonly { href: string; label: string; detail: string }[] = [
   {
     href: url.legalityHub(),
-    label: 'Check your state',
-    detail: 'Every position with the statute behind it and the date it was reviewed.',
+    label: 'Look up your state',
+    detail: 'Each state page names the statute we follow and when we last checked it.',
   },
   {
     href: url.labResults(),
-    label: 'Request a certificate',
-    detail: 'The laboratory report for the batch code on your package, sent on request.',
+    label: 'Ask for a lab report',
+    detail: 'Quote the code on your package and we send the report for that batch.',
   },
   {
     href: url.faq(),
-    label: 'How ordering works',
-    detail: 'Why nothing is paid for on this site, and what happens after you submit.',
+    label: 'Ordering, step by step',
+    detail: 'You pay after we confirm your order, never on the site. Here is the sequence.',
   },
 ]
 
@@ -255,9 +255,9 @@ export async function CategoryAboutBand({
 
             {reviewedAt && (
               <p className="mt-5 text-xs leading-relaxed text-foreground-muted">
-                Availability and age positions last reviewed{' '}
-                <time dateTime={reviewedAt}>{formatReviewDate(reviewedAt)}</time>. They
-                are read from the same records the cart checks at checkout.
+                Shipping and age rules last reviewed{' '}
+                <time dateTime={reviewedAt}>{formatReviewDate(reviewedAt)}</time>. The cart
+                enforces these exact records when you check out.
               </p>
             )}
           </div>

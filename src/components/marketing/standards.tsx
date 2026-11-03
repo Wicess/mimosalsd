@@ -99,13 +99,13 @@ export function Standards() {
               id="standards-heading"
               className="font-display text-3xl leading-[1.06] text-balance text-foreground md:text-4xl lg:col-span-7"
             >
-              We would rather lose the order than get it wrong.
+              A refused order costs us less than a wrong one.
             </h2>
 
             <p className="max-w-[54ch] text-base leading-relaxed text-pretty text-foreground-muted lg:col-span-5">
-              This is a category where almost everything is asserted and almost nothing
-              is shown. Four things we will not move on — each of them checkable, by
-              you, without taking our word for any of it.
+              Sellers of root bark tend to promise a lot and prove little. Here are the
+              four rules we hold to, and how you can test each one yourself instead of
+              trusting us.
             </p>
           </div>
 
@@ -268,11 +268,11 @@ export function Standards() {
               items rather than one run-on.
             */}
             <ul className="mt-3 space-y-1.5 text-sm text-foreground-muted">
-              <li>US focused, worldwide on quoted orders.</li>
+              <li>Shipped across the United States; root bark goes abroad on a quote.</li>
               <li>{BRAND.minimumAge} and over.</li>
               <li>
-                We do not advertise; paid advertising is not permitted in this
-                category, so everything here had to be worth finding.
+                No paid ads are allowed in this trade, so we write guides worth
+                searching for instead.
               </li>
             </ul>
           </div>

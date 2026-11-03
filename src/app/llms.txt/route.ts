@@ -130,11 +130,24 @@ async function buildLlmsTxt(): Promise<string> {
       Every product on sale, with its one fixed price and its own summary: the facts an
       answer engine is asked for ("how much is a pound of…") in the form it can quote.
     */
-    '## Products',
+    /*
+      Root bark first and in full: it is what this site writes about and what an
+      answer engine should cite it for. Every other listing keeps its name, price and
+      link, without the description it shares word for word with the parent build's
+      catalogue (2026-11-03).
+    */
+    '## Root bark',
     '',
-    ...products.map((p) => {
+    ...products.filter((p) => p.categorySlug === 'mimosa-hostilis').map((p) => {
       const price = listPrice(p)
       return `- [${p.name}](${absoluteUrl(url.product(p.slug))}) — ${formatCents(price.cents)} ${price.per === 'lb' ? 'per pound, sold in 1/4, 1/3, 1/2 and 1 lb' : 'per unit'}. ${p.seo?.metaDescription ?? p.shortDescription}`
+    }),
+    '',
+    '## Other listings',
+    '',
+    ...products.filter((p) => p.categorySlug !== 'mimosa-hostilis').map((p) => {
+      const price = listPrice(p)
+      return `- [${p.name}](${absoluteUrl(url.product(p.slug))}) — ${formatCents(price.cents)} ${price.per === 'lb' ? 'per pound' : 'per unit'}`
     }),
     '',
     '## Guides and blogs',

@@ -30,8 +30,8 @@ export async function CartDrawerContents() {
       <div className="flex h-full flex-col items-center justify-center text-center">
         <p className="font-display text-xl text-foreground">Your cart is empty</p>
         <p className="mt-2 max-w-xs text-sm leading-relaxed text-foreground-muted">
-          Everything we sell is batch-tested, and we tell you what ships to your state
-          before you add it.
+          Each batch is tested before it goes on sale, and every product page shows
+          whether it can ship to your state before you add it to the cart.
         </p>
         <ButtonLink href={url.shop()} variant="primary" className="mt-6">
           Browse the shop

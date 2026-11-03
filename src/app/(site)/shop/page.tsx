@@ -73,7 +73,7 @@ export default async function ShopPage({
           className="mb-10"
           align="center"
           title="Shop"
-          summary="Mimosa hostilis root bark in three cuts, and sassafras root bark, sold by the pound and shipped from California."
+          summary="Mimosa hostilis root bark in powder, shredded and whole cuts, plus sassafras root bark. All of it is priced by the pound and shipped from California."
         />
 
         {/* Per-visitor and per-query — streamed in. */}

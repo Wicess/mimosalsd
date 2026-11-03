@@ -12,6 +12,7 @@ import {
   postMessage,
   visitorId,
 } from '@/lib/chat/core'
+import { subscribedEmail } from '@/lib/chat/subscribed-email'
 import { cleanBody } from '@/lib/chat/rules'
 import { forCustomer } from '@/lib/chat/serialize'
 import { WELCOME_MESSAGE } from '@/lib/chat/welcome'
@@ -90,7 +91,9 @@ export async function POST(request: Request) {
     that already has one (an order, a form, an earlier chat) needs nothing more.
   */
   const existing = await findThread(visitor)
-  if (!existing?.email && !parsed.data.email) {
+  // Typed, or the address this browser subscribed with (lib/chat/subscribed-email).
+  const email = parsed.data.email || (existing?.email ? null : await subscribedEmail(visitor))
+  if (!existing?.email && !email) {
     return NextResponse.json(
       { ok: false, error: 'Enter your email to start the chat.', needsEmail: true },
       { status: 422 },
@@ -100,7 +103,7 @@ export async function POST(request: Request) {
   try {
     const thread = await ensureThread({
       visitor,
-      email: parsed.data.email || null,
+      email: email || null,
       name: parsed.data.name || null,
     })
 

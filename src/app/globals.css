@@ -785,6 +785,56 @@ p {
     transform: translateX(calc(-100cqw - var(--shine-length)));
   }
 }
+/*
+  The pop-up chat's border (owner, 2026-11-03): the site's green glint, as two
+  light-waves travelling slowly round the card's edge. A conic gradient on a thin
+  ring, turned by animating its start angle (registered with @property so it
+  interpolates), and masked so only the ring shows. The card's own border is the
+  ring. Under reduced motion it stays still.
+*/
+@property --chat-wave {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.chat-wave-border::before {
+  --chat-wave-dim: color-mix(in oklab, var(--shine) 16%, transparent);
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--chat-wave),
+    var(--chat-wave-dim) 0deg,
+    var(--shine-core) 40deg,
+    var(--shine) 75deg,
+    var(--chat-wave-dim) 125deg,
+    var(--chat-wave-dim) 180deg,
+    var(--shine-core) 220deg,
+    var(--shine) 255deg,
+    var(--chat-wave-dim) 305deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: chat-wave-spin 10s linear infinite;
+}
+@keyframes chat-wave-spin {
+  to {
+    --chat-wave: 360deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-wave-border::before {
+    animation: none;
+  }
+}
+
 /* Phones: a shorter glint over a shorter distance, at a similar pace. */
 @media (width < 48rem) {
   .shine-rule {

@@ -11,6 +11,7 @@ import {
   postMessage,
   visitorId,
 } from '@/lib/chat/core'
+import { subscribedEmail } from '@/lib/chat/subscribed-email'
 import { cleanBody } from '@/lib/chat/rules'
 import { forCustomer } from '@/lib/chat/serialize'
 import { checkReceipt } from '@/lib/orders/receipts'
@@ -56,8 +57,9 @@ export async function POST(request: Request) {
 
   // Same rule as a typed message: an email before anything is sent.
   const typedEmail = emailSchema.safeParse(form?.get('email') ?? '')
-  const email = typedEmail.success ? typedEmail.data : null
   const existing = await findThread(visitor)
+  // Typed, or the address this browser subscribed with (lib/chat/subscribed-email).
+  const email = typedEmail.success ? typedEmail.data : existing?.email ? null : await subscribedEmail(visitor)
   if (!existing?.email && !email) {
     return NextResponse.json(
       { ok: false, error: 'Enter your email to start the chat.', needsEmail: true },

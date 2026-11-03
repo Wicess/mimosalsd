@@ -3,6 +3,7 @@ import { db } from '@/lib/db/client'
 import { customerViewing, findThread, markDelivered, visitorId } from '@/lib/chat/core'
 import { forCustomer } from '@/lib/chat/serialize'
 import { threadTopic } from '@/lib/live/push'
+import { subscribedEmail } from '@/lib/chat/subscribed-email'
 
 /**
  * The customer's live view of their conversation.
@@ -28,9 +29,13 @@ export async function GET(request: Request) {
   const visitor = await visitorId(false)
   const thread = await findThread(visitor)
 
+  // A visitor who already subscribed is not asked for an email (lib/chat/subscribed-email).
+  // Checked on the first load only: once true, the client keeps it.
+  const firstLoad = !new URL(request.url).searchParams.get('since')
+
   if (!thread) {
     return NextResponse.json(
-      { messages: [], publicId: null, unread: 0, hasEmail: false },
+      { messages: [], publicId: null, unread: 0, hasEmail: firstLoad && Boolean(await subscribedEmail(visitor)) },
       { headers: { 'Cache-Control': 'no-store' } },
     )
   }
@@ -108,7 +113,7 @@ export async function GET(request: Request) {
       changes,
       receipts,
       publicId: thread.publicId,
-      hasEmail: Boolean(thread.email),
+      hasEmail: Boolean(thread.email) || (firstLoad && Boolean(await subscribedEmail(visitor))),
       unread: open ? 0 : thread.unreadForCustomer,
       // The ntfy topic this browser listens on for "the shop changed something"
       // (lib/live/push.ts). Null when pushes are not configured: the timer carries on.

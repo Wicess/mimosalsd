@@ -83,12 +83,14 @@ export function ChatWidget() {
           />
           <div
             className={[
-              'fixed z-(--z-drawer) overflow-hidden bg-background shadow-2xl',
+              // The green light-waves round the edge are the card's border (.chat-wave-border).
+              'chat-wave-border fixed z-(--z-drawer) overflow-hidden bg-background',
+              'shadow-[0_28px_70px_-24px_rgb(0_0_0/0.5),0_0_28px_-10px_var(--shine)]',
               // Phone: a side panel over the site, as tall as the visible screen (keyboard
               // included), so the field stays put while the messages scroll. Desktop: a corner card.
               // Sizes come from .chat-card in globals.css (phones only), which follow the keyboard.
-              'chat-card right-3 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-border',
-              'md:top-auto md:right-5 md:bottom-5 md:h-[min(640px,calc(100dvh-2.5rem))] md:w-[380px] md:rounded-2xl md:border',
+              'chat-card right-3 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl',
+              'md:top-auto md:right-5 md:bottom-5 md:h-[min(640px,calc(100dvh-2.5rem))] md:w-[380px] md:rounded-2xl',
               'motion-safe:animate-[fade-in_180ms_ease-out]',
             ].join(' ')}
           >

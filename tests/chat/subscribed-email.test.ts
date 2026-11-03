@@ -29,7 +29,9 @@ describe('subscribedEmail', () => {
     findActivity.mockResolvedValue({ detail: ' Dyer@Example.com ' })
     findSubscriber.mockResolvedValue({ isActive: true })
     await expect(subscribedEmail('visitor-1')).resolves.toBe('dyer@example.com')
-    expect(findActivity.mock.calls[0][0].where).toMatchObject({ visitorId: 'visitor-1', kind: 'SUBSCRIBED' })
+    expect(findActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ visitorId: 'visitor-1', kind: 'SUBSCRIBED' }) }),
+    )
   })
 
   it('asks again once the address has unsubscribed', async () => {

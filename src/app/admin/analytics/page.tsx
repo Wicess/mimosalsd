@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 import { formatDistanceToNowStrict } from "date-fns";
 import {
   Activity,
@@ -54,8 +55,6 @@ import { AnalyticsTrafficChart } from "@/components/admin/analytics/analytics-tr
 import { DonutChart, DONUT_PALETTE } from "@/components/admin/analytics/donut-chart";
 import { flushForAdminView } from "@/lib/analytics-buffer";
 
-export const dynamic = "force-dynamic";
-
 function isPeriod(v: string | undefined): v is Period {
   return v === "24h" || v === "7d" || v === "30d" || v === "90d";
 }
@@ -96,6 +95,10 @@ export default async function AnalyticsPage({
 }: {
   searchParams: Promise<{ period?: string; exclude?: string }>;
 }) {
+  // This project runs with cacheComponents, which rejects `export const
+  // dynamic = "force-dynamic"`. Opt the route into dynamic rendering the
+  // supported way instead, before any request-data access.
+  await connection();
   // Land any analytics events still queued in Redis before reading them.
   await flushForAdminView();
   const sp = await searchParams;

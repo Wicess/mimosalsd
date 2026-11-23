@@ -72,8 +72,10 @@ const nextConfig: NextConfig = {
     payment invoice).
   */
   outputFileTracingIncludes: {
-    '/checkout': ['./src/lib/invoices/fonts/*.ttf', './public/brand/logo-email.png'],
-    '/admin/orders/\\[slug\\]/payment': ['./src/lib/invoices/fonts/*.ttf', './public/brand/logo-email.png'],
+    // Every route that renders an invoice PNG (lib/invoices/render.tsx): its fonts and logo.
+    '/checkout': ['./src/lib/invoices/fonts/*.ttf', './public/brand/logo-invoice.png'],
+    '/admin/orders/\\[slug\\]': ['./src/lib/invoices/fonts/*.ttf', './public/brand/logo-invoice.png'],
+    '/admin/orders/\\[slug\\]/payment': ['./src/lib/invoices/fonts/*.ttf', './public/brand/logo-invoice.png'],
   },
   /*
     Server Actions accept 1 MB by default, which silently capped every admin

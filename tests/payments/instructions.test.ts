@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   btcForCents,
   buildPaymentInstructions,
+  cashAppPayLink,
   instructionsAsText,
   normalizeAppleCashRecipient,
   normalizeBtcAmount,
@@ -46,6 +47,8 @@ describe('buildPaymentInstructions', () => {
     expect(ins.steps.join(' ')).toMatch(/"For" note.*202609-K7Q4M9/)
     expect(ins.warnings.join(' ')).toMatch(/cannot be cancelled/)
     expect(ins.summary.find((r) => r.label === 'Send to')?.value).toBe('$MIMOSALSD (MIMOSALSD LLC)')
+    // A link the customer can tap: Cash App opened on the $Cashtag, amount filled in.
+    expect(ins.summary.find((r) => r.label === 'Pay link')?.value).toMatch(/^https:\/\/cash\.app\/\$MIMOSALSD\/\d+(\.\d{2})?$/)
   })
 
   it('Chime: says the sender needs a Chime Checking Account, and that member transfers cannot be reversed', () => {
@@ -107,5 +110,12 @@ describe('what the owner types', () => {
     expect(normalizeBtcAmount('0.000000001').ok).toBe(false)
     expect(normalizeBtcAmount('-1').ok).toBe(false)
     expect(normalizeBtcAmount('0').ok).toBe(false)
+  })
+})
+
+describe('cashAppPayLink', () => {
+  it('opens Cash App on the $Cashtag with the amount filled in', () => {
+    expect(cashAppPayLink('$MIMOSALSD', 13500)).toBe('https://cash.app/$MIMOSALSD/135')
+    expect(cashAppPayLink('MIMOSALSD', 13550)).toBe('https://cash.app/$MIMOSALSD/135.50')
   })
 })

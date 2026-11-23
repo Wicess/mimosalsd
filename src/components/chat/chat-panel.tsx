@@ -17,6 +17,7 @@ import {
 import { EmojiTray } from './emoji-tray'
 import { useChat, type ChatMessage } from './use-chat'
 import { preparePush, usePushStatus } from '@/components/pwa/push-client'
+import { MessageText } from './message-text'
 
 /**
  * The conversation.
@@ -63,7 +64,7 @@ function Bubble({
     return (
       <div className="flex justify-center px-2">
         <p className="max-w-[92%] rounded-2xl bg-surface-sunken px-4 py-3 text-center text-[13px] leading-relaxed whitespace-pre-wrap text-foreground-muted">
-          {m.body}
+          <MessageText body={m.body} />
         </p>
       </div>
     )
@@ -115,7 +116,9 @@ function Bubble({
             </button>
           ) : null}
           {m.body ? (
-            <p className="px-4 py-2.5 break-words whitespace-pre-wrap">{m.body}</p>
+            <p className="px-4 py-2.5 break-words whitespace-pre-wrap">
+              <MessageText body={m.body} />
+            </p>
           ) : null}
         </div>
 

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/icon'
 import { clockTime, exactTime } from './format'
 import type { InboxMessage } from './types'
+import { MessageText } from '@/components/chat/message-text'
 
 /**
  * One message in the operator's view of a conversation.
@@ -71,7 +72,7 @@ export function MessageRow({
     return (
       <div className="flex justify-center px-2">
         <p className="max-w-[88%] rounded-2xl bg-surface-sunken px-4 py-2.5 text-center text-[12px] leading-relaxed whitespace-pre-wrap text-foreground-muted">
-          {m.body}
+          <MessageText body={m.body} />
           <span className="mt-1 block text-[10px] tracking-wide text-foreground-subtle uppercase">
             Automatic · {clockTime(m.createdAt)}
           </span>
@@ -201,7 +202,11 @@ export function MessageRow({
                 <span className="truncate">{m.attachment.name}</span>
               </a>
             ) : null}
-            {m.body ? <p className="px-3.5 py-2 break-words whitespace-pre-wrap">{m.body}</p> : null}
+            {m.body ? (
+              <p className="px-3.5 py-2 break-words whitespace-pre-wrap">
+                <MessageText body={m.body} />
+              </p>
+            ) : null}
           </div>
         )}
 

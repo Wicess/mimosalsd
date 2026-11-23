@@ -94,6 +94,12 @@ export function buildPaymentInstructions(d: IssuedPaymentDetails): PaymentInstru
         headline: `Pay ${amount} with Cash App`,
         summary: [
           { label: 'Send to', value: payToLine },
+          /*
+            Owner, 2026-11-23: the Cash App details should be a link the customer can
+            tap. cash.app/$Cashtag/<amount> opens Cash App on that $Cashtag with the
+            amount filled in; the chat and the order page make it clickable.
+          */
+          { label: 'Pay link', value: cashAppPayLink(d.payTo, d.amountCents) },
           { label: 'Amount', value: amount },
           { label: 'Note ("For")', value: d.orderId },
           { label: 'Pay by', value: formatUtc(d.payBy) },
@@ -227,6 +233,13 @@ export function instructionsAsText(ins: PaymentInstructions, orderId: string): s
 // ── What the owner types, checked and put in the form a customer will recognise ──
 
 export type DetailCheck = { ok: true; value: string } | { ok: false; error: string }
+
+/** cash.app/$Cashtag/135 (or /135.50): Cash App opened on the $Cashtag, amount filled in. */
+export function cashAppPayLink(cashtag: string, amountCents: number): string {
+  const tag = cashtag.startsWith('$') ? cashtag : `$${cashtag}`
+  const dollars = (amountCents / 100).toFixed(amountCents % 100 === 0 ? 0 : 2)
+  return `https://cash.app/${tag}/${dollars}`
+}
 
 /** $Cashtag: a $ then 1–20 letters or digits, at least one a letter (Cash App's rule). */
 export function normalizeCashtag(input: string): DetailCheck {

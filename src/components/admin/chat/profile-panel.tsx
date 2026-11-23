@@ -125,6 +125,22 @@ export function ProfilePanel({
               <span className="text-foreground-subtle">Not recorded — they have not written yet</span>
             )}
           </Field>
+          {profile.app ? (
+            <Field label="App">
+              {profile.app.installed === true ? (
+                <span className="inline-flex flex-wrap items-center gap-x-1.5">
+                  <Badge tone="success">Installed</Badge>
+                  {[platformLabel(profile.app.platform), profile.app.since ? `since ${exactTime(profile.app.since)}` : null]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </span>
+              ) : profile.app.installed === false ? (
+                <span className="text-foreground-muted">Not installed</span>
+              ) : (
+                <span className="text-foreground-subtle">Unknown — no browser linked to this conversation</span>
+              )}
+            </Field>
+          ) : null}
         </dl>
 
         <section className="px-4 py-4" aria-labelledby="profile-orders">
@@ -213,4 +229,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <dd className="min-w-0 text-foreground">{children}</dd>
     </div>
   )
+}
+
+/** The device an installed app turned notifications on from, in words. */
+function platformLabel(platform: string | null): string | null {
+  if (platform === 'ios') return 'iPhone / iPad'
+  if (platform === 'android') return 'Android'
+  if (platform === 'desktop') return 'Desktop'
+  return null
 }

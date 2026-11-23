@@ -15,6 +15,7 @@ import { formatCents } from '@/lib/utils'
 import { RememberChatThread } from '@/components/chat/remember-thread'
 import { RememberOrder } from '@/components/account/remember-order'
 import { welcomeLines } from '@/lib/orders/welcome-lines'
+import { MessageText } from '@/components/chat/message-text'
 
 export const metadata: Metadata = {
   title: 'Your order',
@@ -106,7 +107,10 @@ async function PaymentPanel({
         {ins.summary.map((row) => (
           <div key={row.label} className="flex gap-3">
             <dt className="w-28 shrink-0 text-foreground-muted">{row.label}</dt>
-            <dd className="tabular min-w-0 font-medium break-all text-foreground select-all">{row.value}</dd>
+            <dd className="tabular min-w-0 font-medium break-all text-foreground select-all">
+              {/* The Cash App pay link (and any other) is clickable here as in the chat. */}
+              <MessageText body={row.value} />
+            </dd>
           </div>
         ))}
       </dl>

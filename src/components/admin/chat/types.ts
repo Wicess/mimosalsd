@@ -61,6 +61,21 @@ export interface InboxProfile {
   readonly typing: boolean
   readonly typingText: string | null
   readonly orders: readonly InboxOrder[]
+  /**
+   * Whether this customer installed the app on their device. Sent with the first load
+   * of a conversation only (it rarely changes); later polls leave it out and the
+   * inbox keeps the value it has. `installed: null` means the conversation has no
+   * browser to check, e.g. one started from an order form.
+   */
+  readonly app?: InboxAppStatus
+}
+
+export interface InboxAppStatus {
+  readonly installed: boolean | null
+  /** ios | android | desktop, when the installed app turned notifications on. */
+  readonly platform: string | null
+  /** When the install was first recorded. */
+  readonly since: string | null
 }
 
 export type InboxFilter = 'open' | 'all' | 'closed'

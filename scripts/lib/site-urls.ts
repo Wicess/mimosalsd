@@ -22,17 +22,22 @@ import { publishedLocations } from '../../src/lib/locations/locations'
 
 /** The groups URL.md is written in, in the order it writes them. */
 /*
-  In order of indexing priority (2026-09-28): what a buyer lands on first, then the
-  products, then the per-state pages that answer "where can I buy it in <state or
-  city>", then the dyeing content that feeds them, then the supporting pages.
+  In the order the sitemap submits them (src/app/sitemap.ts, 2026-11-03): root bark
+  first — its category and products — then the guides and articles written about it,
+  the per-state pages, and after those every other category and product, still
+  listed and indexable, at a lower priority.
 */
+/** The category the sitemap leads with; must match FOCUS_CATEGORY in src/app/sitemap.ts. */
+const ROOT_BARK_CATEGORY = 'mimosa-hostilis'
+
 export const GROUPS = [
   'Core pages',
-  'Categories',
-  'Products',
-  'State legality',
+  'Root bark',
   'Guides',
   'Articles',
+  'State legality',
+  'Other categories',
+  'Other products',
   'Policies',
   'Locations',
   'Lab batches',
@@ -41,11 +46,12 @@ export const GROUPS = [
 /** The sitemap priority each group is submitted at, for the URL.md headings. */
 export const GROUP_PRIORITY: Record<(typeof GROUPS)[number], string> = {
   'Core pages': '1.0 to 0.4',
-  Categories: '0.95',
-  Products: '0.9',
-  'State legality': '0.9',
+  'Root bark': '1.0 to 0.95',
   Guides: '0.8',
   Articles: '0.7',
+  'State legality': '0.9',
+  'Other categories': '0.6',
+  'Other products': '0.5',
   Policies: '0.5 to 0.3',
   Locations: '0.7',
   'Lab batches': '0.5',
@@ -99,12 +105,19 @@ export async function collectUrls(client?: PrismaClient): Promise<SiteUrl[]> {
     }))
     const products = [...authored, ...posted.filter((p) => !authored.some((a) => a.slug === p.slug))]
 
+    const rootBark = (categorySlug: string) => categorySlug === ROOT_BARK_CATEGORY
     // An empty category renders noindex, so it is not listed.
     for (const category of catalog.listCategories()) {
-      if (products.some((p) => p.categorySlug === category.slug)) add(url.category(category.slug), 'Categories')
+      if (products.some((p) => p.categorySlug === category.slug)) {
+        add(url.category(category.slug), rootBark(category.slug) ? 'Root bark' : 'Other categories')
+      }
     }
     for (const product of products) {
-      add(url.product(product.slug), 'Products', product.updatedAt?.toISOString().slice(0, 10))
+      add(
+        url.product(product.slug),
+        rootBark(product.categorySlug) ? 'Root bark' : 'Other products',
+        product.updatedAt?.toISOString().slice(0, 10),
+      )
     }
 
     for (const batch of catalog.listBatches()) {

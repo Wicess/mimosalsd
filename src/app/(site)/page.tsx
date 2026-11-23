@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import Image, { getImageProps } from 'next/image'
 import { catalog } from '@/lib/catalog/repository'
 import { listAllPosts } from '@/lib/content/merged-content'
 import { ArticleFeature, BulkBand } from '@/components/marketing/home-sections'
@@ -22,6 +22,7 @@ import { listMergedProducts } from '@/lib/catalog/merged'
 import { getCompanyEmail } from '@/lib/site/company-email.server'
 import { formatCents } from '@/lib/utils'
 import { Mona_Sans } from 'next/font/google'
+import { HeroVideo, type HeroVideoClip } from '@/components/marketing/hero-video'
 
 /*
   THE HERO'S TYPEFACE (owner, 2026-09-19: "use modern font on text on landing page
@@ -43,13 +44,51 @@ export const metadata: Metadata = {
   Every other line is still on the page — the "Most shopped" row and the category rail
   below carry all of them — it just no longer leads.
 
-  The hero film and the specimen photograph are gone with it. Both were byte-identical
-  to the parent build's files, and the photograph was an openly-licensed Amanita
-  captioned "Sample image". In their place the plate lists the root bark actually on
-  sale, with its live price: nothing a crawler can find on another domain, and nothing
-  that can go stale, because it is read from the catalogue on every build.
+  THE FILM (owner, 2026-11-23). The parent build's hero films and its sample Amanita
+  photograph were byte-identical to snypegate.com's files and came out on 2026-11-03.
+  This film is the owner's own, so it is on no other domain. It is 720x1280 with
+  plain bands above and below the scene; the still is a square cut of its first
+  frame, which is exactly the scene, and both crops below keep the bands off screen.
 */
 const FOCUS_CATEGORY = 'mimosa-hostilis'
+
+/*
+  Listed twice on purpose: the player fades each clip into the next, so the film's
+  last second dissolves into its own first instead of jumping when it loops.
+*/
+const FILM: HeroVideoClip = { sources: [{ src: '/videos/hero-root-bark-scene.mp4', type: 'video/mp4' }] }
+const HERO_FILM: readonly HeroVideoClip[] = [FILM, FILM]
+
+const SCENE_ALT =
+  'Shredded root bark, an Amanita muscaria cap and a disposable vape on a slate table, with shelves of jars behind.'
+
+/*
+  The still under the film, as <img> props built once. `getImageProps` rather than
+  <Image> so each can sit in a <picture> whose <source> blanks it at the widths where
+  the other one is used: every width downloads the still exactly once. Eager and
+  high priority, because the still is the LCP element at both widths.
+*/
+const { props: PLATE } = getImageProps({
+  src: '/hero/root-bark-scene.jpg',
+  alt: SCENE_ALT,
+  fill: true,
+  sizes: '40vw',
+  loading: 'eager',
+  fetchPriority: 'high',
+  className: 'object-cover -z-30',
+})
+const { props: STAGE } = getImageProps({
+  src: '/hero/root-bark-scene.jpg',
+  alt: '',
+  fill: true,
+  sizes: '100vw',
+  loading: 'eager',
+  fetchPriority: 'high',
+  className: 'object-cover brightness-[0.85]',
+})
+
+/* A 1x1 transparent GIF. Inline, so selecting it costs no request at all. */
+const BLANK_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
 const TRUST_STRIP = [
   [FlaskIcon, 'Lab-tested', 'Every batch, before sale'],
@@ -108,96 +147,131 @@ export default async function Home() {
       />
 
       {/*
-        1 — Hero. Copy in seven columns, the root bark plate in five from `lg`; on a
-        phone the plate drops below the buttons so both CTAs land under a thumb first.
+        1 — Hero. Copy in seven columns, the film in a square plate in five from `lg`.
+
+        BELOW `lg` IT IS A DIFFERENT COMPOSITION: the scene goes full-bleed BEHIND the
+        copy (the still first, the film fading in over it once the page is idle) under
+        a dark gradient, and the copy sits in the gradient's dark foot in white. The
+        price list is desktop-only there; on a phone the root bark band below carries
+        every cut with its price.
       */}
       <section className="field-citron relative overflow-hidden border-b border-border">
-        <div className="shell grid gap-8 py-8 lg:grid-cols-12 lg:gap-8 lg:pt-6 lg:pb-8">
-          <div className={`hero-seq max-lg:text-center lg:col-span-7 font-[family-name:var(--font-hero)] ${heroFace.variable}`}>
-            <Image
-              src="/brand/logo.png"
-              alt={BRAND.name}
-              width={1180}
-              height={329}
-              priority
-              sizes="(max-width: 640px) 200px, 260px"
-              className="mx-auto h-16 w-auto sm:h-[4.5rem] lg:mx-0 lg:h-[4.5rem]"
-            />
+        <div className="relative isolate">
+          {/* Phone backdrop, back to front: the still, the film, the gradient. */}
+          <div aria-hidden className="absolute inset-0 -z-30 overflow-hidden bg-stone-950 lg:hidden">
+            <picture>
+              <source media="(width >= 64rem)" srcSet={BLANK_PIXEL} />
+              <img {...STAGE} alt="" />
+            </picture>
+          </div>
+          {/*
+            The film is 720x1280 with plain bands above and below the scene; scaled up
+            a little so the bands stay off screen and the scene fills the backdrop.
+          */}
+          <HeroVideo clips={HERO_FILM} className="scale-[1.3] lg:hidden" />
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 bg-linear-to-b from-stone-950/18 from-22% via-stone-950/74 via-62% to-stone-950/93 lg:hidden"
+          />
 
-            {/* The H1 carries the nouns people search, one per line. */}
-            <h1 className="mt-5 font-[family-name:var(--font-hero)] text-3xl font-semibold [font-stretch:82%] lg:mt-7 leading-[1.08] tracking-[-0.02em] text-balance text-foreground">
-              {['Mimosa hostilis root bark.', 'Sassafras root bark.', 'Sold for natural dyeing.'].map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </h1>
+          <div className="shell grid gap-8 py-8 max-lg:min-h-[min(32rem,calc(100svh-12rem))] max-lg:content-end lg:grid-cols-12 lg:items-center lg:gap-10 lg:pt-6 lg:pb-8">
+            <div className={`hero-seq max-lg:text-center lg:col-span-7 font-[family-name:var(--font-hero)] ${heroFace.variable}`}>
+              <Image
+                src="/brand/logo.png"
+                alt={BRAND.name}
+                width={1180}
+                height={329}
+                priority
+                sizes="(max-width: 640px) 200px, 260px"
+                className="mx-auto h-16 w-auto sm:h-[4.5rem] lg:mx-0 lg:h-[4.5rem] max-lg:drop-shadow-[0_6px_20px_rgb(0_0_0/0.6)]"
+              />
 
-            <p className="mt-4 flex items-center gap-3 text-base font-medium text-foreground max-lg:justify-center lg:mt-6 sm:text-lg">
-              <span aria-hidden className="h-px w-8 shrink-0 bg-accent max-lg:hidden" />
-              {BRAND.tagline}
-            </p>
+              {/* The H1 carries the nouns people search, one per line. */}
+              <h1 className="mt-5 font-[family-name:var(--font-hero)] text-3xl font-semibold [font-stretch:82%] lg:mt-7 leading-[1.08] tracking-[-0.02em] text-balance text-foreground max-lg:text-white max-lg:[text-shadow:0_1px_2px_rgb(0_0_0/0.5),0_2px_24px_rgb(0_0_0/0.55)]">
+                {['Mimosa hostilis root bark.', 'Sassafras root bark.', 'Sold for natural dyeing.'].map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </h1>
 
-            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-pretty text-foreground-muted lg:mx-0">
-              Mimosa hostilis root bark in powder, shredded and whole cuts, and cut
-              sassafras root bark, weighed out from a quarter pound to a full pound for
-              dyers, soap makers and craft workshops. Shipped from California to US
-              addresses; larger root bark orders go abroad on a quote.
-            </p>
+              <p className="mt-4 flex items-center gap-3 text-base font-medium text-foreground max-lg:justify-center max-lg:text-white max-lg:[text-shadow:0_1px_2px_rgb(0_0_0/0.5),0_2px_18px_rgb(0_0_0/0.5)] lg:mt-6 sm:text-lg">
+                <span aria-hidden className="h-px w-8 shrink-0 bg-accent max-lg:hidden" />
+                {BRAND.tagline}
+              </p>
 
-            <div className="mt-7 flex flex-col gap-3 max-md:mx-auto max-md:max-w-[20rem] md:flex-row md:flex-wrap md:justify-center lg:justify-start">
-              <a
-                href={url.category(FOCUS_CATEGORY)}
-                className="inline-flex min-h-12 items-center justify-center rounded-md bg-accent px-7 text-base font-medium text-on-accent shadow-md transition-[translate,box-shadow] duration-[180ms] ease-[var(--ease-standard)] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-              >
-                Shop root bark
-              </a>
-              <a
-                href={url.shop()}
-                className="inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-surface px-7 text-base font-medium text-foreground transition-colors duration-[180ms] hover:border-primary motion-reduce:transition-none"
-              >
-                Shop everything
-              </a>
+              <p className="mt-4 hidden max-w-xl text-base leading-relaxed text-pretty text-foreground-muted lg:block">
+                Mimosa hostilis root bark in powder, shredded and whole cuts, and cut
+                sassafras root bark, weighed out from a quarter pound to a full pound for
+                dyers, soap makers and craft workshops. Shipped from California to US
+                addresses; larger root bark orders go abroad on a quote.
+              </p>
+
+              <div className="mt-7 flex flex-col gap-3 max-md:mx-auto max-md:max-w-[20rem] md:flex-row md:flex-wrap md:justify-center lg:justify-start">
+                <a
+                  href={url.category(FOCUS_CATEGORY)}
+                  className="inline-flex min-h-12 items-center justify-center rounded-md bg-accent px-7 text-base font-medium text-on-accent shadow-md max-lg:focus-visible:outline-white! transition-[translate,box-shadow] duration-[180ms] ease-[var(--ease-standard)] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                >
+                  Shop root bark
+                </a>
+                <a
+                  href={url.shop()}
+                  className="inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-surface px-7 text-base font-medium text-foreground transition-colors duration-[180ms] hover:border-primary motion-reduce:transition-none max-lg:border-white/60! max-lg:bg-stone-950/30 max-lg:text-white max-lg:hover:border-white! max-lg:hover:bg-stone-950/50 max-lg:focus-visible:outline-white!"
+                >
+                  Shop everything
+                </a>
+              </div>
+
+              {/*
+                Every root bark listing with its live per-pound price, read from the
+                catalogue, so a price change or a new cut shows on the next build.
+              */}
+              {rootBark.length > 0 ? (
+                <div className="mt-8 hidden border-t border-border pt-4 lg:block">
+                  <p className="text-xs font-medium tracking-[0.18em] text-foreground-subtle uppercase">Root bark on the scale today</p>
+                  <ul className="mt-2 grid grid-cols-2 gap-x-8">
+                    {rootBark.map((p) => {
+                      const price = listPrice(p)
+                      return (
+                        <li key={p.slug} className="border-b border-border">
+                          <a
+                            href={url.product(p.slug)}
+                            className="group/cut flex min-h-11 items-baseline justify-between gap-3 py-2 text-sm text-foreground"
+                          >
+                            <span className="truncate underline decoration-transparent underline-offset-4 transition-colors group-hover/cut:decoration-accent">
+                              {p.name}
+                            </span>
+                            <span className="shrink-0 text-foreground-muted tabular-nums">
+                              {formatCents(price.cents)}
+                              {price.per === 'lb' ? ' / lb' : ''}
+                            </span>
+                          </a>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                  <p className="mt-3 text-sm text-foreground-muted">
+                    1/4, 1/3, 1/2 and 1 lb, each at one fixed price.{' '}
+                    <a href={url.bulk()} className="text-accent-fg underline underline-offset-4">Bulk quote</a>
+                  </p>
+                </div>
+              ) : null}
+            </div>
+
+            {/*
+              The square plate, desktop only: the still, with the film fading in over it.
+              A square crop of the 720x1280 film is exactly its scene, bands excluded.
+            */}
+            <div className="hidden lg:col-span-5 lg:block">
+              <figure className="hero-plate relative isolate aspect-square w-full overflow-hidden rounded-xl bg-surface-sunken shadow-xl ring-1 ring-border">
+                <picture>
+                  <source media="(width < 64rem)" srcSet={BLANK_PIXEL} />
+                  <img {...PLATE} alt={PLATE.alt} />
+                </picture>
+                <HeroVideo clips={HERO_FILM} media="(width >= 64rem)" className="hidden lg:block" />
+              </figure>
             </div>
           </div>
-
-          {/*
-            The plate: every root bark listing with its live per-pound price. Read from
-            the catalogue, so a price change or a new cut shows here on the next build
-            and a sold-out listing never lingers.
-          */}
-          {rootBark.length > 0 ? (
-            <div className="lg:col-span-5">
-              <div className="hero-plate h-full rounded-xl bg-surface p-5 shadow-xl ring-1 ring-border lg:p-7">
-                <p className="text-xs font-medium tracking-[0.18em] text-foreground-subtle uppercase">Root bark on the scale today</p>
-                <ul className="mt-4 divide-y divide-border">
-                  {rootBark.map((p) => {
-                    const price = listPrice(p)
-                    return (
-                      <li key={p.slug}>
-                        <a
-                          href={url.product(p.slug)}
-                          className="group/cut flex min-h-12 items-baseline justify-between gap-4 py-3 text-foreground"
-                        >
-                          <span className="text-base font-medium underline decoration-transparent underline-offset-4 transition-colors group-hover/cut:decoration-accent">
-                            {p.name}
-                          </span>
-                          <span className="shrink-0 text-sm text-foreground-muted tabular-nums">
-                            {formatCents(price.cents)}
-                            {price.per === 'lb' ? ' / lb' : ''}
-                          </span>
-                        </a>
-                      </li>
-                    )
-                  })}
-                </ul>
-                <p className="mt-4 text-sm leading-relaxed text-foreground-muted">
-                  Every cut comes in 1/4, 1/3, 1/2 and 1 lb, each at one fixed price. Need more?{' '}
-                  <a href={url.bulk()} className="text-accent-fg underline underline-offset-4">Ask for a bulk quote</a>.
-                </p>
-              </div>
-            </div>
-          ) : null}
         </div>
 
         <div className="relative border-t border-border bg-surface-sunken">

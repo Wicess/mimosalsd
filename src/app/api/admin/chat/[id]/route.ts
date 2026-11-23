@@ -34,6 +34,30 @@ import { BLOCKED_IPS_TAG } from '@/lib/security/blocked-ip-store'
 
 const PAGE = 100
 
+async function appStatus(visitorId: string | null) {
+  if (!visitorId) return { installed: null, platform: null, since: null }
+  const [install, pushFromApp] = await Promise.all([
+    db.visitorActivity.findFirst({
+      where: { visitorId, kind: 'APP_INSTALLED' },
+      orderBy: { createdAt: 'asc' },
+      select: { createdAt: true },
+    }),
+    db.pushSubscription.findFirst({
+      where: { visitorId, installed: true },
+      orderBy: { createdAt: 'desc' },
+      select: { platform: true, createdAt: true },
+    }),
+  ])
+  const since = [install?.createdAt, pushFromApp?.createdAt]
+    .filter((d): d is Date => Boolean(d))
+    .sort((a, b) => a.getTime() - b.getTime())[0]
+  return {
+    installed: Boolean(install || pushFromApp),
+    platform: pushFromApp?.platform ?? null,
+    since: since?.toISOString() ?? null,
+  }
+}
+
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const guard = await requireChatAdmin()
   if (!guard.ok) return guard.response
@@ -69,6 +93,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       : Promise.resolve([]),
     thread.lastIp ? db.blockedIp.findUnique({ where: { ip: thread.lastIp } }) : Promise.resolve(null),
   ])
+
+  /*
+   * Has this customer installed the app? First load only: it rarely changes, and a
+   * poll every few seconds should not ask twice more each time (the inbox keeps the
+   * answer it has). Either signal counts: the install itself, recorded against the
+   * visitor cookie, or notifications switched on from the installed app, which also
+   * says which kind of device it is on.
+   */
+  const app = sinceDate ? undefined : await appStatus(thread.visitorId)
 
   // Opening the conversation is reading it — and when nothing is unread there is
   // nothing to stamp, so a poll of a quiet thread writes nothing at all.
@@ -135,6 +168,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         online: isRecent(thread.customerLastSeenAt, ONLINE_WINDOW_MS),
         typing,
         typingText: typing ? thread.customerTypingText : null,
+        ...(app ? { app } : {}),
         orders: orders.map((o) => ({
           orderNumber: o.orderNumber,
           status: o.status,

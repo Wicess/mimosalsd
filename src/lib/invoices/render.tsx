@@ -61,7 +61,8 @@ function loadAssets() {
       readFile(join(FONT_DIR, 'Inter-SemiBold.ttf')),
       readFile(join(FONT_DIR, 'Inter-Bold.ttf')),
       readFile(join(FONT_DIR, 'SpaceGrotesk-Bold.ttf')),
-      readFile(join(process.cwd(), 'public/brand/logo-email.png')),
+      // Just the logo, cut out for white paper (scripts/invoice-logo.mjs), not the black plate.
+      readFile(join(process.cwd(), 'public/brand/logo-invoice.png')),
     ])
     return {
       fonts: [
@@ -140,7 +141,7 @@ export async function renderInvoicePng(d: InvoiceData): Promise<Buffer> {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Satori draws this into a PNG; next/image does not apply outside a page. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={logo} width={264} height={116} alt="" />
+            <img src={logo} width={330} height={85} alt="" />
             <span style={{ fontSize: 22, color: MUTED, marginTop: 10 }}>{`${BRAND.legalName} · mimosalsd.com`}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>

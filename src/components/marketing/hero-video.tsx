@@ -46,7 +46,21 @@ const CROSSFADE_MS = 1000
  * device for reduced motion never get the film at all (see the checks above), which
  * is the accessibility case the button used to cover.
  */
-export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
+export function HeroVideo({
+  clips,
+  media = '(width < 64rem)',
+  className = 'lg:hidden',
+}: {
+  clips: readonly HeroVideoClip[]
+  /**
+   * The screens this copy of the film plays on. The phone backdrop is the default;
+   * the desktop hero passes `(width >= 64rem)` for its square plate (2026-11-23), so
+   * each width fetches the film for the one place it is shown, never both.
+   */
+  media?: string
+  /** Matching visibility classes for the same widths, e.g. `hidden lg:block`. */
+  className?: string
+}) {
   const videos = useRef<Array<HTMLVideoElement | null>>([])
   // Mirrors `active` for event handlers, which would otherwise see a stale value.
   const activeRef = useRef(0)
@@ -64,7 +78,7 @@ export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
 
   // Whether to fetch at all, decided once the page has gone quiet.
   useEffect(() => {
-    const narrow = window.matchMedia('(width < 64rem)')
+    const narrow = window.matchMedia(media)
     const still = window.matchMedia('(prefers-reduced-motion: reduce)')
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
     if (!narrow.matches || still.matches || connection?.saveData) return
@@ -76,7 +90,7 @@ export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
     }
     const id = window.setTimeout(arm, 1500)
     return () => window.clearTimeout(id)
-  }, [])
+  }, [media])
 
   // Load each clip once it is allowed to fetch. Safari checks the `muted` ATTRIBUTE
   // before it will autoplay, and React only ever sets the property, so both are set
@@ -99,7 +113,7 @@ export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
     const first = videos.current[0]
     if (!armed || !first) return
 
-    const narrow = window.matchMedia('(width < 64rem)')
+    const narrow = window.matchMedia(media)
     const still = window.matchMedia('(prefers-reduced-motion: reduce)')
     let onScreen = true
 
@@ -133,7 +147,7 @@ export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
       still.removeEventListener('change', sync)
       for (const video of all) video?.pause()
     }
-  }, [armed])
+  }, [armed, media])
 
   // Once a fade has finished, the clip underneath is hidden and rewound for its next turn.
   useEffect(() => {
@@ -170,7 +184,8 @@ export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
         const visible = shown && (i === active || i === outgoing)
         return (
           <video
-            key={clip.sources[0]?.src ?? i}
+            // By position: the same clip may be listed twice, to fade its end into its start.
+            key={`${clip.sources[0]?.src ?? 'clip'}-${i}`}
             ref={(el) => {
               videos.current[i] = el
             }}
@@ -197,7 +212,7 @@ export function HeroVideo({ clips }: { clips: readonly HeroVideoClip[] }) {
             }}
             // The clip on screen sits above the one it is covering; both sit under the scrim.
             style={{ zIndex: i === active ? -19 : -20 }}
-            className={`absolute inset-0 size-full object-cover transition-opacity duration-1000 ease-[var(--ease-standard)] motion-reduce:transition-none lg:hidden ${
+            className={`absolute inset-0 size-full object-cover transition-opacity duration-1000 ease-[var(--ease-standard)] motion-reduce:transition-none ${className} ${
               visible ? 'opacity-100' : 'opacity-0'
             }`}
           >

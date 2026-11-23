@@ -229,7 +229,10 @@ export function ChatInbox({ initialThreadId = null }: { initialThreadId?: string
         const newest = data.messages.at(-1)?.createdAt
         if (newest && (!sinceRef.current || newest > sinceRef.current)) sinceRef.current = newest
 
-        setProfile(data.profile)
+        // The app status comes with the first load only; keep it across the polls after.
+        setProfile((prev) =>
+          data.profile.app || prev?.id !== data.profile.id ? data.profile : { ...data.profile, ...(prev.app ? { app: prev.app } : {}) },
+        )
         setMessages((prev) => mergeMessages(prev, data.messages, data.receipts, !incremental))
         // Opening a conversation reads it: its badge clears, and its row learns
         // what the thread poll just saw.

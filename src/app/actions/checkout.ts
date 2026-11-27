@@ -23,7 +23,8 @@ import { after } from 'next/server'
 import { ensureThread, messagesUrl, visitorId } from '@/lib/chat/core'
 import { linkOrderToChat, sendReceivedInvoice } from '@/lib/invoices/deliver'
 import { orderReceivedEmail } from '@/lib/mail/templates'
-import { alertLines, notify } from '@/lib/notify/ntfy'
+import { notify } from '@/lib/notify/ntfy'
+import { newOrderAlertBody } from '@/lib/orders/new-order-alert'
 import {
   generateOrderId,
   generateOrderNumber,
@@ -39,6 +40,7 @@ import {
 import { absoluteUrl, url } from '@/lib/seo/routes'
 import { formatCents } from '@/lib/utils'
 import { recordActivity } from '@/lib/visitors/record-activity'
+import { fixFieldsMessage, validateCheckoutFields } from '@/lib/forms/fields'
 
 /**
  * Checkout submission.
@@ -48,8 +50,9 @@ import { recordActivity } from '@/lib/visitors/record-activity'
  * of the manual-payment model, and it should be spent on conversion, not squandered.
  */
 const checkoutSchema = z.object({
-  email: z.string().email('Enter a valid email address.').max(200),
-  phone: z.string().min(7, 'Enter a phone number we can reach you on.').max(30),
+  // Checked first by validateCheckoutFields (lib/forms/fields.ts); kept here as the type.
+  email: z.string().trim().email('Enter a valid email address, like name@example.com.').max(200),
+  phone: z.string().trim().min(10, 'Enter a 10-digit US phone number, like (555) 123-4567.').max(30),
   firstName: z.string().min(1, 'Enter your first name.').max(80),
   lastName: z.string().min(1, 'Enter your last name.').max(80),
   addressLine1: z.string().min(3, 'Enter your street address.').max(200),
@@ -126,6 +129,31 @@ export async function submitOrder(
   // The enforcement point: decide eligibility on the live rules, not the seed.
   await ensureLiveStateRules()
   const raw = Object.fromEntries(formData.entries())
+
+  /*
+    The same field rules the form runs before it submits (lib/forms/fields.ts), so a
+    request that skipped the browser is refused with the same words. The intended-use
+    box depends on the cart and is checked below, once the cart is known.
+  */
+  const str = (k: string) => (typeof raw[k] === 'string' ? (raw[k] as string) : '')
+  const fieldErrors = validateCheckoutFields(
+    {
+      email: str('email'),
+      phone: str('phone'),
+      firstName: str('firstName'),
+      lastName: str('lastName'),
+      addressLine1: str('addressLine1'),
+      city: str('city'),
+      stateCode: str('stateCode'),
+      postalCode: str('postalCode'),
+      intendedUseConfirmed: str('intendedUseConfirmed'),
+    },
+    { requiresIntendedUse: false },
+  )
+  if (Object.keys(fieldErrors).length > 0) {
+    return { errors: fieldErrors, formError: fixFieldsMessage(Object.keys(fieldErrors).length) }
+  }
+
   const parsed = checkoutSchema.safeParse(raw)
 
   if (!parsed.success) {
@@ -176,7 +204,7 @@ export async function submitOrder(
     return {
       errors: {
         intendedUseConfirmed:
-          'Please confirm the intended use of the botanical material in your order.',
+          'Tick the box to confirm the intended use of the botanical material in your order.',
       },
     }
   }
@@ -440,14 +468,7 @@ export async function submitOrder(
     notify({
       topic: 'orders-new',
       title: `New order ${orderNumber}, ${formatCents(placedOrder.totalCents)}`,
-      body: alertLines([
-        ['Customer', `${placedOrder.firstName} ${placedOrder.lastName}`],
-        ['Ships to', `${placedOrder.city}, ${jurisdiction.name}`],
-        ['Pays by', PAYMENT_LABELS[placedOrder.preferredPaymentMethod]],
-        ['Items', placedOrder.items.map((i) => `${i.quantity} x ${i.productName} (${i.variantName})`).join('; ')],
-        ['Total', formatCents(placedOrder.totalCents)],
-        ['Email', placedOrder.email],
-      ]),
+      body: newOrderAlertBody(placedOrder, jurisdiction.name),
       tags: ['shopping_cart', 'order'],
       clickUrl: absoluteUrl(`/admin/orders/${orderNumber}/payment`),
       actions: [

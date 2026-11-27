@@ -1,3 +1,4 @@
+import { BRAND } from '@/lib/brand'
 import type { Order } from '@/lib/orders/types'
 import { PAYMENT_LABELS } from '@/lib/orders/types'
 import type { PaymentInstructions } from '@/lib/payments/instructions'
@@ -22,11 +23,25 @@ export interface InvoiceLine {
   readonly lineCents: number
 }
 
+/**
+ * How the customer hears from us after ordering. One sentence, shared by the invoice
+ * image, the chat message and the order email, so the three cannot drift apart.
+ */
+export const CONTACT_PROMISE = `Your order will be verified and you will be contacted in the ${BRAND.name} app, or by SMS and email if you are not online.`
+
+/** A ten-digit US number as (555) 123-4567; anything else exactly as it was typed. */
+export function formatPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, '')
+  const national = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits
+  return national.length === 10 ? `(${national.slice(0, 3)}) ${national.slice(3, 6)}-${national.slice(6)}` : phone.trim()
+}
+
 export interface InvoiceData {
   readonly stage: InvoiceStage
   readonly orderId: string
   readonly issuedAt: string
   readonly customerName: string
+  readonly customerPhone: string
   readonly shipTo: readonly string[]
   readonly lines: readonly InvoiceLine[]
   readonly subtotalCents: number
@@ -54,6 +69,7 @@ export function invoiceDataFromOrder(
     orderId: order.orderNumber,
     issuedAt: options.issuedAt ?? new Date().toISOString(),
     customerName: `${order.firstName} ${order.lastName}`.trim(),
+    customerPhone: formatPhone(order.phone),
     shipTo: [
       order.addressLine1,
       ...(order.addressLine2 ? [order.addressLine2] : []),

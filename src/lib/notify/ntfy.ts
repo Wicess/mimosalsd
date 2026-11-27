@@ -36,8 +36,8 @@ export type NtfyTopic =
   chat, the contact form and the bulk-quote form, which all land in the one inbox.
 
   NTFY_TOPIC_ORDERS carries everything else: new orders, payment claims, proofs and
-  confirmations, newsletter sign-ups, and the operational alarms — site errors,
-  failed admin sign-ins and state-rule changes. The owner moved those alarms off the
+  confirmations, and the operational alarms — site errors
+  and state-rule changes. Admin sign-ins and email sign-ups push nothing. The owner moved those alarms off the
   chat topic so a ringing chat topic always means a customer is waiting.
 
   The env names predate the split and are kept, because renaming them would silence

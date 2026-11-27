@@ -1,20 +1,42 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useEffect, useRef, useState } from 'react'
 import { submitContact, type ContactState } from '@/app/actions/contact'
 import { Button } from '@/components/ui/button'
 import { CONTACT_TOPICS, type ContactTopic } from '@/lib/mail/templates'
 import { useCompanyEmail } from '@/components/site/company-email'
+import {
+  CONTACT_FIELD_ORDER,
+  fixFieldsMessage,
+  formValues,
+  validateContactFields,
+  type FieldErrors,
+} from '@/lib/forms/fields'
 
 const TOPIC_KEYS = ['order', 'bulk', 'general'] as const
 
 const FIELD =
-  'mt-1 block w-full min-h-11 rounded-md border border-border-strong bg-surface px-3 py-2 text-base text-foreground placeholder:text-foreground-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40'
+  'mt-1 block w-full min-h-11 rounded-md border border-border-strong bg-surface px-3 py-2 text-base text-foreground placeholder:text-foreground-subtle focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40 aria-invalid:border-danger-fg aria-invalid:ring-1 aria-invalid:ring-danger-fg'
+
+/** The `name` of the field an event came from, if it came from one. */
+function fieldName(target: EventTarget): string | null {
+  return target instanceof HTMLElement ? target.getAttribute('name') : null
+}
+
+/** A field's message, tied to the input for screen readers. */
+function FieldError({ id, message }: { id: string; message: string | undefined }) {
+  if (!message) return null
+  return (
+    <p id={`${id}-error`} role="alert" className="mt-1 text-sm text-danger-fg">
+      {message}
+    </p>
+  )
+}
 
 /**
  * The contact form.
  *
- * Six visible fields, and the order number only appears when the topic makes it
+ * Seven visible fields, and the order number only appears when the topic makes it
  * relevant — asking every sender for an order number they may not have is how a
  * form teaches people to skip it on the one occasion it matters.
  *
@@ -30,6 +52,69 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
   const [state, action, pending] = useActionState<ContactState, FormData>(submitContact, {})
   const [topic, setTopic] = useState<ContactTopic>(defaultTopic)
   const email = useCompanyEmail()
+
+  /*
+    Nothing is sent until name, email, phone and message are right (owner, 2026-11-23).
+    The same rules as the server (lib/forms/fields.ts) run on submit; a failing field
+    shows what to do, the cursor goes to the first, and each message clears as that
+    field is edited. After a first attempt, leaving a field re-checks it.
+  */
+  const formRef = useRef<HTMLFormElement>(null)
+  const [clientErrors, setClientErrors] = useState<FieldErrors>({})
+  const [edited, setEdited] = useState<ReadonlySet<string>>(new Set())
+  const [attempted, setAttempted] = useState(false)
+  const errors: FieldErrors = {
+    ...Object.fromEntries(Object.entries(state.errors ?? {}).filter(([k]) => !edited.has(k))),
+    ...clientErrors,
+  }
+  const errorCount = Object.keys(errors).length
+  const invalid = (id: string) =>
+    ({ 'aria-invalid': Boolean(errors[id]) || undefined, 'aria-describedby': errors[id] ? `contact-${id}-error` : undefined }) as const
+
+  const checkAll = (form: HTMLFormElement) => validateContactFields(formValues(form, CONTACT_FIELD_ORDER))
+  const focusFirst = (found: FieldErrors) => {
+    const first = CONTACT_FIELD_ORDER.find((name) => found[name])
+    if (first) document.getElementById(`contact-${first}`)?.focus()
+  }
+
+  // A refusal from the server lands on its first field, as one from here does.
+  useEffect(() => {
+    if (state.errors) focusFirst(state.errors)
+  }, [state])
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const found = checkAll(event.currentTarget)
+    setAttempted(true)
+    setEdited(new Set())
+    setClientErrors(found)
+    if (Object.keys(found).length > 0) {
+      event.preventDefault()
+      focusFirst(found)
+    }
+  }
+  const onEdit = (event: React.FormEvent<HTMLFormElement>) => {
+    const name = fieldName(event.target)
+    if (!name) return
+    setEdited((prev) => (prev.has(name) ? prev : new Set(prev).add(name)))
+    setClientErrors((prev) => {
+      if (!(name in prev)) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+  }
+  const onLeave = (event: React.FocusEvent<HTMLFormElement>) => {
+    const name = fieldName(event.target)
+    if (!attempted || !name || !formRef.current) return
+    const message = checkAll(formRef.current)[name]
+    setClientErrors((prev) => {
+      if (message) return prev[name] === message ? prev : { ...prev, [name]: message }
+      if (!(name in prev)) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+  }
 
   // Rendered straight from the action's result. Mirroring it into local state via
   // an effect would be a second source of truth for a boolean we already have.
@@ -53,11 +138,35 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
   }
 
   return (
-    <form action={action} className="rounded-xl border border-border bg-surface p-5 md:p-6">
+    <form
+      ref={formRef}
+      action={action}
+      onSubmit={onSubmit}
+      onChange={onEdit}
+      onBlur={onLeave}
+      noValidate
+      className="rounded-xl border border-border bg-surface p-5 md:p-6"
+    >
       <h2 className="font-display text-xl text-foreground">Send us a message</h2>
       <p className="mt-1 text-sm text-foreground-muted">
-        The form and the email address beside it land in the same inbox.
+        The form and the email address beside it land in the same inbox. Every field is
+        required unless it says otherwise.
       </p>
+
+      {errorCount > 0 ? (
+        <div role="alert" className="mt-4 rounded-lg bg-danger-bg p-4 text-sm text-danger-fg">
+          <p className="font-medium">{fixFieldsMessage(errorCount)}</p>
+          <ul className="mt-1.5 list-disc space-y-0.5 pl-4">
+            {CONTACT_FIELD_ORDER.filter((name) => errors[name]).map((name) => (
+              <li key={name}>
+                <a href={`#contact-${name}`} className="underline underline-offset-2">
+                  {errors[name]}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-4 md:grid-cols-2">
         <div>
@@ -70,8 +179,10 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
             required
             autoComplete="name"
             maxLength={120}
+            {...invalid('name')}
             className={FIELD}
           />
+          <FieldError id="contact-name" message={errors.name} />
         </div>
 
         <div>
@@ -84,9 +195,39 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
             type="email"
             required
             autoComplete="email"
+            inputMode="email"
             maxLength={200}
+            {...invalid('email')}
             className={FIELD}
           />
+          <FieldError id="contact-email" message={errors.email} />
+        </div>
+
+        <div className="md:col-span-2">
+          <label htmlFor="contact-phone" className="block text-sm font-medium text-foreground">
+            Phone
+          </label>
+          <input
+            id="contact-phone"
+            name="phone"
+            type="tel"
+            required
+            autoComplete="tel"
+            inputMode="tel"
+            maxLength={30}
+            placeholder="(555) 123-4567"
+            {...invalid('phone')}
+            aria-describedby={errors.phone ? 'contact-phone-error' : 'contact-phone-hint'}
+            className={FIELD}
+          />
+          {errors.phone ? (
+            <FieldError id="contact-phone" message={errors.phone} />
+          ) : (
+            <p id="contact-phone-hint" className="mt-1 text-xs text-foreground-subtle">
+              With the area code, and the country code if you are outside the US. We call
+              only if email does not reach you.
+            </p>
+          )}
         </div>
       </div>
 
@@ -159,8 +300,10 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
           rows={6}
           minLength={10}
           maxLength={4000}
+          {...invalid('message')}
           className={`${FIELD} resize-y`}
         />
+        <FieldError id="contact-message" message={errors.message} />
       </div>
 
       {/*
@@ -173,11 +316,11 @@ export function ContactForm({ defaultTopic = 'general' }: { defaultTopic?: Conta
         <input id="contact-company" name="company" tabIndex={-1} autoComplete="off" />
       </div>
 
-      {state.error && (
+      {state.error && errorCount === 0 ? (
         <p role="alert" className="mt-4 text-sm text-danger-fg">
           {state.error}
         </p>
-      )}
+      ) : null}
 
       <div className="mt-5">
         <Button type="submit" variant="accent" size="lg" loading={pending}>

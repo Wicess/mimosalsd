@@ -1,8 +1,6 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 import { db } from '@/lib/db/client'
-import { alertLines, notify } from '@/lib/notify/ntfy'
-import { absoluteUrl } from '@/lib/seo/routes'
 import { isVisitorId, VISITOR_COOKIE } from '@/lib/visitors/cookie'
 import { recordActivity } from '@/lib/visitors/record-activity'
 
@@ -155,20 +153,6 @@ export async function decideWelcome({
 /** After the order is saved: join the list from checkout, the same way the sign-up form does. */
 export async function joinListFromCheckout(email: string): Promise<void> {
   const address = email.trim().toLowerCase()
-  const existing = await db.newsletterSubscriber.findUnique({ where: { email: address }, select: { id: true } })
   await db.newsletterSubscriber.upsert({ where: { email: address }, update: {}, create: { email: address, source: 'checkout' } })
   await recordActivity('SUBSCRIBED', { path: '/checkout', detail: address })
-  if (!existing) {
-    await notify({
-      topic: 'signups',
-      title: 'New subscriber',
-      body: alertLines([
-        ['Email', address],
-        ['Signed up from', 'checkout, with their order'],
-      ]),
-      tags: ['incoming_envelope', 'newsletter'],
-      clickUrl: absoluteUrl('/admin/newsletter'),
-      actions: [{ label: 'Open subscribers', url: absoluteUrl('/admin/newsletter') }],
-    })
-  }
 }

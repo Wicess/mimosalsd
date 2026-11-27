@@ -14,6 +14,7 @@ import { PromptCard } from '@/components/pwa/prompt-card'
 import { enablePushNotifications, preparePush, syncPushSubscription, usePushStatus } from '@/components/pwa/push-client'
 import { BRAND } from '@/lib/brand'
 import { APP_DISCOUNT_PERCENT, SUBSCRIBER_DISCOUNT_PERCENT } from '@/lib/orders/coupons'
+import { isQuietPath } from './quiet-paths'
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -38,7 +39,6 @@ import { APP_DISCOUNT_PERCENT, SUBSCRIBER_DISCOUNT_PERCENT } from '@/lib/orders/
  */
 
 export const REPEAT_MS = 10_000
-const QUIET_PATHS = ['/checkout', '/cart', '/order', '/offline', '/account']
 
 type Stage = 'newsletter' | 'install' | 'notifications'
 
@@ -61,7 +61,7 @@ export function EngagementPrompts() {
   const [attempt, setAttempt] = useState(0)
   const [bot] = useState(() => isLikelyBot(navigator.userAgent))
 
-  const quiet = bot || QUIET_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))
+  const quiet = bot || isQuietPath(pathname)
   const canInstall = install.ready && !install.installed && install.method !== 'none'
   const canNotify = push === 'default'
 

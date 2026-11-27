@@ -7,7 +7,7 @@ import sharp from 'sharp'
 import { BRAND } from '@/lib/brand'
 import { formatCents } from '@/lib/utils'
 import { formatUtc } from '@/lib/payments/instructions'
-import type { InvoiceData } from './data'
+import { CONTACT_PROMISE, type InvoiceData } from './data'
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -87,7 +87,7 @@ function estimateHeight(d: InvoiceData): number {
   let h = PAD * 2 + 12
   h += 260 // header: logo, title, Order ID, date
   h += 60 + lines(bannerText(d), 26, INNER - 64) * 38 // status banner
-  h += 70 + d.shipTo.length * 36 + 40 // bill to
+  h += 70 + (d.shipTo.length + 1) * 36 + 40 // bill to, with the phone
   h += 64 // table header
   for (const line of d.lines) h += 40 + lines(`${line.name} ${line.variant}`, 26, 560) * 38
   h += 8 * 50 + 90 // totals: up to subtotal, shipping, coupon, subscriber, app, Bitcoin, total, and the method line
@@ -108,7 +108,7 @@ function estimateHeight(d: InvoiceData): number {
 
 function bannerText(d: InvoiceData): string {
   return d.stage === 'RECEIVED'
-    ? `Thank you, ${d.customerName}. We have your order and are verifying it now. Your ${d.methodLabel} payment details will arrive in the chat on our site and by email.`
+    ? `Thank you, ${d.customerName}. We have your order. ${CONTACT_PROMISE}`
     : `Your order is verified. Pay ${formatCents(d.totalCents)} by ${d.methodLabel} using the details below.`
 }
 
@@ -173,6 +173,9 @@ export async function renderInvoicePng(d: InvoiceData): Promise<Buffer> {
           {d.shipTo.map((line) => (
             <span key={line} style={{ fontSize: 25, color: MUTED, marginTop: 4 }}>{line}</span>
           ))}
+          {d.customerPhone ? (
+            <span style={{ fontSize: 25, fontWeight: 600, marginTop: 8 }}>{`Phone ${d.customerPhone}`}</span>
+          ) : null}
         </div>
 
         {/* Items */}

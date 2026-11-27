@@ -1,7 +1,7 @@
 'use client'
 
 import { meetsMinimumOrder, minimumOrderMessage } from '@/lib/orders/minimum-order'
-import { useActionState, useState, useSyncExternalStore, useTransition } from 'react'
+import { useActionState, useEffect, useRef, useState, useSyncExternalStore, useTransition } from 'react'
 import { PaymentMark } from '@/components/commerce/payment-mark'
 import {
   previewCoupon,
@@ -23,6 +23,13 @@ import { formatCents } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { AlertIcon } from '@/components/ui/icon'
 import { Select } from '@/components/ui/select'
+import {
+  CHECKOUT_FIELD_ORDER,
+  fixFieldsMessage,
+  formValues,
+  validateCheckoutFields,
+  type FieldErrors,
+} from '@/lib/forms/fields'
 
 const INITIAL: CheckoutState = {}
 
@@ -59,7 +66,11 @@ function Field({
         {label}
       </label>
       {children}
-      {hint && !error && <p className="mt-1 text-xs text-foreground-muted">{hint}</p>}
+      {hint && !error && (
+        <p id={`${id}-hint`} className="mt-1 text-xs text-foreground-muted">
+          {hint}
+        </p>
+      )}
       {error && (
         <p id={`${id}-error`} role="alert" className="mt-1 text-sm text-danger-fg">
           {error}
@@ -70,7 +81,20 @@ function Field({
 }
 
 const inputClass =
-  'mt-1 min-h-11 w-full rounded-md border border-border-strong bg-surface px-3 text-base text-foreground'
+  'mt-1 min-h-11 w-full rounded-md border border-border-strong bg-surface px-3 text-base text-foreground aria-invalid:border-danger-fg aria-invalid:ring-1 aria-invalid:ring-danger-fg'
+
+/** The `name` of the field an event came from, if it came from one. */
+function fieldName(target: EventTarget): string | null {
+  return target instanceof HTMLElement ? target.getAttribute('name') : null
+}
+
+/** Ties an input to its error (or its hint) for screen readers, and marks it invalid. */
+function describe(id: string, errors: FieldErrors, hasHint = false) {
+  return {
+    'aria-invalid': Boolean(errors[id]) || undefined,
+    'aria-describedby': errors[id] ? `${id}-error` : hasHint ? `${id}-hint` : undefined,
+  } as const
+}
 
 /**
  * Checkout.
@@ -105,7 +129,81 @@ export function CheckoutForm({
   welcome: CheckoutWelcome
 }) {
   const [state, formAction, pending] = useActionState(submitOrder, INITIAL)
-  const errors = state.errors ?? {}
+
+  /*
+    THE FORM DOES NOT SUBMIT UNTIL EVERY REQUIRED FIELD IS RIGHT (owner, 2026-11-23).
+
+    On submit the same rules the server applies (lib/forms/fields.ts) run here first.
+    If any field fails, nothing is sent: each field shows what to do, a summary at the
+    top counts them, and the cursor goes to the first. A field's message clears as
+    soon as it is edited, and once a submit has been tried, leaving a field re-checks
+    it, so the customer sees it come right without pressing the button again.
+
+    Server errors (a request that got past this, or a rule only the server knows,
+    like the cart's intended-use requirement) show the same way, and clear the same way.
+  */
+  const formRef = useRef<HTMLFormElement>(null)
+  const [clientErrors, setClientErrors] = useState<FieldErrors>({})
+  const [edited, setEdited] = useState<ReadonlySet<string>>(new Set())
+  const [attempted, setAttempted] = useState(false)
+  const serverErrors = Object.fromEntries(Object.entries(state.errors ?? {}).filter(([k]) => !edited.has(k)))
+  const errors: FieldErrors = { ...serverErrors, ...clientErrors }
+  const errorCount = Object.keys(errors).length
+
+  const checkAll = (form: HTMLFormElement) =>
+    validateCheckoutFields(formValues(form, CHECKOUT_FIELD_ORDER), { requiresIntendedUse })
+
+  const focusFirst = (found: FieldErrors) => {
+    const first = CHECKOUT_FIELD_ORDER.find((name) => found[name])
+    if (!first) return
+    const el = document.getElementById(first)
+    el?.focus()
+    el?.scrollIntoView({ block: 'center' })
+  }
+
+  // A refusal from the server lands on its first field, as a refusal here does.
+  // (The edited set was reset when the form was submitted, so its messages all show.)
+  useEffect(() => {
+    if (state.errors) focusFirst(state.errors)
+  }, [state])
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const found = checkAll(event.currentTarget)
+    setAttempted(true)
+    setEdited(new Set())
+    setClientErrors(found)
+    if (Object.keys(found).length > 0) {
+      event.preventDefault()
+      focusFirst(found)
+    }
+  }
+
+  // Editing a field clears its message; the next check decides whether it comes back.
+  const onEdit = (event: React.FormEvent<HTMLFormElement>) => {
+    const name = fieldName(event.target)
+    if (!name) return
+    setEdited((prev) => (prev.has(name) ? prev : new Set(prev).add(name)))
+    setClientErrors((prev) => {
+      if (!(name in prev)) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+  }
+
+  // After a first attempt, leaving a field checks it again straight away.
+  const onLeave = (event: React.FocusEvent<HTMLFormElement>) => {
+    const name = fieldName(event.target)
+    if (!attempted || !name || !formRef.current) return
+    const message = checkAll(formRef.current)[name]
+    setClientErrors((prev) => {
+      if (message) return prev[name] === message ? prev : { ...prev, [name]: message }
+      if (!(name in prev)) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+  }
   /*
     Tracked so the saving can be shown the moment Bitcoin is picked rather than after
     submission. The server recomputes it from the same function — this is a preview,
@@ -162,15 +260,43 @@ export function CheckoutForm({
     preview.couponDiscountCents + preview.subscriberDiscountCents + preview.appDiscountCents + preview.paymentDiscountCents > 0
 
   return (
-    <form action={formAction} className="space-y-8" noValidate>
-      {state.formError && (
+    <form
+      ref={formRef}
+      action={formAction}
+      onSubmit={onSubmit}
+      onChange={onEdit}
+      onBlur={onLeave}
+      className="space-y-8"
+      noValidate
+    >
+      {errorCount > 0 ? (
+        <div role="alert" className="rounded-lg bg-danger-bg p-4 text-danger-fg">
+          <div className="flex gap-3">
+            <AlertIcon className="mt-0.5 size-5 shrink-0" />
+            <div className="text-sm">
+              <p className="font-medium">{fixFieldsMessage(errorCount)}</p>
+              <ul className="mt-1.5 list-disc space-y-0.5 pl-4">
+                {CHECKOUT_FIELD_ORDER.filter((name) => errors[name]).map((name) => (
+                  <li key={name}>
+                    <a href={`#${name}`} className="underline underline-offset-2">
+                      {errors[name]}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ) : state.formError ? (
         <div role="alert" className="rounded-lg bg-danger-bg p-4 text-danger-fg">
           <div className="flex gap-3">
             <AlertIcon className="mt-0.5 size-5" />
             <p className="text-sm">{state.formError}</p>
           </div>
         </div>
-      )}
+      ) : null}
+
+      <p className="text-sm text-foreground-muted">Every field is required unless it says optional.</p>
 
       <fieldset>
         <legend className="font-display text-xl text-foreground">1. Contact</legend>
@@ -178,7 +304,7 @@ export function CheckoutForm({
           We use this to send your payment instructions and tracking.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <Field id="email" label="Email" error={errors.email}>
+          <Field id="email" label="Email" error={errors.email} hint="Your payment details and tracking are sent here.">
             <input
               id="email"
               name="email"
@@ -186,14 +312,14 @@ export function CheckoutForm({
               required
               autoComplete="email"
               inputMode="email"
+              maxLength={200}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? 'email-error' : undefined}
+              {...describe('email', errors, true)}
               className={inputClass}
             />
           </Field>
-          <Field id="phone" label="Phone" error={errors.phone}>
+          <Field id="phone" label="Phone" error={errors.phone} hint="10-digit US number. Used only about this order.">
             <input
               id="phone"
               name="phone"
@@ -201,7 +327,9 @@ export function CheckoutForm({
               required
               autoComplete="tel"
               inputMode="tel"
-              aria-invalid={Boolean(errors.phone)}
+              maxLength={30}
+              placeholder="(555) 123-4567"
+              {...describe('phone', errors, true)}
               className={inputClass}
             />
           </Field>
@@ -242,10 +370,10 @@ export function CheckoutForm({
         <legend className="font-display text-xl text-foreground">2. Delivery</legend>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <Field id="firstName" label="First name" error={errors.firstName}>
-            <input id="firstName" name="firstName" required autoComplete="given-name" className={inputClass} />
+            <input id="firstName" name="firstName" required autoComplete="given-name" maxLength={80} {...describe('firstName', errors)} className={inputClass} />
           </Field>
           <Field id="lastName" label="Last name" error={errors.lastName}>
-            <input id="lastName" name="lastName" required autoComplete="family-name" className={inputClass} />
+            <input id="lastName" name="lastName" required autoComplete="family-name" maxLength={80} {...describe('lastName', errors)} className={inputClass} />
           </Field>
           <div className="sm:col-span-2">
             <Field id="addressLine1" label="Street address" error={errors.addressLine1}>
@@ -254,6 +382,8 @@ export function CheckoutForm({
                 name="addressLine1"
                 required
                 autoComplete="address-line1"
+                maxLength={200}
+                {...describe('addressLine1', errors)}
                 className={inputClass}
               />
             </Field>
@@ -264,7 +394,7 @@ export function CheckoutForm({
             </Field>
           </div>
           <Field id="city" label="City" error={errors.city}>
-            <input id="city" name="city" required autoComplete="address-level2" className={inputClass} />
+            <input id="city" name="city" required autoComplete="address-level2" maxLength={120} {...describe('city', errors)} className={inputClass} />
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field id="stateCode" label="State" error={errors.stateCode}>
@@ -276,6 +406,17 @@ export function CheckoutForm({
                 placeholder="Choose…"
                 options={JURISDICTIONS.map((j) => ({ value: j.code, label: j.name }))}
                 invalid={Boolean(errors.stateCode)}
+                describedBy="stateCode-error"
+                // A custom control fires no native change event, so it clears its own message.
+                onChange={() => {
+                  setEdited((prev) => new Set(prev).add('stateCode'))
+                  setClientErrors((prev) => {
+                    if (!('stateCode' in prev)) return prev
+                    const next = { ...prev }
+                    delete next.stateCode
+                    return next
+                  })
+                }}
                 className="mt-0"
               />
             </Field>
@@ -286,6 +427,8 @@ export function CheckoutForm({
                 required
                 inputMode="numeric"
                 autoComplete="postal-code"
+                maxLength={10}
+                {...describe('postalCode', errors)}
                 className={inputClass}
               />
             </Field>
@@ -477,15 +620,19 @@ export function CheckoutForm({
           */}
           <label className="flex cursor-pointer gap-3 text-sm text-foreground">
             <input
+              id="intendedUseConfirmed"
               type="checkbox"
               name="intendedUseConfirmed"
               required
+              {...describe('intendedUseConfirmed', errors)}
               className="mt-1 size-4 shrink-0 accent-[var(--primary)]"
             />
             <span>{INTENDED_USE_ATTESTATION}</span>
           </label>
           {errors.intendedUseConfirmed && (
-            <p role="alert" className="mt-2 text-sm text-danger-fg">{errors.intendedUseConfirmed}</p>
+            <p id="intendedUseConfirmed-error" role="alert" className="mt-2 text-sm text-danger-fg">
+              {errors.intendedUseConfirmed}
+            </p>
           )}
         </fieldset>
       )}

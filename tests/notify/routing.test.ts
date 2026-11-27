@@ -15,7 +15,7 @@ describe('which phone topic each notification rings', () => {
     ['orders-new', 'NTFY_TOPIC_ORDERS'],
     ['orders-paid', 'NTFY_TOPIC_ORDERS'],
     ['signups', 'NTFY_TOPIC_ORDERS'],
-    ['errors', 'NTFY_TOPIC_ORDERS'], // site errors, failed admin sign-ins, state-rule changes
+    ['errors', 'NTFY_TOPIC_ORDERS'], // site errors, state-rule changes
     ['stock-low', 'NTFY_TOPIC_ORDERS'],
   ])('%s → %s', (topic, env) => {
     expect(TOPIC_ENV[topic]).toBe(env)

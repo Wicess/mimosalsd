@@ -14,8 +14,9 @@ import {
   type ContactTopic,
 } from '@/lib/mail/templates'
 import { reportError } from '@/lib/observability/report-error'
+import { fixFieldsMessage, validateContactFields, type FieldErrors } from '@/lib/forms/fields'
 
-export type ContactState = { ok?: boolean; error?: string }
+export type ContactState = { ok?: boolean; error?: string; errors?: FieldErrors }
 
 /**
  * Contact enquiry.
@@ -40,7 +41,9 @@ export type ContactState = { ok?: boolean; error?: string }
  */
 const schema = z.object({
   name: z.string().trim().min(2, 'Tell us your name.').max(120),
-  email: z.string().trim().email('Enter a valid email address.').max(200),
+  email: z.string().trim().email('Enter a valid email address, like name@example.com.').max(200),
+  // Owner, 2026-11-23: required. Checked first by validateContactFields (lib/forms/fields.ts).
+  phone: z.string().trim().min(7, 'Enter your phone number.').max(30),
   topic: z.enum(['order', 'bulk', 'general']),
   orderNumber: z.string().trim().max(40).optional().or(z.literal('')),
   message: z.string().trim().min(10, 'Say a little more so we can answer properly.').max(4000),
@@ -57,9 +60,24 @@ export async function submitContact(
   _previous: ContactState,
   formData: FormData,
 ): Promise<ContactState> {
+  // The form runs these same rules before it submits; a request that skipped it gets
+  // the same field-by-field answer. The honeypot is checked first and stays silent.
+  if (String(formData.get('company') ?? '').length > 0) return { ok: true }
+  const field = (k: string) => String(formData.get(k) ?? '')
+  const fieldErrors = validateContactFields({
+    name: field('name'),
+    email: field('email'),
+    phone: field('phone'),
+    message: field('message'),
+  })
+  if (Object.keys(fieldErrors).length > 0) {
+    return { errors: fieldErrors, error: fixFieldsMessage(Object.keys(fieldErrors).length) }
+  }
+
   const parsed = schema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
+    phone: formData.get('phone'),
     topic: formData.get('topic'),
     orderNumber: formData.get('orderNumber') ?? '',
     message: formData.get('message'),
@@ -76,7 +94,7 @@ export async function submitContact(
     return { error: parsed.error.issues[0]?.message ?? 'Could not send that message.' }
   }
 
-  const { name, email, topic, message } = parsed.data
+  const { name, email, phone, topic, message } = parsed.data
   const orderNumber = parsed.data.orderNumber || undefined
   const routed = CONTACT_TOPICS[topic as ContactTopic]
 
@@ -100,7 +118,8 @@ export async function submitContact(
       email,
       name,
       subject,
-      body: orderNumber ? `Order ID ${orderNumber}\n\n${message}` : message,
+      // The phone number has no column on a thread, so it heads the message itself.
+      body: [`Phone: ${phone}`, ...(orderNumber ? [`Order ID ${orderNumber}`] : []), '', message].join('\n'),
       ip,
     })
     threadId = thread.id
@@ -129,6 +148,7 @@ export async function submitContact(
     body: alertLines([
       ['', message.slice(0, 400)],
       ['Email', email],
+      ['Phone', phone],
       ['Order', orderNumber ?? null],
       ['Take care', flags.matches.length > 0 ? `mentions ${flags.matches.map((m) => m.term).join(', ')}; answer without a health claim` : null],
     ]),
@@ -137,7 +157,7 @@ export async function submitContact(
     actions: [{ label: 'Open chat and reply', url: absoluteUrl(messagesUrl(threadId)) }],
   })
 
-  const enquiry = { name, email, topic: topic as ContactTopic, message, ...(orderNumber ? { orderNumber } : {}) }
+  const enquiry = { name, email, phone, topic: topic as ContactTopic, message, ...(orderNumber ? { orderNumber } : {}) }
   const mail = getMailProvider()
   // Never fails the submission — the message is already recorded and ops is
   // already pushed. A mail outage must not tell a customer we did not hear them.

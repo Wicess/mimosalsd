@@ -1,8 +1,6 @@
 'use server'
 
 import { z } from 'zod'
-import { alertLines, notify } from '@/lib/notify/ntfy'
-import { absoluteUrl } from '@/lib/seo/routes'
 import { db } from '@/lib/db/client'
 import { reportError } from '@/lib/observability/report-error'
 import { recordActivity } from '@/lib/visitors/record-activity'
@@ -56,12 +54,7 @@ export async function subscribeToNewsletter(
 
   const email = parsed.data.email.toLowerCase()
   const { source, path } = parsed.data
-  const where = source === 'site-popup' ? `the pop-up on ${path}` : 'the account page'
-  let isNew = false
   try {
-    // Read first, so only a genuinely new address rings the phone: signing up twice
-    // is a no-op for the list and should be one for the owner too.
-    isNew = !(await db.newsletterSubscriber.findUnique({ where: { email }, select: { id: true } }))
     // `update: {}` — an existing row, active or unsubscribed, is left exactly as it is.
     await db.newsletterSubscriber.upsert({
       where: { email },
@@ -74,18 +67,5 @@ export async function subscribeToNewsletter(
   }
   // The address goes with it, so the visitor list can show who this visitor is.
   await recordActivity('SUBSCRIBED', { path, detail: email })
-  if (isNew) {
-    await notify({
-      topic: 'signups',
-      title: 'New subscriber',
-      body: alertLines([
-        ['Email', email],
-        ['Signed up from', where],
-      ]),
-      tags: ['incoming_envelope', 'newsletter'],
-      clickUrl: absoluteUrl('/admin/newsletter'),
-      actions: [{ label: 'Open subscribers', url: absoluteUrl('/admin/newsletter') }],
-    })
-  }
   return { ok: DONE }
 }

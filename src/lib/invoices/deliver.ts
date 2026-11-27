@@ -6,7 +6,7 @@ import { postMessage } from '@/lib/chat/core'
 import { BRAND } from '@/lib/brand'
 import { reportError } from '@/lib/observability/report-error'
 import type { Order } from '@/lib/orders/types'
-import { invoiceDataFromOrder, type InvoiceStage } from './data'
+import { CONTACT_PROMISE, invoiceDataFromOrder, type InvoiceStage } from './data'
 import { renderInvoicePng } from './render'
 import type { PaymentInstructions } from '@/lib/payments/instructions'
 
@@ -123,7 +123,7 @@ export function receivedChatMessage(order: Order, methodLabel: string): string {
     `Thank you, ${order.firstName}! We have your order.`,
     `Order ID: ${order.orderNumber}`,
     '',
-    `Your invoice is attached. We are verifying your order now, and your ${methodLabel} payment details will arrive right here and by email.`,
+    `Your invoice is attached. ${CONTACT_PROMISE} Your ${methodLabel} payment details follow once it is verified.`,
     '',
     'Please keep your Order ID. You will put it in your payment note.',
   ].join('\n')

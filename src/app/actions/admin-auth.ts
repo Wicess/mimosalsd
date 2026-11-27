@@ -16,8 +16,6 @@ import { getAdminIdentity } from '@/lib/admin/auth'
 import { ADMIN_NEXT_COOKIE, firstAllowedAdminPath, safeAdminNext } from '@/lib/admin/areas'
 import { db } from '@/lib/db/client'
 import { dbRetry, isTransientDbError } from '@/lib/db/retry'
-import { alertLines, notify } from '@/lib/notify/ntfy'
-import { absoluteUrl } from '@/lib/seo/routes'
 import { reportError } from '@/lib/observability/report-error'
 import { markTeamBrowser } from '@/lib/visitors/team'
 
@@ -32,9 +30,8 @@ const schema = z.object({
  * Admin sign-in.
  *
  * A failure is deliberately slow and vague: the same message whatever the cause, and a
- * fixed delay so timing cannot distinguish "no such user" from "wrong password". A
- * failed attempt also pushes an ops notification — an admin login this business did not
- * perform is something you want to hear about immediately, not in a log review.
+ * fixed delay so timing cannot distinguish "no such user" from "wrong password".
+ * Sign-ins, failed or not, send no phone notification (owner's decision).
  */
 export async function adminLogin(
   _previous: LoginState,
@@ -90,10 +87,8 @@ export async function adminLogin(
       patient credential-stuffing run would be billed to us twice: once as writes,
       once as compute that never gets to idle.
 
-      Failures are not unmonitored. Each one already pushes a high-priority ntfy
-      alert with the address that was tried, which is both faster than a log review
-      and immune to being flooded into uselessness. If failures ever need
-      persisting, they need a rate limiter first.
+      So failures are neither stored nor pushed (the owner turned the alert off).
+      If they ever need persisting, they need a rate limiter first.
     */
     await recordAdminAction({
       entityType: 'AdminUser',
@@ -125,16 +120,6 @@ export async function adminLogin(
   }
 
   await new Promise((resolve) => setTimeout(resolve, 600))
-  await notify({
-    topic: 'errors',
-    title: 'Failed admin sign-in',
-    body: alertLines([
-      ['Email tried', email],
-      ['', 'If this was not you, change the admin password.'],
-    ]),
-    tags: ['lock', 'security'],
-    clickUrl: absoluteUrl('/admin/audit'),
-  })
   return { error: 'Incorrect email or password.' }
 }
 

@@ -1,4 +1,5 @@
 import { BRAND } from '@/lib/brand'
+import { CONTACT_PROMISE } from '@/lib/invoices/data'
 import { PAYMENT_LABELS } from '@/lib/orders/types'
 import type { Order } from '@/lib/orders/types'
 import { jurisdictionName } from '@/lib/compliance/jurisdictions'
@@ -120,7 +121,7 @@ export function orderReceivedEmail(order: Order): EmailMessage {
       '',
       `We have your order request and we are checking two things: that we can lawfully ship every item to ${jurisdictionName(order.stateCode)}, and that we have the stock.`,
       '',
-      'A person is checking your order now. Payment details will follow in your order chat and by email.',
+      `${CONTACT_PROMISE} Payment details follow once it is checked.`,
       '',
       `Order ${order.orderNumber}`,
       orderSummary(order),
@@ -141,7 +142,7 @@ export function orderReceivedEmail(order: Order): EmailMessage {
           `We are checking two things: that we can lawfully ship every item to ${jurisdictionName(order.stateCode)}, and that we have the stock.`,
         ),
         emailParagraph(
-          'A person is checking your order now. Payment details will follow in your order chat and by email.',
+          `${CONTACT_PROMISE} Payment details follow once it is checked.`,
         ),
         orderSummaryHtml(order),
         emailParagraph(
@@ -360,6 +361,8 @@ export type ContactTopic = 'order' | 'bulk' | 'general'
 export interface ContactEnquiry {
   readonly name: string
   readonly email: string
+  /** Owner, 2026-11-23: the contact form asks for a phone number too. */
+  readonly phone?: string
   readonly topic: ContactTopic
   readonly orderNumber?: string
   readonly message: string
@@ -452,6 +455,7 @@ export function contactNotificationEmail(enquiry: ContactEnquiry): EmailMessage 
     text: [
       `From: ${enquiry.name} <${enquiry.email}>`,
       `Topic: ${topic.label}`,
+      ...(enquiry.phone ? [`Phone: ${enquiry.phone}`] : []),
       ...(enquiry.orderNumber ? [`Order: ${enquiry.orderNumber}`] : []),
       '',
       enquiry.message,
@@ -463,6 +467,7 @@ export function contactNotificationEmail(enquiry: ContactEnquiry): EmailMessage 
         emailHeading(`${topic.label} — ${enquiry.name}`),
         `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;">
           ${emailRow('From', `${enquiry.name} <${enquiry.email}>`)}
+          ${enquiry.phone ? emailRow('Phone', enquiry.phone) : ''}
           ${enquiry.orderNumber ? emailRow('Order', enquiry.orderNumber) : ''}
         </table>`,
         emailQuote(enquiry.message),
